@@ -1,0 +1,4 @@
+gcc -c -g -fsanitize=address -Wall -Werror -DSHOW_LOG_ERROR eznet.c
+gcc -g -std=gnu11 -fsanitize=address -Wall -Werror -DSHOW_LOG_ERROR -oechoclient echoclient.c
+gcc -g -std=gnu11 -fsanitize=address -Wall -Werror -DSHOW_LOG_ERROR -owebserver webserver.c eznet.o
+
