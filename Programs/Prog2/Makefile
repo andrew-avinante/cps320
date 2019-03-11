@@ -5,4 +5,4 @@ eznet.o : eznet.c eznet.h
 	gcc -c eznet.c eznet.h
 
 clean :
-	rm *.o
+	-rm *.o
