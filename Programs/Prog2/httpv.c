@@ -80,11 +80,10 @@ int parseHttp(FILE *in, http_request_t **request)
         rc = -6;
         goto cleanup;
     }
-    printf("HERE\n");
+    
     i = 0;
-    while(fgets(buff, buffSize, in) > 0 && i < MAX_HEADERS)
+    while(fgets(buff, buffSize, in) && i < MAX_HEADERS)
     {
-        printf("INFINITE\n");
         if(buff[0] == 13)
         {
            
@@ -111,7 +110,6 @@ int parseHttp(FILE *in, http_request_t **request)
     *request = req;
     
     rc = 1;
-    printf("CONTINUE?\n");
     return rc;
 
 cleanup:
