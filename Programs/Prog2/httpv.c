@@ -150,14 +150,14 @@ int generateResponse(int result, FILE *out)
     switch (result)
     {
         case 1:
-            printf("1\n");
-            fputs("HTTP/1.1 200 OK\r\n", out);
-            fputs("Content-type: text/html\r\n", out);
-            fputs("\r\n", out);
-            while ((recd = getline(&line, &len, fstream)) > 0) 
-            {
-                fputs(line, out); 
-            }
+            // printf("1\n");
+            // fputs("HTTP/1.1 200 OK\r\n", out);
+            // fputs("Content-type: text/html\r\n", out);
+            // fputs("\r\n", out);
+            // while ((recd = getline(&line, &len, fstream)) > 0) 
+            // {
+            //     fputs(line, out); 
+            // }
             break;
         case -1:
             printf("-1\n");
@@ -216,10 +216,10 @@ int generateResponse(int result, FILE *out)
             fputs("Something has gone wrong on our end...\r\n", out);
             break;
     }
-    if(fstream)
-    {
-        fclose(fstream);
-    }
+    // if(fstream)
+    // {
+    //     fclose(fstream);
+    // }
     return 0;
 }
 
