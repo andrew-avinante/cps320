@@ -137,7 +137,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
     char *line = NULL;
     size_t len = 0u;
     ssize_t recd;
-    FILE *fstream = fopen(strstr(&request->path.substring[1], "r+");
+    FILE *fstream = fopen(&request->path.substring[1], "r+");
     if(fstream == NULL) { result = -5; }
     switch (result)
     {
