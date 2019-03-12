@@ -128,37 +128,37 @@ cleanup:
         free(req->headers[i].value);
     }
     free(buff);
-    free(req);  // It's OK to free() a NULL pointer 
+    *request = req;  // It's OK to free() a NULL pointer 
     return rc;
 }
 
 int generateResponse(int result, http_request_t *request, FILE *out)
 {
-    // char *line = NULL;
-    // size_t len = 0u;
-    // ssize_t recd;
-    // FILE *fstream = NULL;
-    // // printf("%d\n", result);
-    // if(result == 1)
-    // {
-    //     // printf("WHY IN HERE?\n");
-    //     fstream = fopen(&request->path[1], "r+");
-    //     if(fstream == NULL) { result = -5; }
-    //     if(strcmp(request->verb, "POST") == 0) { result = -7; }
-    // }
-    // printf("CONTINUE\n");
+    char *line = NULL;
+    size_t len = 0u;
+    ssize_t recd;
+    FILE *fstream = NULL;
+    // printf("%d\n", result);
+    if(result == 1)
+    {
+        // printf("WHY IN HERE?\n");
+        fstream = fopen(&request->path[1], "r+");
+        if(fstream == NULL) { result = -5; }
+        if(strcmp(request->verb, "POST") == 0) { result = -7; }
+    }
+    printf("CONTINUE\n");
     switch (result)
     {
-        // case 1:
-        //     printf("1\n");
-        //     fputs("HTTP/1.1 200 OK\r\n", out);
-        //     fputs("Content-type: text/html\r\n", out);
-        //     fputs("\r\n", out);
-        //     while ((recd = getline(&line, &len, fstream)) > 0) 
-        //     {
-        //         fputs(line, out); 
-        //     }
-        //     break;
+        case 1:
+            printf("1\n");
+            fputs("HTTP/1.1 200 OK\r\n", out);
+            fputs("Content-type: text/html\r\n", out);
+            fputs("\r\n", out);
+            while ((recd = getline(&line, &len, fstream)) > 0) 
+            {
+                fputs(line, out); 
+            }
+            break;
         case -1:
             printf("-1\n");
             fputs("HTTP/1.1 400 Bad Request\r\n", out);
@@ -216,10 +216,10 @@ int generateResponse(int result, http_request_t *request, FILE *out)
             fputs("Something has gone wrong on our end...\r\n", out);
             break;
     }
-    // if(fstream)
-    // {
-    //     fclose(fstream);
-    // }
+    if(fstream)
+    {
+        fclose(fstream);
+    }
     return 0;
 }
 
