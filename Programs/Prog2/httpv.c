@@ -127,7 +127,7 @@ cleanup:
         free(req->headers[i].name);
         free(req->headers[i].value);
     }
-    // free(buff);
+    free(buff);
     free(req);  // It's OK to free() a NULL pointer 
     return rc;
 }
