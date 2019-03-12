@@ -128,7 +128,7 @@ cleanup:
         free(req->headers[i].value);
     }
     free(buff);
-    *request = req;  // It's OK to free() a NULL pointer 
+    free(req);  // It's OK to free() a NULL pointer 
     return rc;
 }
 
@@ -137,7 +137,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
     char *line = NULL;
     size_t len = 0u;
     ssize_t recd;
-    FILE *fstream = NULL;
+    FILE *fstream = NULL;s
     // printf("%d\n", result);
     if(result == 1)
     {
@@ -200,6 +200,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
             fputs("Content-type: text/plain\r\n", out);
             fputs("\r\n", out);
             fputs("Invalid verb\r\n", out);
+            printf("DONE\n");
             break;
         case -7:
             printf("-7\n");
