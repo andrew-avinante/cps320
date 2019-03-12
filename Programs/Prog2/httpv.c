@@ -128,9 +128,11 @@ cleanup:
         free(req->headers[i].name);
         free(req->headers[i].value);
     }
-    while ((recd = getline(&line, &len, in)) > 0) {
+    while (line[0] == 13 && line[1] == 10) {
+        getline(&line, &len, in)
         // Discard rest of input
     }
+    printf("DONE\n");
     free(req);  // It's OK to free() a NULL pointer 
     return rc;
 }
