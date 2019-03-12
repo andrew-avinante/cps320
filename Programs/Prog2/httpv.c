@@ -138,6 +138,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
     size_t len = 0u;
     ssize_t recd;
     FILE *fstream;
+    printf("%d\n", result);
     if(request != NULL)
     {
         fstream = fopen(&request->path[1], "r+");
