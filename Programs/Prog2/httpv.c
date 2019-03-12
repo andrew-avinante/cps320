@@ -211,7 +211,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
             fputs("\r\n", out);
             fputs("Something has gone wrong on our end...\r\n", out);
     }
-    if(stream != NULL)
+    if(fstream != NULL)
     {
         fclose(fstream);
     }
