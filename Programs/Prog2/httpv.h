@@ -24,6 +24,6 @@ typedef struct http_request {
 // -1 on invalid HTTP request,
 // -2 on I/O error,
 // -3 on malloc failure
-int parseHttp(FILE *in, http_request_t *request);
+int parseHttp(FILE *in, http_request_t **request);
 
-int cleanupHttp(http_request_t **request);
+int cleanupHttp(http_request_t *request);
