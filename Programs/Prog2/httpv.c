@@ -146,6 +146,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
         if(fstream == NULL) { result = -5; }
         if(strcmp(request->verb, "POST") == 0) { result = -7; }
     }
+    result = -6;
     printf("CONTINUE\n");
     switch (result)
     {
@@ -197,13 +198,9 @@ int generateResponse(int result, http_request_t *request, FILE *out)
         case -6:
             printf("-6\n");
             fputs("HTTP/1.1 400 Bad Request\r\n", out);
-                fflush(out);
             fputs("Content-type: text/plain\r\n", out);
-                fflush(out);
             fputs("\r\n", out);
-                fflush(out);
             fputs("Invalid verb\r\n", out);
-                fflush(out);
             break;
         case -7:
             printf("-7\n");
