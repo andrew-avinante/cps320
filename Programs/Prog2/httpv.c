@@ -10,6 +10,9 @@
 #include <limits.h>
 #include <errno.h>
 
+typedef struct http_header http_header_t;
+typedef struct http_request http_request_t;
+
 // Returns 1 on success,
 // -1 on invalid HTTP request,
 // -2 on I/O error,

@@ -19,8 +19,6 @@ typedef struct http_request {
     int num_headers;
     http_header_t headers[MAX_HEADERS];
 }
-typedef struct http_header http_header_t;
-typedef struct http_request http_request_t;
 
 // Returns 1 on success,
 // -1 on invalid HTTP request,
