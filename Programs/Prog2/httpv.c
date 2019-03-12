@@ -84,6 +84,7 @@ int parseHttp(FILE *in, http_request_t **request)
     i = 0;
     while(fgets(buff, buffSize, in) && i < MAX_HEADERS)
     {
+        printf("INFINITE\n");
         if(buff[0] == 13)
         {
            
