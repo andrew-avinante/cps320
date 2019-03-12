@@ -85,7 +85,7 @@ int parseHttp(FILE *in, http_request_t **request)
     while(fgets(buff, buffSize, in) && i < MAX_HEADERS)
     {
 
-        if(buff[0] == 13)
+        if(buff[0] == 13 && buff[1] == 10)
         {
             blankline = 1;
             break;
