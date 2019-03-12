@@ -128,7 +128,6 @@ cleanup:
         free(req->headers[i].value);
     }
     free(buff);
-    free(req);  // It's OK to free() a NULL pointer 
     return rc;
 }
 
@@ -144,7 +143,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
         // printf("WHY IN HERE?\n");
         fstream = fopen(&request->path[1], "r+");
         if(fstream == NULL) { result = -5; }
-        if(strcmp(request->verb, "POST") == 0) { result = -6; }
+        if(strcmp(request->verb, "POST") == 0) { result = -7; }
     }
     printf("CONTINUE\n");
     switch (result)
