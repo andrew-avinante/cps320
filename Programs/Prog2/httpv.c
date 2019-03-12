@@ -195,7 +195,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
             fputs("\r\n", out);
             fputs("Something has gone wrong on our end...\r\n", out);
     }
-    close(fstream);
+    fclose(fstream);
 }
 
 int cleanupHttp(http_request_t *request)
