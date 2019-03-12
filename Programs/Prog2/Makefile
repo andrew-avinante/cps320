@@ -4,7 +4,7 @@ webserver: webserver.c eznet.o httpv.o
 eznet.o : eznet.c eznet.h
 	gcc -c eznet.c
 
-httpv.o : httpv.c httpv.o
+httpv.o : httpv.c httpv.h
 	gcc -c httpv.c
 
 clean :
