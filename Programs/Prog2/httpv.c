@@ -130,7 +130,7 @@ cleanup:
 
 }
 
-int cleanupHttp(http_request_t **request)
+int cleanupHttp(http_request_t *request)
 {
     int rtrn = -1;
     if(request != NULL)
