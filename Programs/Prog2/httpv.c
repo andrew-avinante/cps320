@@ -199,7 +199,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
             fputs("HTTP/1.1 400 Bad Request\r\n", out);
             fputs("Content-type: text/plain\r\n", out);
             fputs("\r\n", out);
-            fputs("Missing version\r\n", out);
+            fputs("Invalid verb\r\n", out);
             break;
         case -7:
             printf("-7\n");
@@ -220,6 +220,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
     {
         fclose(fstream);
     }
+    return 0;
 }
 
 int cleanupHttp(http_request_t *request)
