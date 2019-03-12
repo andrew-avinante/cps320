@@ -19,11 +19,12 @@ int parseHttp(FILE *in, http_request_t **request)
 {
     http_request_t *req = NULL;
     int rc = -1;
-    int buffSize = 256;
+    char *line = NULL;
+    size_t len = 0u;
+    int pathSize = 256;
     int verbSize = 5;
     int versionSize = 10;
     char *save;
-    char *buff = malloc(buffSize);
     char *token;
     int i, blankline = 0;
 
@@ -34,7 +35,7 @@ int parseHttp(FILE *in, http_request_t **request)
         goto cleanup;
     }
 
-    fgets(buff, buffSize, in);  //Gets first line of file
+    getline(&line, &len, in);  //Gets first line of file
 
     token = strtok_r(buff, " ", &save);     //Parses first line for VERB
     if(token == NULL)
@@ -82,7 +83,7 @@ int parseHttp(FILE *in, http_request_t **request)
     }
     
     i = 0;
-    while(fgets(buff, buffSize, in) && i < MAX_HEADERS)
+    while(getline(&line, &len, in); && i < MAX_HEADERS)
     {
 
         if(buff[0] == 13 && buff[1] == 10)
@@ -132,32 +133,32 @@ cleanup:
     return rc;
 }
 
-int generateResponse(int result, FILE *out)
+int generateResponse(int result, http_request_t *request, FILE *out)
 {
-    // char *line = NULL;
-    // size_t len = 0u;
-    // ssize_t recd;
-    // FILE *fstream = NULL;
-    // // printf("%d\n", result);
-    // if(result == 1)
-    // {
-    //     // printf("WHY IN HERE?\n");
-    //     fstream = fopen(&request->path[1], "r+");
-    //     if(fstream == NULL) { result = -5; }
-    //     if(strcmp(request->verb, "POST") == 0) { result = -7; }
-    // }
-    // printf("CONTINUE\n");
+    char *line = NULL;
+    size_t len = 0u;
+    ssize_t recd;
+    FILE *fstream = NULL;
+    // printf("%d\n", result);
+    if(result == 1)
+    {
+        // printf("WHY IN HERE?\n");
+        fstream = fopen(&request->path[1], "r+");
+        if(fstream == NULL) { result = -5; }
+        if(strcmp(request->verb, "POST") == 0) { result = -7; }
+    }
+    printf("CONTINUE\n");
     switch (result)
     {
         case 1:
-            // printf("1\n");
-            // fputs("HTTP/1.1 200 OK\r\n", out);
-            // fputs("Content-type: text/html\r\n", out);
-            // fputs("\r\n", out);
-            // while ((recd = getline(&line, &len, fstream)) > 0) 
-            // {
-            //     fputs(line, out); 
-            // }
+            printf("1\n");
+            fputs("HTTP/1.1 200 OK\r\n", out);
+            fputs("Content-type: text/html\r\n", out);
+            fputs("\r\n", out);
+            while ((recd = getline(&line, &len, fstream)) > 0) 
+            {
+                fputs(line, out); 
+            }
             break;
         case -1:
             printf("-1\n");
@@ -216,10 +217,10 @@ int generateResponse(int result, FILE *out)
             fputs("Something has gone wrong on our end...\r\n", out);
             break;
     }
-    // if(fstream)
-    // {
-    //     fclose(fstream);
-    // }
+    if(fstream)
+    {
+        fclose(fstream);
+    }
     return 0;
 }
 
