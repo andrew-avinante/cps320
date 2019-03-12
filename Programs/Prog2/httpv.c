@@ -134,14 +134,10 @@ cleanup:
 
 int generateResponse(int result, http_request_t *request, FILE *out)
 {
-    int bufSize = 80;
     char *line = NULL;
     size_t len = 0u;
     ssize_t recd;
-    char *flOpen[bufSize];
-    flOpen[0] = ".";
-    strlcat(flOpen, request->path, bufSize);
-    FILE *fstream = fopen(*flOpen, "r+");
+    FILE *fstream = fopen(strstr(&request->path.substring[1], "r+");
     if(fstream == NULL) { result = -5; }
     switch (result)
     {
