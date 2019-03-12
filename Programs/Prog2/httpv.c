@@ -138,10 +138,10 @@ int generateResponse(int result, http_request_t *request, FILE *out)
     size_t len = 0u;
     ssize_t recd;
     FILE *fstream;
-    printf("%d\n", result);
+    // printf("%d\n", result);
     if(result == 1)
     {
-        printf("WHY IN HERE?\n");
+        // printf("WHY IN HERE?\n");
         fstream = fopen(&request->path[1], "r+");
         if(fstream == NULL) { result = -5; }
         if(request->verb == "POST") { result = -1; }
@@ -150,7 +150,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
     switch (result)
     {
         case 1:
-            printf("1\n");
+            // printf("1\n");
             fputs("HTTP/1.1 200 OK\r\n", out);
             fputs("Content-type: text/html\r\n", out);
             fputs("\r\n", out);
@@ -160,58 +160,61 @@ int generateResponse(int result, http_request_t *request, FILE *out)
             }
             break;
         case -1:
-            printf("-1\n");
+            // printf("-1\n");
             fputs("HTTP/1.1 400 Bad Request\r\n", out);
             fputs("Content-type: text/plain\r\n", out);
             fputs("\r\n", out);
             fputs("Illegal HTTP stream\r\n", out);
         case -2:
-            printf("-2\n");
+            // printf("-2\n");
             fputs("HTTP/1.1 500 Internal Server Error\r\n", out);
             fputs("Content-type: text/plain\r\n", out);
             fputs("\r\n", out);
             fputs("I/O error while reading request\r\n", out);
         case -3:
-            printf("-3\n");
+            // printf("-3\n");
             fputs("HTTP/1.1 500 Internal Server Error\r\n", out);
             fputs("Content-type: text/plain\r\n", out);
             fputs("\r\n", out);
             fputs("Malloc failure\r\n", out);
         case -4:
-            printf("-4\n");
+            // printf("-4\n");
             fputs("HTTP/1.1 400 Bad Request\r\n", out);
             fputs("Content-type: text/plain\r\n", out);
             fputs("\r\n", out);
             fputs("Invalid verb\r\n", out);
             break;
         case -5:
-            printf("-5\n");
+            // printf("-5\n");
             fputs("HTTP/1.1 404 Not Found\r\n", out);
             fputs("Content-type: text/plain\r\n", out);
             fputs("\r\n", out);
             fputs("Resource not found\r\n", out);
             break;
         case -6:
-            printf("-6\n");
+            // printf("-6\n");
             fputs("HTTP/1.1 400 Bad Request\r\n", out);
             fputs("Content-type: text/plain\r\n", out);
             fputs("\r\n", out);
             fputs("Missing version\r\n", out);
             break;
         case -7:
-            printf("-7\n");
+            // printf("-7\n");
             fputs("HTTP/1.1 501 Not Implemented\r\n", out);
             fputs("Content-type: text/plain\r\n", out);
             fputs("\r\n", out);
             fputs("Verb not implemented\r\n", out);
         default:
-            printf("DEFAULT\n");
+            // printf("DEFAULT\n");
             fputs("HTTP/1.1 500 Internal Server Error\r\n", out);
             fputs("Content-type: text/plain\r\n", out);
             fputs("\r\n", out);
             fputs("Something has gone wrong on our end...\r\n", out);
     }
-    fclose(fstream);
+    if(stream != NULL)
+    {
+        fclose(fstream);
+    }
 }
 
 int cleanupHttp(http_request_t *request)
