@@ -139,7 +139,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
     ssize_t recd;
     FILE *fstream = fopen(&request->path[1], "r+");
     if(fstream == NULL) { result = -5; }
-    if(request->verb == "POST") { result = -1; }
+    if(request != NULL && request->verb == "POST") { result = -1; }
     switch (result)
     {
         case 1:
