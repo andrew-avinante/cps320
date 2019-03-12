@@ -52,9 +52,9 @@ int parseHttp(FILE *in, http_request_t **request)
         rc = -2;
         goto cleanup;
     }
-    req->path = malloc(buffSize);           //Allocates memory for PATH
-    strlcpy(req->path, token, buffSize);    //Coppies token to PATH
-    req->path[buffSize-1] = 0;              //Adds null terminator
+    req->path = malloc(pathSize);           //Allocates memory for PATH
+    strlcpy(req->path, token, pathSize);    //Coppies token to PATH
+    req->path[pathSize-1] = 0;              //Adds null terminator
     token = strtok_r(NULL, " ", &save);     //Parses line for VERSION
     if(token == NULL)
     {
@@ -91,14 +91,14 @@ int parseHttp(FILE *in, http_request_t **request)
             blankline = 1;
             break;
         }
-        if(buff[0] != 13)
-        {
-            req->headers[i].name = malloc(buffSize);
-            req->headers[i].value = malloc(buffSize);
-            strlcpy(req->headers[i].name, strtok_r(buff, ":", &save), buffSize);
-            strlcpy(req->headers[i].value, strtok_r(NULL, ":", &save), buffSize);
-            i++;
-        }
+        // if(buff[0] != 13)
+        // {
+        //     req->headers[i].name = malloc(buffSize);
+        //     req->headers[i].value = malloc(buffSize);
+        //     strlcpy(req->headers[i].name, strtok_r(buff, ":", &save), buffSize);
+        //     strlcpy(req->headers[i].value, strtok_r(NULL, ":", &save), buffSize);
+        //     i++;
+        // }
     }
             printf("EXIT\n");
     if(blankline == 0)
