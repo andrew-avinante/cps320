@@ -127,7 +127,6 @@ cleanup:
     free(buff);
     free(req);  // It's OK to free() a NULL pointer 
     return rc;
-
 }
 
 int cleanupHttp(http_request_t *request)
