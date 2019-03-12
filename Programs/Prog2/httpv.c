@@ -137,7 +137,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
     char *line = NULL;
     size_t len = 0u;
     ssize_t recd;
-    FILE *fstream = NULL;s
+    FILE *fstream = NULL;
     // printf("%d\n", result);
     if(result == 1)
     {
