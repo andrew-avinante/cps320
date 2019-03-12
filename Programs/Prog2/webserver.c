@@ -106,7 +106,7 @@ void handle_client(struct client_info *client) {
     char *line = NULL;
     size_t len = 0u;
     ssize_t recd;
-    result = parseHttp(f, &request);
+    result = parseHttp(stream, &request);
     fputs(request->verb, stream);
     cleanupHttp(request);
     // while ((recd = getline(&line, &len, stream)) > 0) {
