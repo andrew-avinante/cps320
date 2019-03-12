@@ -10,35 +10,6 @@
 #include <limits.h>
 #include <errno.h>
 
-
-#define MAX_HEADERS 10
-
-typedef struct http_header {
-    char *name;
-    char *value;
-} http_header_t;
-
-typedef struct http_request {
-    char *verb;
-    char *path;
-    char *version;
-    int num_headers;
-    http_header_t headers[MAX_HEADERS];
-} http_request_t;
-
-
-FILE *parseArgs(int argc, char **argv)
-{
-    FILE *in;
-    if(argc < 2)
-    {
-        printf("Reading from stdin...\n");
-        return stdin;
-    }
-    (in = fopen(argv[1], "r")) != NULL ? printf("Reading from %s...\n", argv[1]) :  printf("Unable to open %s\n", argv[1]);
-    return in;
-}
-
 // Returns 1 on success,
 // -1 on invalid HTTP request,
 // -2 on I/O error,
@@ -158,60 +129,19 @@ cleanup:
 
 }
 
-int main(int argc, char **argv)
+int cleanupHttp(http_request_t **request)
 {
-    FILE *f = parseArgs(argc, argv);
-    if (f == NULL) {
-        exit(1);
-    }
-
-    http_request_t *request = NULL;
-    int result = 0;
-
-    result = parseHttp(f, &request);
-
-    switch (result) {
-    case 1:
-        printf("Verb: %s\n", request->verb);
-        printf("Path: %s\n", request->path);
-        printf("Version: %s\n", request->version);
-        printf("\n%d header(s):\n", request->num_headers);
-
-        for (int i = 0; i < request->num_headers; ++i) {
-             printf("* %s is %s\n", request->headers[i].name, request->headers[i].value);
-        }
-        break;
-    case -1:
-        fprintf(stderr, "** ERROR: Illegal HTTP stream.\n");
-        break;
-    case -2:
-        fprintf(stderr, "** ERROR: I/O error while reading request.\n");
-        break;
-    case -3:
-        fprintf(stderr, "** ERROR: malloc failure.\n");
-        break;
-    case -4:
-        fprintf(stderr, "** ERROR: Illegal HTTP stream (Invalid verb).\n");
-        break;
-    case -5:
-        fprintf(stderr, "** ERROR: Illegal HTTP stream (Invalid path).\n");
-        break;
-    case -6:
-        fprintf(stderr, "** ERROR: Illegal HTTP stream (Missing version).\n");
-        break;
-    default:
-        printf("Unexpected return code %d.\n", result);
-    }
+    int rtrn = -1;
     if(request != NULL)
     {
         free(request->verb);
         free(request->path);
         free(request->version);
         for (int i = 0; i < request->num_headers; ++i) {
-             free(request->headers[i].name);
-             free(request->headers[i].value);
+            free(request->headers[i].name);
+            free(request->headers[i].value);
         }
+        rtrn = 0;
     }
     free(request);
-    fclose(f);
 }

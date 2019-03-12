@@ -1,6 +1,10 @@
 /* Echo Server: an example usage of EzNet
  * (c) 2016, Bob Jones University
  */
+#define _GNU_SOURCE
+#include <bsd/string.h>
+#include <limits.h>
+
 #include <stdbool.h>    // For access to C99 "bool" type
 #include <stdio.h>      // Standard I/O functions
 #include <stdlib.h>     // Other standard library functions
@@ -14,6 +18,8 @@
 #include <signal.h>     // Signal handling system calls (sigaction(2))
 
 #include "eznet.h"      // Custom networking library
+
+#include "httpv.h"      // Custom HTTP parsing library
 
 // Generic log-to-stdout logging routine
 // Message format: "timestamp:pid:user-defined-message"
@@ -93,14 +99,20 @@ void handle_client(struct client_info *client) {
         goto cleanup;
     }
 
+    http_request_t *request = NULL;
+    int result = 0;
+
     // Echo all lines
     char *line = NULL;
     size_t len = 0u;
     ssize_t recd;
-    while ((recd = getline(&line, &len, stream)) > 0) {
-        printf("\tReceived %zd byte line; echoing...\n", recd);
-        fputs(line, stream); 
-    }
+    result = parseHttp(f, &request);
+    fputs(request->verb, stream);
+    // while ((recd = getline(&line, &len, stream)) > 0) {
+    //     printf("\tReceived %zd byte line; echoing...\n", recd);
+        
+    //     fputs(line, stream); 
+    // }
 
 cleanup:
     // Shutdown this client
