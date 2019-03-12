@@ -163,7 +163,10 @@ int generateResponse(int result, http_request_t *request, FILE *out)
             fprintf(stderr, "** ERROR: Illegal HTTP stream (Invalid verb).\n");
             break;
         case -5:
-            fprintf(stderr, "** ERROR: Illegal HTTP stream (Invalid path).\n");
+            fputs("HTTP/1.1 404 Not Found\r\n", out);
+            fputs("Content-type: text/plain\r\n", out);
+            fputs("\r\n", out);
+            fputs("Resource not found\r\n");
             break;
         case -6:
             fprintf(stderr, "** ERROR: Illegal HTTP stream (Missing version).\n");
