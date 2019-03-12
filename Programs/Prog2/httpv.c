@@ -146,7 +146,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
         if(fstream == NULL) { result = -5; }
         if(strcmp(request->verb, "POST") == 0) { result = -7; }
     }
-    result = -6;
+    result = -5;
     printf("CONTINUE\n");
     switch (result)
     {
