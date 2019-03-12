@@ -37,7 +37,7 @@ int parseHttp(FILE *in, http_request_t **request)
 
     getline(&line, &len, in);  //Gets first line of file
 
-    token = strtok_r(buff, " ", &save);     //Parses first line for VERB
+    token = strtok_r(&line, " ", &save);     //Parses first line for VERB
     if(token == NULL)
     {
         rc = -2;
@@ -86,7 +86,7 @@ int parseHttp(FILE *in, http_request_t **request)
     while(getline(&line, &len, in); && i < MAX_HEADERS)
     {
 
-        if(buff[0] == 13 && buff[1] == 10)
+        if(&line[0] == 13 && &line[1] == 10)
         {
             blankline = 1;
             break;
@@ -109,7 +109,6 @@ int parseHttp(FILE *in, http_request_t **request)
         goto cleanup;
     }
     req->num_headers = i;
-     free(buff);
 
     *request = req;
     
@@ -128,7 +127,6 @@ cleanup:
         free(req->headers[i].name);
         free(req->headers[i].value);
     }
-    free(buff);
     free(req);  // It's OK to free() a NULL pointer 
     return rc;
 }
