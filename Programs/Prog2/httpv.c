@@ -137,9 +137,10 @@ int generateResponse(int result, http_request_t *request, FILE *out)
     char *line = NULL;
     size_t len = 0u;
     ssize_t recd;
+    FILE *fstream;
     if(request != NULL)
     {
-        FILE *fstream = fopen(&request->path[1], "r+");
+        fstream = fopen(&request->path[1], "r+");
         if(fstream == NULL) { result = -5; }
         if(request->verb == "POST") { result = -1; }
     }
