@@ -134,11 +134,11 @@ cleanup:
 
 int generateResponse(int result, http_request_t *request, FILE *out)
 {
+    char *line = NULL;
+    size_t len = 0u;
+    ssize_t recd;
     if(request != NULL)
     {
-        char *line = NULL;
-        size_t len = 0u;
-        ssize_t recd;
         FILE *fstream = fopen(&request->path[1], "r+");
         if(fstream == NULL) { result = -5; }
         if(request->verb == "POST") { result = -1; }
