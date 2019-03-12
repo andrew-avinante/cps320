@@ -165,18 +165,21 @@ int generateResponse(int result, http_request_t *request, FILE *out)
             fputs("Content-type: text/plain\r\n", out);
             fputs("\r\n", out);
             fputs("Illegal HTTP stream\r\n", out);
+            break;
         case -2:
             // printf("-2\n");
             fputs("HTTP/1.1 500 Internal Server Error\r\n", out);
             fputs("Content-type: text/plain\r\n", out);
             fputs("\r\n", out);
             fputs("I/O error while reading request\r\n", out);
+            break;
         case -3:
             // printf("-3\n");
             fputs("HTTP/1.1 500 Internal Server Error\r\n", out);
             fputs("Content-type: text/plain\r\n", out);
             fputs("\r\n", out);
             fputs("Malloc failure\r\n", out);
+            break;
         case -4:
             // printf("-4\n");
             fputs("HTTP/1.1 400 Bad Request\r\n", out);
@@ -204,12 +207,14 @@ int generateResponse(int result, http_request_t *request, FILE *out)
             fputs("Content-type: text/plain\r\n", out);
             fputs("\r\n", out);
             fputs("Verb not implemented\r\n", out);
+            break;
         default:
             // printf("DEFAULT\n");
             fputs("HTTP/1.1 500 Internal Server Error\r\n", out);
             fputs("Content-type: text/plain\r\n", out);
             fputs("\r\n", out);
             fputs("Something has gone wrong on our end...\r\n", out);
+            break;
     }
     if(fstream != NULL)
     {
