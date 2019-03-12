@@ -111,6 +111,7 @@ int parseHttp(FILE *in, http_request_t **request)
     *request = req;
     
     rc = 1;
+    printf("CONTINUE?\n");
     return rc;
 
 cleanup:
