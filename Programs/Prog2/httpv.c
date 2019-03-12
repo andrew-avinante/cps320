@@ -17,15 +17,13 @@
 // -3 on malloc failure
 int parseHttp(FILE *in, http_request_t **request) 
 {
-    ssize_t recd;
     http_request_t *req = NULL;
     int rc = -1;
-    char *line = NULL;
-    size_t len = 0u;
-    int pathSize = 256;
+    int buffSize = 256;
     int verbSize = 5;
     int versionSize = 10;
     char *save;
+    char *buff = malloc(buffSize);
     char *token;
     int i, blankline = 0;
 
@@ -36,9 +34,9 @@ int parseHttp(FILE *in, http_request_t **request)
         goto cleanup;
     }
 
-    getline(&line, &len, in);  //Gets first line of file
+    fgets(buff, buffSize, in);  //Gets first line of file
 
-    token = strtok_r(line, " ", &save);     //Parses first line for VERB
+    token = strtok_r(buff, " ", &save);     //Parses first line for VERB
     if(token == NULL)
     {
         rc = -2;
@@ -53,9 +51,9 @@ int parseHttp(FILE *in, http_request_t **request)
         rc = -2;
         goto cleanup;
     }
-    req->path = malloc(pathSize);           //Allocates memory for PATH
-    strlcpy(req->path, token, pathSize);    //Coppies token to PATH
-    req->path[pathSize-1] = 0;              //Adds null terminator
+    req->path = malloc(buffSize);           //Allocates memory for PATH
+    strlcpy(req->path, token, buffSize);    //Coppies token to PATH
+    req->path[buffSize-1] = 0;              //Adds null terminator
     token = strtok_r(NULL, " ", &save);     //Parses line for VERSION
     if(token == NULL)
     {
@@ -84,22 +82,22 @@ int parseHttp(FILE *in, http_request_t **request)
     }
     
     i = 0;
-    while(getline(&line, &len, in) && i < MAX_HEADERS)
+    while(fgets(buff, buffSize, in) && i < MAX_HEADERS)
     {
 
-        if(line[0] == 13 && line[1] == 10)
+        if(buff[0] == 13 && buff[1] == 10)
         {
             blankline = 1;
             break;
         }
-        // if(buff[0] != 13)
-        // {
-        //     req->headers[i].name = malloc(buffSize);
-        //     req->headers[i].value = malloc(buffSize);
-        //     strlcpy(req->headers[i].name, strtok_r(buff, ":", &save), buffSize);
-        //     strlcpy(req->headers[i].value, strtok_r(NULL, ":", &save), buffSize);
-        //     i++;
-        // }
+        if(buff[0] != 13)
+        {
+            req->headers[i].name = malloc(buffSize);
+            req->headers[i].value = malloc(buffSize);
+            strlcpy(req->headers[i].name, strtok_r(buff, ":", &save), buffSize);
+            strlcpy(req->headers[i].value, strtok_r(NULL, ":", &save), buffSize);
+            i++;
+        }
     }
             printf("EXIT\n");
     if(blankline == 0)
@@ -110,6 +108,7 @@ int parseHttp(FILE *in, http_request_t **request)
         goto cleanup;
     }
     req->num_headers = i;
+     free(buff);
 
     *request = req;
     
@@ -128,11 +127,16 @@ cleanup:
         free(req->headers[i].name);
         free(req->headers[i].value);
     }
-    while (line[0] == 13 && line[1] == 10) {
-        getline(&line, &len, in)
-        // Discard rest of input
+    while(fgets(buff, buffSize, in) && i < MAX_HEADERS)
+    {
+
+        if(buff[0] == 13 && buff[1] == 10)
+        {
+            blankline = 1;
+            break;
+        }
     }
-    printf("DONE\n");
+    free(buff);
     free(req);  // It's OK to free() a NULL pointer 
     return rc;
 }
