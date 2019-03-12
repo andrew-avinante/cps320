@@ -144,7 +144,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
         // printf("WHY IN HERE?\n");
         fstream = fopen(&request->path[1], "r+");
         if(fstream == NULL) { result = -5; }
-        if(request->verb == "POST") { result = -1; }
+        if(strcmp(request->verb, "POST") == 0) { result = -1; }
     }
     printf("CONTINUE\n");
     switch (result)
@@ -216,8 +216,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
             fputs("Something has gone wrong on our end...\r\n", out);
             break;
     }
-    fputs("OUT\r\n", out);
-    if(fstream != NULL)
+    if(fstream)
     {
         fclose(fstream);
     }
