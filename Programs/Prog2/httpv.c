@@ -132,6 +132,47 @@ cleanup:
     return rc;
 }
 
+int generateResponse(int result, http_request_t *request, FILE *out)
+{
+    char *line = NULL;
+    size_t len = 0u;
+    ssize_t recd;
+    FILE *fstream = fopen(request->path, "r+");
+    if(fstream == NULL) { result = -5; }
+    switch (result)
+    {
+        case 1:
+            fputs("HTTP/1.1 200 OK\r\n", out);
+            fputs("Content-type: text/html\r\n", out);
+            fputs("\r\n", out);
+            while ((recd = getline(&line, &len, fstream)) > 0) 
+            {
+                fputs(line, out); 
+            }
+            break;
+        case -1:
+            fprintf(stderr, "** ERROR: Illegal HTTP stream.\n");
+            break;
+        case -2:
+            fprintf(stderr, "** ERROR: I/O error while reading request.\n");
+            break;
+        case -3:
+            fprintf(stderr, "** ERROR: malloc failure.\n");
+            break;
+        case -4:
+            fprintf(stderr, "** ERROR: Illegal HTTP stream (Invalid verb).\n");
+            break;
+        case -5:
+            fprintf(stderr, "** ERROR: Illegal HTTP stream (Invalid path).\n");
+            break;
+        case -6:
+            fprintf(stderr, "** ERROR: Illegal HTTP stream (Missing version).\n");
+            break;
+        default:
+            printf("Unexpected return code %d.\n", result);
+    }
+}
+
 int cleanupHttp(http_request_t *request)
 {
     int rtrn = -1;
