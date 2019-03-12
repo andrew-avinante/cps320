@@ -128,7 +128,7 @@ cleanup:
         free(req->headers[i].name);
         free(req->headers[i].value);
     }
-    while ((recd = getline(&line, &len, stream)) > 0) {
+    while ((recd = getline(&line, &len, in)) > 0) {
         // Discard rest of input
     }
     free(req);  // It's OK to free() a NULL pointer 
