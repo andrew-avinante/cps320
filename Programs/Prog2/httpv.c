@@ -17,6 +17,7 @@
 // -3 on malloc failure
 int parseHttp(FILE *in, http_request_t **request) 
 {
+    ssize_t recd;
     http_request_t *req = NULL;
     int rc = -1;
     char *line = NULL;
@@ -126,6 +127,9 @@ cleanup:
         
         free(req->headers[i].name);
         free(req->headers[i].value);
+    }
+    while ((recd = getline(&line, &len, stream)) > 0) {
+        // Discard rest of input
     }
     free(req);  // It's OK to free() a NULL pointer 
     return rc;
