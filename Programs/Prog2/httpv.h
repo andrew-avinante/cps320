@@ -10,7 +10,7 @@
 typedef struct http_header {
     char *name;
     char *value;
-} http_header_t;
+}
 
 typedef struct http_request {
     char *verb;
@@ -18,7 +18,9 @@ typedef struct http_request {
     char *version;
     int num_headers;
     http_header_t headers[MAX_HEADERS];
-} http_request_t;
+}
+typedef struct http_header http_header_t;
+typedef struct http_request http_request_t;
 
 // Returns 1 on success,
 // -1 on invalid HTTP request,
