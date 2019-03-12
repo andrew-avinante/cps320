@@ -166,7 +166,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
             fputs("HTTP/1.1 404 Not Found\r\n", out);
             fputs("Content-type: text/plain\r\n", out);
             fputs("\r\n", out);
-            fputs("Resource not found\r\n");
+            fputs("Resource not found\r\n", out);
             break;
         case -6:
             fprintf(stderr, "** ERROR: Illegal HTTP stream (Missing version).\n");
