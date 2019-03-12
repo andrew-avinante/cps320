@@ -107,7 +107,7 @@ void handle_client(struct client_info *client) {
     size_t len = 0u;
     ssize_t recd;
     result = parseHttp(stream, &request);
-    fputs(request->verb, stream);
+    generateResponse(result, request, stream);
     cleanupHttp(request);
     // while ((recd = getline(&line, &len, stream)) > 0) {
     //     printf("\tReceived %zd byte line; echoing...\n", recd);
