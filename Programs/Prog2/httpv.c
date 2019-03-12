@@ -87,8 +87,8 @@ int parseHttp(FILE *in, http_request_t **request)
 
         if(buff[0] == 13)
         {
-                   printf("INFINITE\n");
             blankline = 1;
+            break;
         }
         if(buff[0] != 13)
         {
