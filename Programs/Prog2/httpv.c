@@ -200,7 +200,6 @@ int generateResponse(int result, http_request_t *request, FILE *out)
             fputs("Content-type: text/plain\r\n", out);
             fputs("\r\n", out);
             fputs("Invalid verb\r\n", out);
-            printf("DONE\n");
             break;
         case -7:
             printf("-7\n");
@@ -217,6 +216,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
             fputs("Something has gone wrong on our end...\r\n", out);
             break;
     }
+    fflush(out);
     if(fstream)
     {
         fclose(fstream);
