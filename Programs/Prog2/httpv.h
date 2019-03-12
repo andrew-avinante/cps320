@@ -26,7 +26,7 @@ typedef struct http_request {
 // -3 on malloc failure
 int parseHttp(FILE *in, http_request_t **request);
 
-int generateResponse(int result, http_request_t *request, FILE *out);
+int generateResponse(int result, FILE *out);
 
 // Cleans up memory allocated by request
 int cleanupHttp(http_request_t *request);

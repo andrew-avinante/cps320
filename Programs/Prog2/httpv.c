@@ -132,22 +132,21 @@ cleanup:
     return rc;
 }
 
-int generateResponse(int result, http_request_t *request, FILE *out)
+int generateResponse(int result, FILE *out)
 {
-    char *line = NULL;
-    size_t len = 0u;
-    ssize_t recd;
-    FILE *fstream = NULL;
-    // printf("%d\n", result);
-    if(result == 1)
-    {
-        // printf("WHY IN HERE?\n");
-        fstream = fopen(&request->path[1], "r+");
-        if(fstream == NULL) { result = -5; }
-        if(strcmp(request->verb, "POST") == 0) { result = -7; }
-    }
-    result = -5;
-    printf("CONTINUE\n");
+    // char *line = NULL;
+    // size_t len = 0u;
+    // ssize_t recd;
+    // FILE *fstream = NULL;
+    // // printf("%d\n", result);
+    // if(result == 1)
+    // {
+    //     // printf("WHY IN HERE?\n");
+    //     fstream = fopen(&request->path[1], "r+");
+    //     if(fstream == NULL) { result = -5; }
+    //     if(strcmp(request->verb, "POST") == 0) { result = -7; }
+    // }
+    // printf("CONTINUE\n");
     switch (result)
     {
         case 1:
