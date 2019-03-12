@@ -144,7 +144,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
         // printf("WHY IN HERE?\n");
         fstream = fopen(&request->path[1], "r+");
         if(fstream == NULL) { result = -5; }
-        if(strcmp(request->verb, "POST") == 0) { result = -1; }
+        if(strcmp(request->verb, "POST") == 0) { result = -6; }
     }
     printf("CONTINUE\n");
     switch (result)
