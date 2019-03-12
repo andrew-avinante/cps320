@@ -195,7 +195,6 @@ int generateResponse(int result, http_request_t *request, FILE *out)
             fputs("Resource not found\r\n", out);
             break;
         case -6:
-           rintf("-5\n");
             fputs("HTTP/1.1 404 Not Found\r\n", out);
             fputs("Content-type: text/plain\r\n", out);
             fputs("\r\n", out);
