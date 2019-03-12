@@ -80,7 +80,7 @@ int parseHttp(FILE *in, http_request_t **request)
         rc = -6;
         goto cleanup;
     }
-    
+    printf("HERE\n");
     i = 0;
     while(fgets(buff, buffSize, in) > 0 && i < MAX_HEADERS)
     {
