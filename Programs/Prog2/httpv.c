@@ -195,10 +195,15 @@ int generateResponse(int result, http_request_t *request, FILE *out)
             fputs("Resource not found\r\n", out);
             break;
         case -6:
-            fputs("HTTP/1.1 404 Not Found\r\n", out);
+            printf("-6\n");
+            fputs("HTTP/1.1 400 Bad Request\r\n", out);
+                fflush(out);
             fputs("Content-type: text/plain\r\n", out);
+                fflush(out);
             fputs("\r\n", out);
-            fputs("Resource not found\r\n", out);
+                fflush(out);
+            fputs("Invalid verb\r\n", out);
+                fflush(out);
             break;
         case -7:
             printf("-7\n");
@@ -215,7 +220,6 @@ int generateResponse(int result, http_request_t *request, FILE *out)
             fputs("Something has gone wrong on our end...\r\n", out);
             break;
     }
-    fflush(out);
     if(fstream)
     {
         fclose(fstream);
