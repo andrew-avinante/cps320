@@ -37,7 +37,7 @@ int parseHttp(FILE *in, http_request_t **request)
 
     getline(&line, &len, in);  //Gets first line of file
 
-    token = strtok_r(&line, " ", &save);     //Parses first line for VERB
+    token = strtok_r(line, " ", &save);     //Parses first line for VERB
     if(token == NULL)
     {
         rc = -2;
@@ -83,10 +83,10 @@ int parseHttp(FILE *in, http_request_t **request)
     }
     
     i = 0;
-    while(getline(&line, &len, in); && i < MAX_HEADERS)
+    while(getline(&line, &len, in) && i < MAX_HEADERS)
     {
 
-        if(&line[0] == 13 && &line[1] == 10)
+        if(line[0] == 13 && line[1] == 10)
         {
             blankline = 1;
             break;
