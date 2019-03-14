@@ -94,7 +94,7 @@ int parseHttp(FILE *in, http_request_t **request)
     }
     
     i = 0;
-    while(getline(&line, &len, fstream) > 0 && i < MAX_HEADERS)
+    while(getline(&line, &len, in) > 0 && i < MAX_HEADERS)
     {
 
         if(line[0] == 13 && line[1] == 10)
@@ -139,7 +139,7 @@ cleanup:
         free(req->headers[i].name);
         free(req->headers[i].value);
     }
-    while(getline(&line, &len, fstream) > 0 && i < MAX_HEADERS)
+    while(getline(&line, &len, in) > 0 && i < MAX_HEADERS)
     {
 
         if(line[0] == 13 && line[1] == 10)
