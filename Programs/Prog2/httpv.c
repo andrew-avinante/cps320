@@ -75,8 +75,8 @@ int parseHttp(FILE *in, http_request_t **request)
     }
     if(strchr(req->path, '/') != req->path)
     {
-        printf("%d", strstr(req->path, ".."));
-        if(strstr(req->path, "..") == NULL)
+        printf("%s", strstr(req->path, ".."));
+        if(strstr(req->path, "..") != NULL)
         {
             rc = -8;
         }
