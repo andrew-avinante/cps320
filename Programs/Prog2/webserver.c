@@ -56,7 +56,7 @@ int parse_options(int argc, char * const argv[]) {
     int ret = -1; 
 
     char op;
-    while ((op = getopt(argc, argv, "h:p:")) > -1) {
+    while ((op = getopt(argc, argv, "h:p:r:")) > -1) {
         switch (op) {
             case 'h':
                 g_settings.bindhost = optarg;
@@ -64,6 +64,9 @@ int parse_options(int argc, char * const argv[]) {
             case 'p':
                 g_settings.bindport = optarg;
                 break;
+            case 'r':
+                ret = chdir(optarg);
+                if(ret < 0) { goto cleanup; }
             default:
                 // Unexpected argument--abort parsing
                 goto cleanup;

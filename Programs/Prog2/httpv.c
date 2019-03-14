@@ -16,8 +16,9 @@
 // -2 on I/O error,
 // -3 on malloc failure
 // -4 on invalid verb
-// -5 invalid path
-// -6 invalid version
+// -5 outside of root directory
+// -6 invalid path
+// -7 invalid version
 int parseHttp(FILE *in, http_request_t **request) 
 {
     http_request_t *req = NULL;
@@ -154,7 +155,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
     {
         fstream = fopen(&request->path[1], "r+");
         if(fstream == NULL) { result = -6; }
-        if(strcmp(request->verb, "POST") == 0) { result = -8; }
+        if(strcmp(request->verb, "POST") == 0) { result = -8; } // -8 verb not implimented
     }
 
     switch (result)
