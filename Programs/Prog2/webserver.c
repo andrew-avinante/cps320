@@ -134,7 +134,7 @@ int main(int argc, char **argv) {
 
     // Handle our options
     if (parse_options(argc, argv)) {
-        printf("usage: %s [-p PORT] [-h HOSTNAME/IP]\n", argv[0]);
+        printf("usage: %s [-p PORT] [-h HOSTNAME/IP] [-r ROOT DIRECTORY]\n", argv[0]);
         goto cleanup;
     }
 
