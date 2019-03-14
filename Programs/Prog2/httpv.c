@@ -20,53 +20,54 @@
 // -6 invalid version
 int parseHttp(FILE *in, http_request_t **request) 
 {
+    const int VERB_SIZE = 4;
+    const int PATH_SIZE = 256;
+    const int VERSION_SIZE = 10;
     http_request_t *req = NULL;
     int rc = -1;
-    int buffSize = 256;
-    int verbSize = 5;
-    int versionSize = 10;
+    char *line = NULL;
+    size_t len = 0u;
     char *save;
-    char *buff = malloc(buffSize);
     char *token;
     int i, blankline = 0;
 
 
-    if((req = calloc(4, sizeof(http_request_t))) == NULL)   //Allocates memory for req
+    if((req = calloc(1, sizeof(http_request_t))) == NULL)   //Allocates memory for req
     {
         rc = -3;
         goto cleanup;
     }
 
-    fgets(buff, buffSize, in);  //Gets first line of file
+    getline(&line, &len, in);  //Gets first line of file
 
-    token = strtok_r(buff, " ", &save);     //Parses first line for VERB
+    token = strtok_r(line, " ", &save);     //Parses first line for VERB
     if(token == NULL)
     {
         rc = -2;
         goto cleanup;
     }
-    req->verb = malloc(verbSize);                  //Allocates memory for VERB
-    strlcpy(req->verb, token, verbSize);    //Coppies token to VERB
-    req->verb[verbSize - 1] = 0;            //Adds null terminator
+    req->verb = malloc(VERB_SIZE);                  //Allocates memory for VERB
+    strlcpy(req->verb, token, VERB_SIZE);    //Coppies token to VERB
+    req->verb[VERB_SIZE - 1] = 0;            //Adds null terminator
     token = strtok_r(NULL, " ", &save);     //Parses line for PATH
     if(token == NULL)
     {
         rc = -2;
         goto cleanup;
     }
-    req->path = malloc(buffSize);           //Allocates memory for PATH
-    strlcpy(req->path, token, buffSize);    //Coppies token to PATH
-    req->path[buffSize-1] = 0;              //Adds null terminator
+    req->path = malloc(PATH_SIZE);           //Allocates memory for PATH
+    strlcpy(req->path, token, PATH_SIZE);    //Coppies token to PATH
+    req->path[PATH_SIZE - 1] = 0;              //Adds null terminator
     token = strtok_r(NULL, " ", &save);     //Parses line for VERSION
     if(token == NULL)
     {
         rc = -2;
         goto cleanup;
     }
-    req->version = malloc(versionSize);                      //Allocates memory for VERSION 
-    strlcpy(req->version, token, versionSize);      //Coppies token to VERSION
+    req->version = malloc(VERSION_SIZE);                      //Allocates memory for VERSION 
+    strlcpy(req->version, token, VERSION_SIZE);      //Coppies token to VERSION
 
-    req->version[versionSize - 1] = 0;
+    req->version[VERSION_SIZE - 1] = 0;
 
     if(strcmp(req->verb, "GET") != 0 && strcmp(req->verb,"POST") != 0)
     {
@@ -93,20 +94,20 @@ int parseHttp(FILE *in, http_request_t **request)
     }
     
     i = 0;
-    while(fgets(buff, buffSize, in) && i < MAX_HEADERS)
+    while(getline(&line, &len, fstream) > 0 && i < MAX_HEADERS)
     {
 
-        if(buff[0] == 13 && buff[1] == 10)
+        if(line[0] == 13 && line[1] == 10)
         {
             blankline = 1;
             break;
         }
-        if(buff[0] != 13)
+        if(line[0] != 13)
         {
-            req->headers[i].name = malloc(buffSize);
-            req->headers[i].value = malloc(buffSize);
-            strlcpy(req->headers[i].name, strtok_r(buff, ":", &save), buffSize);
-            strlcpy(req->headers[i].value, strtok_r(NULL, ":", &save), buffSize);
+            req->headers[i].name = malloc(len);
+            req->headers[i].value = malloc(len);
+            strlcpy(req->headers[i].name, strtok_r(line, ":", &save), len);
+            strlcpy(req->headers[i].value, strtok_r(NULL, ":", &save), len);
             i++;
         }
     }
@@ -119,7 +120,7 @@ int parseHttp(FILE *in, http_request_t **request)
         goto cleanup;
     }
     req->num_headers = i;
-     free(buff);
+     free(line);
 
     *request = req;
     
@@ -138,16 +139,16 @@ cleanup:
         free(req->headers[i].name);
         free(req->headers[i].value);
     }
-    while(fgets(buff, buffSize, in) && i < MAX_HEADERS)
+    while(getline(&line, &len, fstream) > 0 && i < MAX_HEADERS)
     {
 
-        if(buff[0] == 13 && buff[1] == 10)
+        if(line[0] == 13 && line[1] == 10)
         {
             blankline = 1;
             break;
         }
     }
-    free(buff);
+    free(line);
     free(req);  // It's OK to free() a NULL pointer 
     return rc;
 }

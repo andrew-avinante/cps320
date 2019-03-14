@@ -47,7 +47,7 @@ struct settings {
     const char *bindport;   // Portnumber (as a string) to bind/listen on
 } g_settings = {
     .bindhost = "localhost",    // Default: listen only on localhost interface
-    .bindport = "5000",         // Default: listen on TCP port 5000
+    .bindport = "8080",         // Default: listen on TCP port 8080
 };
 
 // Parse commandline options and sets g_settings accordingly.
