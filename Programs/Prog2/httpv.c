@@ -15,6 +15,9 @@
 // -1 on invalid HTTP request,
 // -2 on I/O error,
 // -3 on malloc failure
+// -4 on invalid verb
+// -5 invalid path
+// -6 invalid version
 int parseHttp(FILE *in, http_request_t **request) 
 {
     http_request_t *req = NULL;
@@ -70,9 +73,16 @@ int parseHttp(FILE *in, http_request_t **request)
         rc = -4;
         goto cleanup;
     }
-     if(strchr(req->path, '/') != req->path)
+    if(strchr(req->path, '/') != req->path)
     {
-        rc = -5;
+        if(strstr(req->path, "..") != req->path)
+        {
+            rc = -8;
+        }
+        else
+        {
+            rc = -5;
+        }
         goto cleanup;
     }
      if(strstr(req->version, "HTTP") == 0)
@@ -216,6 +226,13 @@ int generateResponse(int result, http_request_t *request, FILE *out)
             fputs("Content-type: text/plain\r\n", out);
             fputs("\r\n", out);
             fputs("Verb not implemented\r\n", out);
+            break;
+        case -8:
+            printf("-8\n");
+            fputs("HTTP/1.1 403 Forbidden\r\n", out);
+            fputs("Content-type: text/plain\r\n", out);
+            fputs("\r\n", out);
+            fputs("File requested is out of root directory\r\n", out);
             break;
         default:
             printf("DEFAULT\n");
