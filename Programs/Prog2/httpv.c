@@ -87,7 +87,7 @@ int parseHttp(FILE *in, http_request_t **request)
     
     while(getline(&line, &len, in) > 0 && i < MAX_HEADERS)
     {
-        if(strcmp(&line, "\r\n") == 0)
+        if(strcmp(line, "\r\n") == 0)
         {
             blankline = 1;
             break;
@@ -110,7 +110,7 @@ int parseHttp(FILE *in, http_request_t **request)
     }
 
     req->num_headers = i;
-    ree(line);
+    free(line);
 
     *request = req;
     
