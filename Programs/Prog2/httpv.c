@@ -127,7 +127,6 @@ int parseHttp(FILE *in, http_request_t **request)
     return rc;
 
 cleanup:
-    printf("%d", rc);
     if(req != NULL)
     {
         free(req->verb);
@@ -148,6 +147,7 @@ cleanup:
             break;
         }
     }
+    printf("%d", rc);
     free(line);
     free(req);  // It's OK to free() a NULL pointer 
     return rc;
