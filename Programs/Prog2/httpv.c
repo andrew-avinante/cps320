@@ -41,6 +41,7 @@ int parseHttp(FILE *in, http_request_t **request)
     }
 
     getline(&line, &len, in);  //Gets first line of file
+    printf("%d\n", fflush());
     // if(strstr(line, "\n\r") == NULL)
     // {
     //     rc = -1;
@@ -91,7 +92,7 @@ int parseHttp(FILE *in, http_request_t **request)
         rc = -7;
         goto cleanup;
     }
-    fflush(in);
+    
     while(getline(&line, &len, in) > 0 && i < MAX_HEADERS)
     {
         if(strcmp(line, "\r\n") == 0)
@@ -135,7 +136,6 @@ cleanup:
         free(req->headers[i].name);
         free(req->headers[i].value);
     }
-    fflush(in);
     while(getline(&line, &len, in) > 0 && i < MAX_HEADERS)
     {
         if(line[0] == 13 && line[1] == 10)
@@ -145,7 +145,7 @@ cleanup:
         }
         i++;
     }
-    fflush(in);
+
     free(line);
     free(req);  // It's OK to free() a NULL pointer 
     return rc;
@@ -153,7 +153,6 @@ cleanup:
 
 int generateResponse(int result, http_request_t *request, FILE *out)
 {
-    fflush(out);
     char *line = NULL;
     const int CONTENT_SIZE = 50;
     size_t len = 0u;
