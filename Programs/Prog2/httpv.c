@@ -33,16 +33,17 @@ int parseHttp(FILE *in, http_request_t **request)
     char *line = NULL;
     char *save;
     char *token;
+    char buff[40];
 
     if((req = calloc(1, sizeof(http_request_t))) == NULL)   //Allocates memory for req
     {
         rc = -3;
         goto cleanup;
     }
-
+    fgets(buff, 40, in);
     ssize_t recd;
-    recd = getline(&line, &len, in);  //Gets first line of file
-    printf("%s", line);
+    // recd = getline(&line, &len, in);  //Gets first line of file
+    printf("%s", buff);
     // if(strstr(line, "\n\r") == NULL)
     // {
     //     rc = -1;
