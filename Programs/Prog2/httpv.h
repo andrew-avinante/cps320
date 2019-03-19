@@ -23,16 +23,16 @@ typedef struct http_request {
 
 typedef struct Key {
     char *key;
-} key_t
+} key_t;
 
 typedef struct Value {
     char *value;
-} value_t
+} value_t;
 
 typedef struct Node {
     struct Key key;
     struct Value value;
-} node_t
+} node_t;
 
 typedef struct dict {
     struct node_t node[DICT_SIZE];
