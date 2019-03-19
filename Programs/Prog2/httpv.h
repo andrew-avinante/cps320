@@ -21,11 +21,11 @@ typedef struct http_request {
     http_header_t headers[MAX_HEADERS];
 } http_request_t;
 
-struct Key {
+typedef struct Key {
     char *key;
 } key_t
 
-struct Value {
+typedef struct Value {
     char *value;
 } value_t
 
