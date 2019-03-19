@@ -168,7 +168,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
         {
             if(strcmp(dict.node[i].key.key, fileExt))
             {
-                snprintf(contentType, CONTENT_SIZE, "Content-type: %s\r\n", dict.node[i].value);
+                snprintf(contentType, CONTENT_SIZE, "Content-type: %s\r\n", dict.node[i].value.value);
             }
         }
 
