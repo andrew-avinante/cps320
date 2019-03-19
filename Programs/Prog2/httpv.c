@@ -33,7 +33,7 @@ int parseHttp(FILE *in, http_request_t **request)
     char *line = NULL;
     char *save;
     char *token;
-    char buff[40];
+    char *buff = malloc(40);
 
     if((req = calloc(1, sizeof(http_request_t))) == NULL)   //Allocates memory for req
     {
