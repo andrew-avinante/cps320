@@ -41,7 +41,7 @@ int parseHttp(FILE *in, http_request_t **request)
     }
 
     getline(&line, &len, in);  //Gets first line of file
-
+    printf("%s", line);
     token = strtok_r(line, " ", &save);     //Parses first line for VERB
     if(token == NULL)
     {
