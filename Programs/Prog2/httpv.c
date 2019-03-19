@@ -156,7 +156,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
     FILE *fstream = NULL;
     char *fileExt;
     char contentType[CONTENT_SIZE];
-    printf("OVER HERE\n");
+    fputs("HI\n");
     if(result == 1)
     {
         fstream = fopen(&request->path[1], "r+");
