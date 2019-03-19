@@ -146,6 +146,7 @@ cleanup:
             blankline = 1;
             break;
         }
+        i++;
     }
     printf("%d", rc);
     free(line);
