@@ -41,7 +41,7 @@ int parseHttp(FILE *in, http_request_t **request)
     }
 
     getline(&line, &len, in);  //Gets first line of file
-    if(strstr(line, "\n\r") == 0)
+    if(strstr(line, "\n\r") == NULL)
     {
         rc = -1;
         goto cleanup;
