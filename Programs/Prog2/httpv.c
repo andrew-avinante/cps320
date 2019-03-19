@@ -90,6 +90,7 @@ int parseHttp(FILE *in, http_request_t **request)
     
     while(getline(&line, &len, in) > 0 && i < MAX_HEADERS)
     {
+        printf("HI\n");
         if(strcmp(line, "\r\n") == 0)
         {
             blankline = 1;
