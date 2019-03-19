@@ -161,7 +161,6 @@ int generateResponse(int result, http_request_t *request, FILE *out)
         if(fstream == NULL) 
         { 
             result = -6; 
-            continue;
         }
         strtok_r(&request->path, ".", &save);
         printf("%s", save);
