@@ -137,7 +137,7 @@ cleanup:
         free(req->headers[i].name);
         free(req->headers[i].value);
     }
-    while(getline(&line, &len, in) > 0 && i < MAX_HEADERS)
+    while((recd = getline(&line, &len, in)) > 0 && i < MAX_HEADERS)
     {
         if(line[0] == 13 && line[1] == 10)
         {
