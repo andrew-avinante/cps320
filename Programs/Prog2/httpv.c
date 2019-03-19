@@ -153,7 +153,7 @@ cleanup:
 
 int generateResponse(int result, http_request_t *request, FILE *out)
 {
-    fflush(in);
+    fflush(out);
     char *line = NULL;
     const int CONTENT_SIZE = 50;
     size_t len = 0u;
