@@ -168,7 +168,6 @@ int generateResponse(int result, http_request_t *request, FILE *out)
         {
             if(strcmp(dict.node[i].key.key, fileExt) == 0)
             {
-                printf("%d %s %s\n", i, fileExt, dict.node[i].key.key);
                 snprintf(contentType, CONTENT_SIZE, "Content-type: %s\r\n", dict.node[i].value.value);
             }
         }
