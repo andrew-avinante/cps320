@@ -121,7 +121,6 @@ int parseHttp(FILE *in, http_request_t **request)
     return rc;
 
 cleanup:
-printf("CLEANUP\n");
     if(req != NULL)
     {
         free(req->verb);
@@ -133,15 +132,15 @@ printf("CLEANUP\n");
         free(req->headers[i].name);
         free(req->headers[i].value);
     }
-    // while(getline(&line, &len, in) > 0 && i < MAX_HEADERS)
-    // {
-    //     if(line[0] == 13 && line[1] == 10)
-    //     {
-    //         blankline = 1;
-    //         break;
-    //     }
-    //     i++;
-    // }
+    while(getline(&line, &len, in) > 0 && i < MAX_HEADERS)
+    {
+        if(line[0] == 13 && line[1] == 10)
+        {
+            blankline = 1;
+            break;
+        }
+        i++;
+    }
 
     free(line);
     free(req);  // It's OK to free() a NULL pointer 
@@ -157,7 +156,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
     FILE *fstream = NULL;
     char *fileExt;
     char contentType[CONTENT_SIZE];
-
+    printf("OVER HERE\n");
     if(result == 1)
     {
         fstream = fopen(&request->path[1], "r+");
