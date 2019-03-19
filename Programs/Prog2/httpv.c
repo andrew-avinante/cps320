@@ -11,7 +11,7 @@
 #include <errno.h>
 #include "httpv.h"
 
-dict_t dict = {{{".html", "text/html"}, {".htm", "text/html"}, {".gif", "image/gif"}, {".jpeg", "image/jpeg"}, {".jpg", "image/jpeg"}, {".png", "image/png"}, {".css", "text/css"}, {".txt", "text/plain"}}};
+dict_t dict = {{{"html", "text/html"}, {"htm", "text/html"}, {"gif", "image/gif"}, {"jpeg", "image/jpeg"}, {"jpg", "image/jpeg"}, {"png", "image/png"}, {"css", "text/css"}, {"txt", "text/plain"}}};
 
 // Returns 1 on success,
 // -1 on invalid HTTP request,
@@ -149,11 +149,12 @@ cleanup:
 int generateResponse(int result, http_request_t *request, FILE *out)
 {
     char *line = NULL;
+    const int CONTENT_SIZE = 50;
     size_t len = 0u;
     ssize_t recd;
     FILE *fstream = NULL;
-    char *fileExt = NULL;
-    char *save;
+    char *fileExt;
+    char contentType[CONTENT_SIZE];
 
     if(result == 1)
     {
@@ -162,9 +163,14 @@ int generateResponse(int result, http_request_t *request, FILE *out)
         { 
             result = -6; 
         }
-        strtok_r(request->path, ".", &save);
-        printf("%s", save);
-        
+        strtok_r(request->path, ".", &fileExt);
+        for(int i = 0; i < DICT_SIZE; i++)
+        {
+            if(strcmp(dict.node[i].key, fileExt))
+            {
+                snprintf(contentType, CONTENT_SIZE, "Content-type: %s\r\n", dict.node[i].value);
+            }
+        }
 
         if(strcmp(request->verb, "POST") == 0) 
         {
@@ -176,7 +182,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
     {
         case 1:
             fputs("HTTP/1.1 200 OK\r\n", out);
-            fputs("Content-type: text/html\r\n", out);
+            fputs(contentType, out);
             fputs("\r\n", out);
             while ((recd = getline(&line, &len, fstream)) > 0) 
             {
