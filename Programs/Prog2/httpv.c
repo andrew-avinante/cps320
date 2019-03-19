@@ -30,7 +30,7 @@ int parseHttp(FILE *in, http_request_t **request)
     const int VERSION_SIZE = 10;
     int i = 0, blankline = 0;
     int rc = -1;
-    char *line[40];
+    char *line = NULL;
     char *save;
     char *token;
 
@@ -40,8 +40,7 @@ int parseHttp(FILE *in, http_request_t **request)
         goto cleanup;
     }
 
-    fgets(line, 10, in);  //Gets first line of file
-
+    getline(&line, &len, in);  //Gets first line of file
     // if(strstr(line, "\n\r") == NULL)
     // {
     //     rc = -1;
