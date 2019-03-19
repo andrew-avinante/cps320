@@ -89,7 +89,6 @@ int parseHttp(FILE *in, http_request_t **request)
     }
     while(getline(&line, &len, in) > 0 && i < MAX_HEADERS)
     {
-        printf("HI\n");
         if(strcmp(line, "\r\n") == 0)
         {
             blankline = 1;
@@ -156,7 +155,6 @@ int generateResponse(int result, http_request_t *request, FILE *out)
     FILE *fstream = NULL;
     char *fileExt;
     char contentType[CONTENT_SIZE];
-    fputs("HI\n", out);
     if(result == 1)
     {
         fstream = fopen(&request->path[1], "r+");
@@ -196,6 +194,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
             }
             break;
         case -1:
+            printf("IN HERE\n");
             fputs("HTTP/1.1 400 Bad Request\r\n", out);
             fputs(contentType, out);
             fputs("\r\n", out);
