@@ -43,7 +43,7 @@ int parseHttp(FILE *in, http_request_t **request)
     fgets(buff, 40, in);
     ssize_t recd;
     // recd = getline(&line, &len, in);  //Gets first line of file
-    printf("%s", buff);
+    printf("%s\n", buff);
     // if(strstr(line, "\n\r") == NULL)
     // {
     //     rc = -1;
