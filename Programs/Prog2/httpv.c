@@ -94,7 +94,6 @@ int parseHttp(FILE *in, http_request_t **request)
         goto cleanup;
     }
 
-    ssize_t recd;
     while((recd = getline(&line, &len, in)) > 0 && i < MAX_HEADERS)
     {
         if(strcmp(line, "\r\n") == 0)
