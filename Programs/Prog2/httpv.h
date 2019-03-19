@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 #define MAX_HEADERS 10
-#define DICT_SIZE 7
+#define DICT_SIZE 8
 
 typedef struct http_header {
     char *name;

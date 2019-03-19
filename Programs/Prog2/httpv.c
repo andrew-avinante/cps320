@@ -11,7 +11,7 @@
 #include <errno.h>
 #include "httpv.h"
 
-dict_t dict = {{{"Test", "lol"}, {"TEW", "HAH"}}};
+dict_t dict = {{{".html", "text/html"}, {".htm", "text/html"}, {".gif", "image/gif"}, {".jpeg", "image/jpeg"}, {".jpg", "image/jpeg"}, {".png", "image/png"}, {".css", "text/css"}, {".txt", "text/plain"}}};
 
 // Returns 1 on success,
 // -1 on invalid HTTP request,
@@ -152,12 +152,25 @@ int generateResponse(int result, http_request_t *request, FILE *out)
     size_t len = 0u;
     ssize_t recd;
     FILE *fstream = NULL;
+    char *fileExt = NULL;
+    char *save;
 
     if(result == 1)
     {
         fstream = fopen(&request->path[1], "r+");
-        if(fstream == NULL) { result = -6; }
-        if(strcmp(request->verb, "POST") == 0) { result = -8; } // -8 verb not implimented
+        if(fstream == NULL) 
+        { 
+            result = -6; 
+            continue;
+        }
+        strtok_r(&request->path, ".", &save)
+        printf("%s", save);
+        
+
+        if(strcmp(request->verb, "POST") == 0) 
+        {
+            result = -8;
+        } // -8 verb not implimented
     }
 
     switch (result)
