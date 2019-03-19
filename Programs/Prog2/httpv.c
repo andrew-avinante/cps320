@@ -103,7 +103,7 @@ int parseHttp(FILE *in, http_request_t **request)
             i++;
         }
     }
-
+    printf("%s", line);
     if(blankline == 0)
     {
         rc = -1;
@@ -194,7 +194,6 @@ int generateResponse(int result, http_request_t *request, FILE *out)
             }
             break;
         case -1:
-            printf("IN HERE\n");
             fputs("HTTP/1.1 400 Bad Request\r\n", out);
             fputs(contentType, out);
             fputs("\r\n", out);
