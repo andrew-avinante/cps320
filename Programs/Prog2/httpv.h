@@ -6,6 +6,7 @@
 #include <stdio.h>
 
 #define MAX_HEADERS 10
+#define DICT_SIZE 7
 
 typedef struct http_header {
     char *name;
@@ -19,6 +20,23 @@ typedef struct http_request {
     int num_headers;
     http_header_t headers[MAX_HEADERS];
 } http_request_t;
+
+struct Key {
+    char *key;
+} key_t
+
+struct Value {
+    char *value;
+} value_t
+
+typedef struct Node {
+    struct Key key;
+    struct Value value;
+} node_t
+
+typedef struct dict {
+    struct node_t node[DICT_SIZE];
+} dict_t;
 
 // Returns 1 on success,
 // -1 on invalid HTTP request,
