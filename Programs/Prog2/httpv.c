@@ -148,7 +148,6 @@ cleanup:
         }
         i++;
     }
-    printf("%d", rc);
     free(line);
     free(req);  // It's OK to free() a NULL pointer 
     return rc;
