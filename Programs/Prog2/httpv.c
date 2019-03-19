@@ -104,7 +104,7 @@ int parseHttp(FILE *in, http_request_t **request)
     //         i++;
     //     }
     // }
-    printf("HERE");
+    printf("HERE\n");
 
     if(blankline == 0)
     {
