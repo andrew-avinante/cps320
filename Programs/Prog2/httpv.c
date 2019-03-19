@@ -177,7 +177,8 @@ int generateResponse(int result, http_request_t *request, FILE *out)
             result = -8;
         } // -8 verb not implimented
     }
-    else
+    
+    if(result != 1)
     {
         snprintf(contentType, CONTENT_SIZE, "Content-type: %s\r\n", "text/plain");
     }
