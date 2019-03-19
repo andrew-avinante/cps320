@@ -30,8 +30,8 @@ typedef struct Value {
 } value_t;
 
 typedef struct Node {
-    struct Key key;
-    struct Value value;
+    struct key_t key;
+    struct value_t value;
 } node_t;
 
 typedef struct dict {
