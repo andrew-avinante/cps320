@@ -41,7 +41,11 @@ int parseHttp(FILE *in, http_request_t **request)
     }
 
     getline(&line, &len, in);  //Gets first line of file
-    printf("%s", line);
+    if(strstr(line, "\n\r") == 0)
+    {
+        rc = -1;
+        goto cleanup;
+    }
     token = strtok_r(line, " ", &save);     //Parses first line for VERB
     if(token == NULL)
     {
@@ -61,7 +65,7 @@ int parseHttp(FILE *in, http_request_t **request)
     req->path = malloc(PATH_SIZE);           //Allocates memory for PATH
     strlcpy(req->path, token, PATH_SIZE);    //Coppies token to PATH
     req->path[PATH_SIZE - 1] = 0;              //Adds null terminator
-    printf("TSET HER\n");
+
     token = strtok_r(NULL, " ", &save);     //Parses line for VERSION
     if(token == NULL)
     {
@@ -71,7 +75,7 @@ int parseHttp(FILE *in, http_request_t **request)
     req->version = malloc(VERSION_SIZE);              //Allocates memory for VERSION 
     strlcpy(req->version, token, VERSION_SIZE);      //Coppies token to VERSION
     req->version[VERSION_SIZE - 1] = 0;
-    printf("or here\n");
+    
     if(strcmp(req->verb, "GET") != 0 && strcmp(req->verb,"POST") != 0) // test for valid verb
     {
         rc = -4;
@@ -87,7 +91,7 @@ int parseHttp(FILE *in, http_request_t **request)
         rc = -7;
         goto cleanup;
     }
-    printf("%s\n", req->version);
+    
     while(getline(&line, &len, in) > 0 && i < MAX_HEADERS)
     {
         if(strcmp(line, "\r\n") == 0)
