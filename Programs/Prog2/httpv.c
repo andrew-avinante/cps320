@@ -107,7 +107,7 @@ int parseHttp(FILE *in, http_request_t **request)
 
     if(blankline == 0)
     {
-        rc = -2;
+        rc = -1;
         req->num_headers = i;
         goto cleanup;
     }
