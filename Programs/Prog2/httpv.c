@@ -87,6 +87,7 @@ int parseHttp(FILE *in, http_request_t **request)
         rc = -7;
         goto cleanup;
     }
+    printf("TEST");
     if(strstr(req->version, "\r\n") == 0)
     {
         rc = -1;
