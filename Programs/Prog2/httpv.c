@@ -87,12 +87,7 @@ int parseHttp(FILE *in, http_request_t **request)
         rc = -7;
         goto cleanup;
     }
-    if(strstr(req->version, "\r\n") == 0)
-    {
-        printf("IN HERE\n");
-        rc = -1;
-        goto cleanup;
-    }
+    printf("%ld", getline(&line, &len, in));
     while(getline(&line, &len, in) > 0 && i < MAX_HEADERS)
     {
         printf("HI\n");
@@ -140,7 +135,6 @@ cleanup:
     }
     while(getline(&line, &len, in) > 0 && i < MAX_HEADERS)
     {
-
         if(line[0] == 13 && line[1] == 10)
         {
             blankline = 1;
@@ -148,7 +142,7 @@ cleanup:
         }
         i++;
     }
-    printf("and here\n");
+
     free(line);
     free(req);  // It's OK to free() a NULL pointer 
     return rc;
