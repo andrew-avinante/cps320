@@ -87,7 +87,7 @@ int parseHttp(FILE *in, http_request_t **request)
         rc = -7;
         goto cleanup;
     }
-    printf("%s\n", line);
+
     while(getline(&line, &len, in) > 0 && i < MAX_HEADERS)
     {
         if(strcmp(line, "\r\n") == 0)
@@ -95,16 +95,12 @@ int parseHttp(FILE *in, http_request_t **request)
             blankline = 1;
             break;
         }
-        if(line[0] != 13)
-        {
-            req->headers[i].name = malloc(len);
-            req->headers[i].value = malloc(len);
-            strlcpy(req->headers[i].name, strtok_r(line, ":", &save), len);
-            strlcpy(req->headers[i].value, strtok_r(NULL, ":", &save), len);
-            i++;
-        }
+        req->headers[i].name = malloc(len);
+        req->headers[i].value = malloc(len);
+        strlcpy(req->headers[i].name, strtok_r(line, ":", &save), len);
+        strlcpy(req->headers[i].value, strtok_r(NULL, ":", &save), len);
+        i++;
     }
-    printf("%s\n", line);
     if(blankline == 0)
     {
         rc = -1;
