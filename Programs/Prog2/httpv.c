@@ -87,7 +87,11 @@ int parseHttp(FILE *in, http_request_t **request)
         rc = -7;
         goto cleanup;
     }
-    printf("Line 90\n");
+    if(strstr(req-version, "\r\n") == 0)
+    {
+        rc = -1;
+        goto cleanup;
+    }
     while(getline(&line, &len, in) > 0 && i < MAX_HEADERS)
     {
         printf("HI\n");
