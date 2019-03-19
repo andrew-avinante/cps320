@@ -89,20 +89,20 @@ int parseHttp(FILE *in, http_request_t **request)
     }
     while(getline(&line, &len, in) > 0 && i < MAX_HEADERS)
     {
-        printf("HI\n");
-        if(strcmp(line, "\r\n") == 0)
-        {
-            blankline = 1;
-            break;
-        }
-        if(line[0] != 13)
-        {
-            req->headers[i].name = malloc(len);
-            req->headers[i].value = malloc(len);
-            strlcpy(req->headers[i].name, strtok_r(line, ":", &save), len);
-            strlcpy(req->headers[i].value, strtok_r(NULL, ":", &save), len);
-            i++;
-        }
+        // printf("HI\n");
+        // if(strcmp(line, "\r\n") == 0)
+        // {
+        //     blankline = 1;
+        //     break;
+        // }
+        // if(line[0] != 13)
+        // {
+        //     req->headers[i].name = malloc(len);
+        //     req->headers[i].value = malloc(len);
+        //     strlcpy(req->headers[i].name, strtok_r(line, ":", &save), len);
+        //     strlcpy(req->headers[i].value, strtok_r(NULL, ":", &save), len);
+        //     i++;
+        // }
     }
     printf("HERE");
 
