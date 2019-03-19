@@ -11,7 +11,7 @@
 #include <errno.h>
 #include "httpv.h"
 
-struct dict_t dict = {{{"Test", "lol"}, {"TEW", "HAH"}}};
+dict_t dict = {{{"Test", "lol"}, {"TEW", "HAH"}}};
 
 // Returns 1 on success,
 // -1 on invalid HTTP request,
