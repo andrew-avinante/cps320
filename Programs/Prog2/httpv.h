@@ -30,12 +30,12 @@ typedef struct Value {
 } value_t;
 
 typedef struct Node {
-    struct keys_t key;
-    struct value_t value;
+    keys_t key;
+    value_t value;
 } node_t;
 
 typedef struct dict {
-    struct node_t node[DICT_SIZE];
+    node_t node[DICT_SIZE];
 } dict_t;
 
 // Returns 1 on success,
