@@ -40,7 +40,7 @@ int parseHttp(FILE *in, http_request_t **request)
         goto cleanup;
     }
 
-    fgets(&line, &len, in);  //Gets first line of file
+    fgets(line, len, in);  //Gets first line of file
 
     // if(strstr(line, "\n\r") == NULL)
     // {
