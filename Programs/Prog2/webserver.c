@@ -110,6 +110,7 @@ void handle_client(struct client_info *client) {
     size_t len = 0u;
     ssize_t recd;
     result = parseHttp(stream, &request);
+    printf("OUT HERE\n");
     generateResponse(result, request, stream);
     cleanupHttp(request);
     // while ((recd = getline(&line, &len, stream)) > 0) {
