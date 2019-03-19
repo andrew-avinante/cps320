@@ -40,7 +40,8 @@ int parseHttp(FILE *in, http_request_t **request)
         goto cleanup;
     }
 
-    getline(&line, &len, in);  //Gets first line of file
+    ssize_t recd;
+    recd = getline(&line, &len, in);  //Gets first line of file
     printf("HI\n");
     // if(strstr(line, "\n\r") == NULL)
     // {
@@ -92,8 +93,9 @@ int parseHttp(FILE *in, http_request_t **request)
         rc = -7;
         goto cleanup;
     }
-    
-    while(getline(&line, &len, in) > 0 && i < MAX_HEADERS)
+
+    ssize_t recd;
+    while((recd = getline(&line, &len, in)) > 0 && i < MAX_HEADERS)
     {
         if(strcmp(line, "\r\n") == 0)
         {
