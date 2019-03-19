@@ -87,6 +87,10 @@ int parseHttp(FILE *in, http_request_t **request)
         rc = -7;
         goto cleanup;
     }
+    if(getline(&line, &len, in) <= 0)
+    {
+        printf("IN HERESDS\n");
+    }
     while(getline(&line, &len, in) > 0 && i < MAX_HEADERS)
     {
         printf("HI\n");
