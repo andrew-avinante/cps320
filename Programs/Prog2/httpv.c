@@ -40,9 +40,8 @@ int parseHttp(FILE *in, http_request_t **request)
         goto cleanup;
     }
 
-    getline(&line, &len, in);  //Gets first line of file
-    fflush(in);
-    printf("%d\n", errno);
+    fgets(&line, &len, in);  //Gets first line of file
+
     // if(strstr(line, "\n\r") == NULL)
     // {
     //     rc = -1;
