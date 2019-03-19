@@ -87,6 +87,7 @@ int parseHttp(FILE *in, http_request_t **request)
         rc = -7;
         goto cleanup;
     }
+    printf("%s\n", line);
     while(getline(&line, &len, in) > 0 && i < MAX_HEADERS)
     {
         if(strcmp(line, "\r\n") == 0)
@@ -103,7 +104,7 @@ int parseHttp(FILE *in, http_request_t **request)
             i++;
         }
     }
-    printf("%s", line);
+    printf("%s\n", line);
     if(blankline == 0)
     {
         rc = -1;
