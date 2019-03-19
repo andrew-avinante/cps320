@@ -21,16 +21,16 @@ typedef struct http_request {
     http_header_t headers[MAX_HEADERS];
 } http_request_t;
 
-typedef struct Key {
+typedef struct Keys {
     char *key;
-} key_t;
+} keys_t;
 
 typedef struct Value {
     char *value;
 } value_t;
 
 typedef struct Node {
-    struct key_t key;
+    struct keys_t key;
     struct value_t value;
 } node_t;
 
