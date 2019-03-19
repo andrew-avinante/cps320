@@ -41,6 +41,7 @@ int parseHttp(FILE *in, http_request_t **request)
     }
 
     getline(&line, &len, in);  //Gets first line of file
+    printf("HI\n");
     // if(strstr(line, "\n\r") == NULL)
     // {
     //     rc = -1;
