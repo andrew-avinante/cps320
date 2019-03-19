@@ -41,11 +41,11 @@ int parseHttp(FILE *in, http_request_t **request)
     }
 
     getline(&line, &len, in);  //Gets first line of file
-    if(strstr(line, "\n\r") == NULL)
-    {
-        rc = -1;
-        goto cleanup;
-    }
+    // if(strstr(line, "\n\r") == NULL)
+    // {
+    //     rc = -1;
+    //     goto cleanup;
+    // }
     token = strtok_r(line, " ", &save);     //Parses first line for VERB
     if(token == NULL)
     {
@@ -91,7 +91,7 @@ int parseHttp(FILE *in, http_request_t **request)
         rc = -7;
         goto cleanup;
     }
-    
+    fflush(in);
     while(getline(&line, &len, in) > 0 && i < MAX_HEADERS)
     {
         if(strcmp(line, "\r\n") == 0)
