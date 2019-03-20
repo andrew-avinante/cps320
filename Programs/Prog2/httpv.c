@@ -10,6 +10,7 @@
 #include <limits.h>
 #include <errno.h>
 #include "httpv.h"
+#include <fcntl.h>
 
 dict_t dict = {{{"html", "text/html"}, {"htm", "text/html"}, {"gif", "image/gif"}, {"jpeg", "image/jpeg"}, {"jpg", "image/jpeg"}, {"png", "image/png"}, {"css", "text/css"}, {"txt", "text/plain"}}};
 
@@ -23,6 +24,9 @@ dict_t dict = {{{"html", "text/html"}, {"htm", "text/html"}, {"gif", "image/gif"
 // -7 invalid version
 int parseHttp(FILE *in, http_request_t **request) 
 {
+    int const descriptor = fileno(in);
+    flags = fcntl(descriptor, F_GETFL);
+    fcntl(descriptor, F_SETFL, flags | O_NONBLOCK);
     http_request_t *req = NULL;
     size_t len = 0u;
     const int VERB_SIZE = 4;
@@ -124,6 +128,7 @@ int parseHttp(FILE *in, http_request_t **request)
     *request = req;
     
     rc = 1;
+    fcntl(descriptor, F_SETFL, flags);
     return rc;
 
 cleanup:
@@ -150,6 +155,7 @@ cleanup:
 
     free(line);
     free(req);  // It's OK to free() a NULL pointer 
+    fcntl(descriptor, F_SETFL, flags);
     return rc;
 }
 
