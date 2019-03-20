@@ -41,7 +41,6 @@ int parseHttp(FILE *in, http_request_t **request)
     }
     
     getline(&line, &len, in);  //Gets first line of file
-    printf("HI\n");
     // if(strstr(line, "\n\r") == NULL)
     // {
     //     rc = -1;
@@ -92,7 +91,7 @@ int parseHttp(FILE *in, http_request_t **request)
         rc = -7;
         goto cleanup;
     }
-    printf("I CAN SEE THIS\n");
+    printf("I CAN SEE THIS WITH ONE WITH ONE \\r\\n\n");
     while(getline(&line, &len, in) > 0 && i < MAX_HEADERS)
     {
         printf("BUT NOT THIS\n");
