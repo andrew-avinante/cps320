@@ -10,14 +10,8 @@
 #include <limits.h>
 #include <errno.h>
 #include "httpv.h"
-#include <signal.h>
 
 dict_t dict = {{{"html", "text/html"}, {"htm", "text/html"}, {"gif", "image/gif"}, {"jpeg", "image/jpeg"}, {"jpg", "image/jpeg"}, {"png", "image/png"}, {"css", "text/css"}, {"txt", "text/plain"}}};
-
-void signal_handler(){
-  printf("One second elapsed !\n");
-}
-
 
 // Returns 1 on success,
 // -1 on invalid HTTP request,
@@ -29,7 +23,6 @@ void signal_handler(){
 // -7 invalid version
 int parseHttp(FILE *in, http_request_t **request) 
 {
-    signal(SIGBUS, signal_handler);
     http_request_t *req = NULL;
     size_t len = 0u;
     const int VERB_SIZE = 4;
@@ -99,7 +92,7 @@ int parseHttp(FILE *in, http_request_t **request)
         rc = -7;
         goto cleanup;
     }
-    
+    printf("Down here\n");
     while(getline(&line, &len, in) > 0 && i < MAX_HEADERS)
     {
         if(strcmp(line, "\r\n") == 0)
