@@ -33,6 +33,8 @@ int parseHttp(FILE *in, http_request_t **request)
     char *line = NULL;
     char *save;
     char *token;
+    char *buff = malloc(256);
+
 
     if((req = calloc(1, sizeof(http_request_t))) == NULL)   //Allocates memory for req
     {
@@ -40,7 +42,8 @@ int parseHttp(FILE *in, http_request_t **request)
         goto cleanup;
     }
 
-    getline(&line, &len, in);  //Gets first line of file
+fgets(buff, 40, in);
+    //getline(&line, &len, in);  //Gets first line of file
     printf("HI\n");
     // if(strstr(line, "\n\r") == NULL)
     // {
@@ -92,10 +95,10 @@ int parseHttp(FILE *in, http_request_t **request)
         rc = -7;
         goto cleanup;
     }
-    printf("Down here\n");
-    while(getline(&line, &len, in) > 0 && i < MAX_HEADERS)
+
+    while(fgets(buff, 40, in) > 0 && i < MAX_HEADERS)
     {
-        printf("IN\n");
+
         if(strcmp(line, "\r\n") == 0)
         {
             blankline = 1;
@@ -110,7 +113,7 @@ int parseHttp(FILE *in, http_request_t **request)
             i++;
         }
     }
-    printf("SSS\n");
+
     if(blankline == 0)
     {
         rc = -1;
@@ -138,7 +141,7 @@ cleanup:
         free(req->headers[i].name);
         free(req->headers[i].value);
     }
-    while(getline(&line, &len, in) > 0 && i < MAX_HEADERS)
+    while(fgets(buff, 40, in) > 0 && i < MAX_HEADERS)
     {
         if(line[0] == 13 && line[1] == 10)
         {
