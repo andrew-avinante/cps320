@@ -39,9 +39,8 @@ int parseHttp(FILE *in, http_request_t **request)
         rc = -3;
         goto cleanup;
     }
-    printf("%d\n", sizeof(in));
+    
     getline(&line, &len, in);  //Gets first line of file
-    printf("%d\n", sizeof(in));
     printf("HI\n");
     // if(strstr(line, "\n\r") == NULL)
     // {

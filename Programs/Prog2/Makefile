@@ -7,5 +7,8 @@ eznet.o : eznet.c eznet.h
 httpv.o : httpv.c httpv.h
 	gcc -c httpv.c
 
+utils.o : utils.c utils.h
+	gcc -c utils.c
+
 clean :
 	-rm *.o
