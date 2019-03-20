@@ -50,7 +50,7 @@ fgets(buff, 40, in);
     //     rc = -1;
     //     goto cleanup;
     // }
-    token = strtok_r(line, " ", &save);     //Parses first line for VERB
+    token = strtok_r(buff, " ", &save);     //Parses first line for VERB
     if(token == NULL)
     {
         rc = -2;
