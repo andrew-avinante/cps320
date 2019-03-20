@@ -92,10 +92,10 @@ int parseHttp(FILE *in, http_request_t **request)
         rc = -7;
         goto cleanup;
     }
-
+    printf("I CAN SEE THIS\n");
     while(getline(&line, &len, in) > 0 && i < MAX_HEADERS)
     {
-
+        printf("BUT NOT THIS\n");
         if(strcmp(line, "\r\n") == 0)
         {
             blankline = 1;
@@ -110,7 +110,7 @@ int parseHttp(FILE *in, http_request_t **request)
             i++;
         }
     }
-
+    printf("ORO THIS\n");
     if(blankline == 0)
     {
         rc = -1;
