@@ -25,6 +25,7 @@ dict_t dict = {{{"html", "text/html"}, {"htm", "text/html"}, {"gif", "image/gif"
 int parseHttp(FILE *in, http_request_t **request) 
 {
     int const descriptor = fileno(in);
+    long      flags;
     flags = fcntl(descriptor, F_GETFL);
     fcntl(descriptor, F_SETFL, flags | O_NONBLOCK);
     http_request_t *req = NULL;
