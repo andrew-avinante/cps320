@@ -13,6 +13,11 @@
 
 dict_t dict = {{{"html", "text/html"}, {"htm", "text/html"}, {"gif", "image/gif"}, {"jpeg", "image/jpeg"}, {"jpg", "image/jpeg"}, {"png", "image/png"}, {"css", "text/css"}, {"txt", "text/plain"}}};
 
+void signal_handler(){
+  printf("One second elapsed !\n");
+}
+
+
 // Returns 1 on success,
 // -1 on invalid HTTP request,
 // -2 on I/O error,
@@ -23,6 +28,7 @@ dict_t dict = {{{"html", "text/html"}, {"htm", "text/html"}, {"gif", "image/gif"
 // -7 invalid version
 int parseHttp(FILE *in, http_request_t **request) 
 {
+    signal(SIGBUS signal_handler);
     http_request_t *req = NULL;
     size_t len = 0u;
     const int VERB_SIZE = 4;
@@ -33,17 +39,15 @@ int parseHttp(FILE *in, http_request_t **request)
     char *line = NULL;
     char *save;
     char *token;
-    char *buff = malloc(40);
 
     if((req = calloc(1, sizeof(http_request_t))) == NULL)   //Allocates memory for req
     {
         rc = -3;
         goto cleanup;
     }
-    fgets(buff, 40, in);
-    ssize_t recd;
-    // recd = getline(&line, &len, in);  //Gets first line of file
-    printf("%s\n", buff);
+
+    getline(&line, &len, in);  //Gets first line of file
+    printf("HI\n");
     // if(strstr(line, "\n\r") == NULL)
     // {
     //     rc = -1;
@@ -94,8 +98,8 @@ int parseHttp(FILE *in, http_request_t **request)
         rc = -7;
         goto cleanup;
     }
-
-    while((recd = getline(&line, &len, in)) > 0 && i < MAX_HEADERS)
+    
+    while(getline(&line, &len, in) > 0 && i < MAX_HEADERS)
     {
         if(strcmp(line, "\r\n") == 0)
         {
@@ -138,7 +142,7 @@ cleanup:
         free(req->headers[i].name);
         free(req->headers[i].value);
     }
-    while((recd = getline(&line, &len, in)) > 0 && i < MAX_HEADERS)
+    while(getline(&line, &len, in) > 0 && i < MAX_HEADERS)
     {
         if(line[0] == 13 && line[1] == 10)
         {
