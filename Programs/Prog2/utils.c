@@ -11,7 +11,11 @@
 #include <string.h>     // Standard string functions
 #include <errno.h>      // Global errno variable
 
+#include <stdarg.h>     // Variadic argument lists (for blog function)
 #include <time.h>       // Time/date formatting function (for blog function)
+
+#include <unistd.h>     // Standard system calls
+#include <signal.h>     // Signal handling system calls (sigaction(2))
 
 #include "utils.h"
 
