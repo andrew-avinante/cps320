@@ -17,15 +17,15 @@ int verifyInput(http_request_t *req)
 {
     if(strcmp(req->verb, "GET") != 0 && strcmp(req->verb,"POST") != 0) // test for valid verb
     {
-        return = -4;
+        return -4;
     }
     if(strchr(req->path, '/') != req->path) // test for valid path
     {
-        return = (strstr(req->path, "..") != NULL) ? -5 : -6; // if path goes outside of root directory then -5 else -6
+        return (strstr(req->path, "..") != NULL) ? -5 : -6; // if path goes outside of root directory then -5 else -6
     }
     if(strstr(req->version, "HTTP") == 0) // test for invalid version
     {
-        return = -7;
+        return -7;
     }
     return -1;
 }
@@ -89,7 +89,7 @@ int parseHttp(FILE *in, http_request_t **request)
     strlcpy(req->version, token, VERSION_SIZE);      //Coppies token to VERSION
     req->version[VERSION_SIZE - 1] = 0;
     
-    if((rc = verifyInput(request)) != -1)
+    if((rc = verifyInput(req)) != -1)
     {
         goto cleanup;
     }
