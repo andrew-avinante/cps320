@@ -14,6 +14,8 @@
 #include <stdarg.h>     // Variadic argument lists (for blog function)
 #include <time.h>       // Time/date formatting function (for blog function)
 
+#include <sys/wait.h>
+
 #include <unistd.h>     // Standard system calls
 #include <signal.h>     // Signal handling system calls (sigaction(2))
 
@@ -27,10 +29,24 @@
 struct settings {
     const char *bindhost;   // Hostname/IP address to bind/listen on
     const char *bindport;   // Portnumber (as a string) to bind/listen on
+    int socketNum;
 } g_settings = {
     .bindhost = "localhost",    // Default: listen only on localhost interface
     .bindport = "8080",         // Default: listen on TCP port 8080
+    .socketNum = 5,
 };
+
+int connectedCount = 0;
+
+// Signal handler for when children die
+void waitchildren(int signum) {
+    printf("HERE\n");
+  while (wait3((int *)NULL,
+               WNOHANG,
+               (struct rusage *)NULL) > 0) {
+   connectedCount -= 1;
+  }
+}
 
 // Parse commandline options and sets g_settings accordingly.
 // Returns 0 on success, -1 on false...
@@ -38,7 +54,7 @@ int parse_options(int argc, char * const argv[]) {
     int ret = -1; 
 
     char op;
-    while ((op = getopt(argc, argv, "h:p:r:")) > -1) {
+    while ((op = getopt(argc, argv, "h:p:r:w:")) > -1) {
         switch (op) {
             case 'h':
                 g_settings.bindhost = optarg;
@@ -49,6 +65,9 @@ int parse_options(int argc, char * const argv[]) {
             case 'r':
                 ret = chdir(optarg);
                 if(ret < 0) { goto cleanup; }
+            case 'w':
+                g_settings.socketNum = atoi(optarg);
+                break;
             default:
                 // Unexpected argument--abort parsing
                 goto cleanup;
@@ -92,7 +111,6 @@ void handle_client(struct client_info *client) {
     size_t len = 0u;
     ssize_t recd;
     result = parseHttp(stream, &request);
-    printf("OUT HERE\n");
     generateResponse(result, request, stream);
     cleanupHttp(request);
     // while ((recd = getline(&line, &len, stream)) > 0) {
@@ -107,10 +125,15 @@ cleanup:
     destroy_client_info(client);
     free(line);
     printf("\tSession ended.\n");
+    return;
 }
 
 int main(int argc, char **argv) {
     int ret = 1;
+    int child;
+
+    // signal handler for when child dies
+    signal(SIGCHLD, waitchildren);
 
     // Network server/client context
     int server_sock = -1;
@@ -149,8 +172,18 @@ int main(int argc, char **argv) {
             // it was  "real" error, report it, but keep serving.
             if (errno != EINTR) { perror("unable to accept connection"); }
         } else {
-            blog("connection from %s:%d", client.ip, client.port);
-            handle_client(&client); // Client gets cleaned up in here
+            if(connectedCount < g_settings.socketNum)
+            child = fork();
+            if(child == 0)
+            {
+                blog("connection from %s:%d with %d client(s) connected", client.ip, client.port, connectedCount);
+                handle_client(&client); // Client gets cleaned up in here
+            }
+            else if(child > 0)
+            {
+                // perror("Failed to fork child\n");
+                connectedCount += 1;
+            }
         }
     }
     ret = 0;
