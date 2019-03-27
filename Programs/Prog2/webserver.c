@@ -165,12 +165,16 @@ int main(int argc, char **argv) {
         struct client_info client;
 
         // Wait for a connection on that socket
-        if (wait_for_client(server_sock, &client) || connectedCount >= g_settings.socketNum) {
+        if (wait_for_client(server_sock, &client)) {
             // Check to make sure our "failure" wasn't due to
             // a signal interrupting our accept(2) call; if
             // it was  "real" error, report it, but keep serving.
             if (errno != EINTR) { perror("unable to accept connection"); }
         } else {
+            if(connectedCount >= g_settings.socketNum)
+            {
+                goto cleanup;
+            }
             child = fork();
             if(child == 0)
             {
