@@ -27,10 +27,21 @@
 struct settings {
     const char *bindhost;   // Hostname/IP address to bind/listen on
     const char *bindport;   // Portnumber (as a string) to bind/listen on
+    const int socketNum;
 } g_settings = {
     .bindhost = "localhost",    // Default: listen only on localhost interface
     .bindport = "8080",         // Default: listen on TCP port 8080
+    .socketNum = 5;
 };
+
+// Signal handler for when children die
+void waitchildren(int signum) {
+  while (wait3((int *)NULL,
+               WNOHANG,
+               (struct rusage *)NULL) > 0) {
+    printf("A client disconnected.\n");
+  }
+}
 
 // Parse commandline options and sets g_settings accordingly.
 // Returns 0 on success, -1 on false...
@@ -38,7 +49,7 @@ int parse_options(int argc, char * const argv[]) {
     int ret = -1; 
 
     char op;
-    while ((op = getopt(argc, argv, "h:p:r:")) > -1) {
+    while ((op = getopt(argc, argv, "h:p:r:w:")) > -1) {
         switch (op) {
             case 'h':
                 g_settings.bindhost = optarg;
@@ -49,6 +60,9 @@ int parse_options(int argc, char * const argv[]) {
             case 'r':
                 ret = chdir(optarg);
                 if(ret < 0) { goto cleanup; }
+            case 'w':
+                .socketNum = strtol(optarg);
+                break;
             default:
                 // Unexpected argument--abort parsing
                 goto cleanup;
@@ -111,6 +125,7 @@ cleanup:
 
 int main(int argc, char **argv) {
     int ret = 1;
+    int child;
 
     // Network server/client context
     int server_sock = -1;
@@ -150,7 +165,15 @@ int main(int argc, char **argv) {
             if (errno != EINTR) { perror("unable to accept connection"); }
         } else {
             blog("connection from %s:%d", client.ip, client.port);
-            handle_client(&client); // Client gets cleaned up in here
+            child = fork();
+            if(child == 0)
+            {
+                handle_client(&client); // Client gets cleaned up in here
+            }
+            else if(child < 0)
+            {
+                perror("Failed to fork child\n");
+            }
         }
     }
     ret = 0;
