@@ -170,7 +170,7 @@ int main(int argc, char **argv) {
             // a signal interrupting our accept(2) call; if
             // it was  "real" error, report it, but keep serving.
             if (errno != EINTR) { perror("unable to accept connection"); }
-        } else if(connectedCount < g_settings.socketNum) {
+        } else {
             child = fork();
             if(child == 0)
             {
@@ -188,10 +188,10 @@ int main(int argc, char **argv) {
                 perror("Failed to fork child\n");
             }
         }
-        else
-        {
-            blog("There are currently %d/%d people connected.", connectedCount, g_settings.socketNum);
-        }
+        // else
+        // {
+        //     blog("There are currently %d/%d people connected.", connectedCount, g_settings.socketNum);
+        // }
     }
     ret = 0;
 
