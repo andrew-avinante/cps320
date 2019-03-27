@@ -30,7 +30,7 @@ int verifyInput(http_request_t *req)
     }
     if(strcmp(req->verb, "POST") == 0) 
     {
-        result = -8;
+        return -8;
     }
     return -1;
 }
