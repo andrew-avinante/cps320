@@ -30,9 +30,9 @@ int verifyInput(http_request_t *req)
     return -1;
 }
 
-int parseRequestLine(char *line, char *token, char *reqWord, char *save, const int WORD_SIZE)
+int parseRequestLine(char *line, char *reqWord, char *save, const int WORD_SIZE)
 {
-    strtok_r(line, " ", &save);     //Parses first line for VERB
+    char *token = strtok_r(line, " ", &save)
     if(token == NULL)
     {
         return -2;
@@ -61,7 +61,6 @@ int parseHttp(FILE *in, http_request_t **request)
     int rc = -1;
     char *line = NULL;
     char *save;
-    char *token;
 
     if((req = calloc(1, sizeof(http_request_t))) == NULL)   //Allocates memory for req
     {
@@ -74,9 +73,9 @@ int parseHttp(FILE *in, http_request_t **request)
     req->verb = malloc(VERB_SIZE); 
     req->path = malloc(PATH_SIZE); 
     req->version = malloc(VERSION_SIZE);
-    if((rc = parseRequestLine(line, strtok_r(line, " ", &save), req->verb, save, VERB_SIZE)) != -1) goto cleanup;
-    if((rc = parseRequestLine(NULL, strtok_r(line, " ", &save), req->path, save, PATH_SIZE)) != -1) goto cleanup;
-    if((rc = parseRequestLine(NULL, strtok_r(line, " ", &save), req->version, save, VERSION_SIZE)) != -1) goto cleanup;
+    if((rc = parseRequestLine(line, req->verb, save, VERB_SIZE)) != -1) goto cleanup;
+    if((rc = parseRequestLine(NULL, req->path, save, PATH_SIZE)) != -1) goto cleanup;
+    if((rc = parseRequestLine(NULL, req->version, save, VERSION_SIZE)) != -1) goto cleanup;
     printf("%s\n", req->path);
     // token = strtok_r(line, " ", &save);     //Parses first line for VERB
     // if(token == NULL)
