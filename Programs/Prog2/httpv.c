@@ -14,8 +14,7 @@
 dict_t dict = {{{"html", "text/html"}, {"htm", "text/html"}, {"gif", "image/gif"}, {"jpeg", "image/jpeg"}, {"jpg", "image/jpeg"}, {"png", "image/png"}, {"css", "text/css"}, {"txt", "text/plain"}}};
 
 int verifyInput(http_request_t *req)
-{        printf("HEY\n");
-printf("%d %d\n", strcmp(req->verb, "GET") != 0, strcmp(req->verb,"POST") != 0);
+{        
     if(strcmp(req->verb, "GET") != 0 && strcmp(req->verb,"POST") != 0) // test for valid verb
     {
         return -4;
@@ -96,18 +95,13 @@ int parseHttp(FILE *in, http_request_t **request)
             i++;
         }
     }
-    if(blankline == 0)
-    {
-        rc = -1;
-        req->num_headers = i;
-        goto cleanup;
-    }
+    if(blankline == 0) goto cleanup;
 
     req->num_headers = i;
     free(line);
 
     *request = req;
-    
+
     rc = 1;
     return rc;
 
@@ -139,10 +133,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
     if(result == 1)
     {
         fstream = fopen(&request->path[1], "r+");
-        if(fstream == NULL) 
-        { 
-            result = -6; 
-        }
+        if(fstream == NULL) result = -6; 
         strtok_r(request->path, ".", &fileExt);
         for(int i = 0; i < DICT_SIZE; i++)
         {
