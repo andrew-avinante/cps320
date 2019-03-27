@@ -30,10 +30,9 @@ int verifyInput(http_request_t *req)
     return -1;
 }
 
-int parseRequestLine(char *line, char *reqWord, char *save, const int WORD_SIZE)
+int parseRequestLine(char *line, char *reqWord, char **save, const int WORD_SIZE)
 {
-    char *token = strtok_r(line, " ", &save);
-    save = &save;
+    char *token = strtok_r(line, " ", save);
     if(token == NULL)
     {
         return -2;
@@ -62,7 +61,7 @@ int parseHttp(FILE *in, http_request_t **request)
     int i = 0, blankline = 0;
     int rc = -1;
     char *line = NULL;
-    char *save;
+    char **save;
 
     if((req = calloc(1, sizeof(http_request_t))) == NULL)   //Allocates memory for req
     {
