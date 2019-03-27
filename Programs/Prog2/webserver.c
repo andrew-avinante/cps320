@@ -128,7 +128,7 @@ void handle_client(struct client_info *client) {
 //     }
 //     destroy_client_info(client);
 //     free(line);
-//     printf("\tSession ended.\n");
+    printf("\tSession ended.\n");
     return;
 }
 
