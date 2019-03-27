@@ -14,10 +14,10 @@
 dict_t dict = {{{"html", "text/html"}, {"htm", "text/html"}, {"gif", "image/gif"}, {"jpeg", "image/jpeg"}, {"jpg", "image/jpeg"}, {"png", "image/png"}, {"css", "text/css"}, {"txt", "text/plain"}}};
 
 int verifyInput(http_request_t *req)
-{
+{        printf("HEY\n");
+printf("%d %d\n", strcmp(req->verb, "GET") != 0, strcmp(req->verb,"POST") != 0)
     if(strcmp(req->verb, "GET") != 0 && strcmp(req->verb,"POST") != 0) // test for valid verb
     {
-        printf("HEY\n");
         return -4;
     }
     if(strchr(req->path, '/') != req->path) // test for valid path
