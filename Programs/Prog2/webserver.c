@@ -40,7 +40,7 @@ int connectedCount = 0;
 
 // Signal handler for when children die
 void waitchildren(int signum) {
-    printf("HERE");
+    printf("HERE\n");
   while (wait3((int *)NULL,
                WNOHANG,
                (struct rusage *)NULL) > 0) {
@@ -177,7 +177,7 @@ int main(int argc, char **argv) {
             {
                 blog("connection from %s:%d with %d client(s) connected", client.ip, client.port, connectedCount);
                 handle_client(&client); // Client gets cleaned up in here
-                printf("crap");
+                printf("crap\n");
             }
             else if(child < 0)
             {
