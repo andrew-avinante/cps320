@@ -16,6 +16,7 @@ dict_t dict = {{{"html", "text/html"}, {"htm", "text/html"}, {"gif", "image/gif"
 
 int verifyInput(http_request_t *req)
 {        
+    printf("%s\n", req->verb);
     if(strcmp(req->verb, "GET") != 0 && strcmp(req->verb,"POST") != 0) // test for valid verb
     {
         return -4;
