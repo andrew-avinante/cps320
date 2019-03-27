@@ -121,8 +121,9 @@ void handle_client(struct client_info *client) {
 
 cleanup:
     // Shutdown this client
-    destroy_client_info(stream);
     if (stream) fclose(stream);
+    // destroy_client_info(client);
+    fclose(client);
     free(line);
     printf("\tSession ended.\n");
     return;
