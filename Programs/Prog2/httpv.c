@@ -32,7 +32,7 @@ int verifyInput(http_request_t *req)
 
 int parseRequestLine(char *line, char *reqWord, char *save, const int WORD_SIZE)
 {
-    char *token = strtok_r(line, " ", &save)
+    char *token = strtok_r(line, " ", &save);
     if(token == NULL)
     {
         return -2;
