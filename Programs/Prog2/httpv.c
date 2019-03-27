@@ -22,7 +22,7 @@ int verifyInput(http_request_t *req)
     }
     if(strchr(req->path, '/') != req->path) // test for valid path
     {
-        return (strstr(req->path, "..") != NULL || access( req->path, F_OK ) != -1) ? -5 : -6; // if path goes outside of root directory then -5 else -6
+        return (strstr(req->path, "..") != NULL) ? -5 : -6; // if path goes outside of root directory then -5 else -6
     }
     if(strstr(req->version, "HTTP") == 0) // test for invalid version
     {
@@ -30,6 +30,7 @@ int verifyInput(http_request_t *req)
     }
     if(strcmp(req->verb, "POST") == 0) 
     {
+        printf("HEY\n");
         return -8;
     }
     return -1;
