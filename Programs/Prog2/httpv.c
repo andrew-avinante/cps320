@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <limits.h>
 #include <errno.h>
+#include <unistd.h>
 #include "httpv.h"
 
 dict_t dict = {{{"html", "text/html"}, {"htm", "text/html"}, {"gif", "image/gif"}, {"jpeg", "image/jpeg"}, {"jpg", "image/jpeg"}, {"png", "image/png"}, {"css", "text/css"}, {"txt", "text/plain"}}};
@@ -21,11 +22,15 @@ int verifyInput(http_request_t *req)
     }
     if(strchr(req->path, '/') != req->path) // test for valid path
     {
-        return (strstr(req->path, "..") != NULL) ? -5 : -6; // if path goes outside of root directory then -5 else -6
+        return (strstr(req->path, "..") != NULL || access( req->path, F_OK ) != -1) ? -5 : -6; // if path goes outside of root directory then -5 else -6
     }
     if(strstr(req->version, "HTTP") == 0) // test for invalid version
     {
         return -7;
+    }
+    if(strcmp(req->verb, "POST") == 0) 
+    {
+        result = -8;
     }
     return -1;
 }
@@ -50,6 +55,7 @@ int parseRequestLine(char *line, char *reqWord, char **save, const int WORD_SIZE
 // -5 outside of root directory
 // -6 invalid path
 // -7 invalid version
+// -8 verb not implimented
 int parseHttp(FILE *in, http_request_t **request) 
 {
     http_request_t *req = NULL;
@@ -133,7 +139,6 @@ int generateResponse(int result, http_request_t *request, FILE *out)
     if(result == 1)
     {
         fstream = fopen(&request->path[1], "r+");
-        if(fstream == NULL) result = -6; 
         strtok_r(request->path, ".", &fileExt);
         for(int i = 0; i < DICT_SIZE; i++)
         {
@@ -143,11 +148,6 @@ int generateResponse(int result, http_request_t *request, FILE *out)
                 printf("%s\n", dict.node[i].value.value);
             }
         }
-
-        if(strcmp(request->verb, "POST") == 0) 
-        {
-            result = -8;
-        } // -8 verb not implimented
     }
     
     if(result != 1)
@@ -169,56 +169,47 @@ int generateResponse(int result, http_request_t *request, FILE *out)
         case -1:
             fputs("HTTP/1.1 400 Bad Request\r\n", out);
             fputs(contentType, out);
-            fputs("\r\n", out);
-            fputs("Illegal HTTP stream\r\n", out);
+            fputs("\r\nIllegal HTTP stream\r\n", out);
             break;
         case -2:
             fputs("HTTP/1.1 500 Internal Server Error\r\n", out);
             fputs(contentType, out);
-            fputs("\r\n", out);
-            fputs("I/O error while reading request\r\n", out);
+            fputs("\r\nI/O error while reading request\r\n", out);
             break;
         case -3:
             fputs("HTTP/1.1 500 Internal Server Error\r\n", out);
             fputs(contentType, out);
-            fputs("\r\n", out);
-            fputs("Malloc failure\r\n", out);
+            fputs("\r\nMalloc failure\r\n", out);
             break;
         case -4:
             fputs("HTTP/1.1 400 Bad Request\r\n", out);
             fputs(contentType, out);
-            fputs("\r\n", out);
-            fputs("Invalid verb\r\n", out);
+            fputs("\r\nInvalid verb\r\n", out);
             break;
         case -5:
             fputs("HTTP/1.1 403 Forbidden\r\n", out);
             fputs(contentType, out);
-            fputs("\r\n", out);
-            fputs("File requested is out of root directory\r\n", out);
+            fputs("\r\nFile requested is out of root directory\r\n", out);
             break;
         case -6:
             fputs("HTTP/1.1 404 Not Found\r\n", out);
             fputs(contentType, out);
-            fputs("\r\n", out);
-            fputs("Resource not found\r\n", out);
+            fputs("\r\nResource not found\r\n", out);
             break;
         case -7:
             fputs("HTTP/1.1 400 Bad Request\r\n", out);
             fputs(contentType, out);
-            fputs("\r\n", out);
-            fputs("Invalid HTTP version\r\n", out);
+            fputs("\r\nInvalid HTTP version\r\n", out);
             break;
         case -8:
             fputs("HTTP/1.1 501 Not Implemented\r\n", out);
             fputs(contentType, out);
-            fputs("\r\n", out);
-            fputs("Verb not implemented\r\n", out);
+            fputs("\r\nVerb not implemented\r\n", out);
             break;
         default:
             fputs("HTTP/1.1 500 Internal Server Error\r\n", out);
             fputs(contentType, out);
-            fputs("\r\n", out);
-            fputs("Something has gone wrong on our end...\r\n", out);
+            fputs("\r\nSomething has gone wrong on our end...\r\n", out);
             break;
     }
     if(fstream)
