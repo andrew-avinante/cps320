@@ -90,7 +90,7 @@ void sigint_handler(int signum) {
 
 // Connection handling logic: reads/echos lines of text until error/EOF,
 // then tears down connection.
-void handle_client(struct client_info *client) {
+void handle_client(struct client_info *client, int server_sock) {
     FILE *stream = NULL;
 
     // Wrap the socket file descriptor in a read/write FILE stream
@@ -125,6 +125,7 @@ cleanup:
     destroy_client_info(client);
     free(line);
     printf("\tSession ended.\n");
+    close(server_sock);
 }
 
 int main(int argc, char **argv) {
@@ -176,7 +177,7 @@ int main(int argc, char **argv) {
             if(child == 0)
             {
                 blog("connection from %s:%d with %d client(s) connected", client.ip, client.port, connectedCount);
-                handle_client(&client); // Client gets cleaned up in here
+                handle_client(&client, server_sock); // Client gets cleaned up in here
                 printf("crap\n");
             }
             else if(child < 0)
