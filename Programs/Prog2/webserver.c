@@ -40,6 +40,7 @@ int connectedCount = 0;
 
 // Signal handler for when children die
 void waitchildren(int signum) {
+    printf("HERE");
   while (wait3((int *)NULL,
                WNOHANG,
                (struct rusage *)NULL) > 0) {
