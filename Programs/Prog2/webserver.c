@@ -65,7 +65,7 @@ int parse_options(int argc, char * const argv[]) {
                 ret = chdir(optarg);
                 if(ret < 0) { goto cleanup; }
             case 'w':
-                g_settings.socketNum = strtol(optarg, sizeof(optarg), 10);
+                g_settings.socketNum = atoi(optarg);
                 break;
             default:
                 // Unexpected argument--abort parsing
