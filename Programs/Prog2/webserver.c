@@ -122,8 +122,7 @@ void handle_client(struct client_info *client) {
 cleanup:
     // Shutdown this client
     if (stream) fclose(stream);
-    // destroy_client_info(client);
-    fclose(client->fd);
+    destroy_client_info(client);
     free(line);
     printf("\tSession ended.\n");
     return;
@@ -179,10 +178,12 @@ int main(int argc, char **argv) {
             {
                 blog("connection from %s:%d with %d client(s) connected", client.ip, client.port, connectedCount);
                 handle_client(&client); // Client gets cleaned up in here
+                break;
             }
             else if(child > 0)
             {
                 // perror("Failed to fork child\n");
+                destroy_client_info(client);
                 connectedCount += 1;
             }
         }
