@@ -137,80 +137,56 @@ int generateResponse(int result, http_request_t *request, FILE *out)
     FILE *fstream = NULL;
     char *fileExt;
     char contentType[CONTENT_SIZE];
-    if(result == 1)
-    {
-        fstream = fopen(&request->path[1], "r+");
-        strtok_r(request->path, ".", &fileExt);
-        for(int i = 0; i < DICT_SIZE; i++)
-        {
-            if(strcmp(dict.node[i].key.key, fileExt) == 0)
-            {
-                snprintf(contentType, CONTENT_SIZE, "Content-type: %s\r\n", dict.node[i].value.value);
-                printf("%s\n", dict.node[i].value.value);
-            }
-        }
-    }
-    
-    if(result != 1)
-    {
-        snprintf(contentType, CONTENT_SIZE, "Content-type: %s\r\n", "text/plain");
-    }
 
     switch (result)
     {
         case 1:
+            fstream = fopen(&request->path[1], "r+");
+            strtok_r(request->path, ".", &fileExt);
+            for(int i = 0; i < DICT_SIZE; i++)
+            {
+                if(strcmp(dict.node[i].key.key, fileExt) == 0)
+                {
+                    snprintf(contentType, CONTENT_SIZE, "Content-type: %s\r\n", dict.node[i].value.value);
+                    printf("%s\n", dict.node[i].value.value);
+                }
+            }
+
             fputs("HTTP/1.1 200 OK\r\n", out);
             fputs(contentType, out);
             fputs("\r\n", out);
+            
             while ((recd = getline(&line, &len, fstream)) > 0) 
             {
                 fputs(line, out); 
             }
             break;
         case -1:
-            fputs("HTTP/1.1 400 Bad Request\r\n", out);
-            fputs(contentType, out);
-            fputs("\r\nIllegal HTTP stream\r\n", out);
+            fputs("HTTP/1.1 400 Bad Request\r\nContent-type: text/plain\r\n\r\nIllegal HTTP stream\r\n", out);
             break;
         case -2:
-            fputs("HTTP/1.1 500 Internal Server Error\r\n", out);
-            fputs(contentType, out);
-            fputs("\r\nI/O error while reading request\r\n", out);
+            fputs("HTTP/1.1 500 Internal Server Error\r\nContent-type: text/plain\r\n\r\nI/O error while reading request\r\n", out);
             break;
         case -3:
-            fputs("HTTP/1.1 500 Internal Server Error\r\n", out);
-            fputs(contentType, out);
-            fputs("\r\nMalloc failure\r\n", out);
+            fputs("HTTP/1.1 500 Internal Server Error\r\nContent-type: text/plain\r\n\r\nMalloc failure\r\n", out);
             break;
         case -4:
-            fputs("HTTP/1.1 400 Bad Request\r\n", out);
-            fputs(contentType, out);
-            fputs("\r\nInvalid verb\r\n", out);
+            fputs("HTTP/1.1 400 Bad Request\r\nContent-type: text/plain\r\n\r\nInvalid verb\r\n", out);
             break;
         case -5:
-            fputs("HTTP/1.1 403 Forbidden\r\n", out);
-            fputs(contentType, out);
-            fputs("\r\nFile requested is out of root directory\r\n", out);
+            fputs("HTTP/1.1 403 Forbidden\r\nContent-type: text/plain\r\n\r\nFile requested is out of root directory\r\n", out);
             break;
         case -6:
-            fputs("HTTP/1.1 404 Not Found\r\n", out);
-            fputs(contentType, out);
-            fputs("\r\nResource not found\r\n", out);
+            fputs("HTTP/1.1 404 Not Found\r\nContent-type: text/plain\r\n\r\nResource not found\r\n", out);
             break;
         case -7:
-            fputs("HTTP/1.1 400 Bad Request\r\n", out);
-            fputs(contentType, out);
-            fputs("\r\nInvalid HTTP version\r\n", out);
+            fputs("HTTP/1.1 400 Bad Request\r\nContent-type: text/plain\r\n\r\nInvalid HTTP version\r\n", out);
             break;
         case -8:
-            fputs("HTTP/1.1 501 Not Implemented\r\n", out);
-            fputs(contentType, out);
-            fputs("\r\nVerb not implemented\r\n", out);
+            fputs("HTTP/1.1 501 Not Implemented\r\nContent-type: text/plain\r\n\r\nVerb not implemented\r\n", out);
             break;
         default:
-            fputs("HTTP/1.1 500 Internal Server Error\r\n", out);
-            fputs(contentType, out);
-            fputs("\r\nSomething has gone wrong on our end...\r\n", out);
+            fputs("HTTP/1.1 500 Internal Server Error\r\nContent-type: text/plain\r\n\r\nSomething has gone wrong on our end...\r\n", out);
             break;
     }
     if(fstream)
