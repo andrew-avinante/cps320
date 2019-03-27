@@ -14,6 +14,8 @@
 #include <stdarg.h>     // Variadic argument lists (for blog function)
 #include <time.h>       // Time/date formatting function (for blog function)
 
+#include <sys/wait.h>
+
 #include <unistd.h>     // Standard system calls
 #include <signal.h>     // Signal handling system calls (sigaction(2))
 
@@ -130,7 +132,7 @@ int main(int argc, char **argv) {
     int child;
 
     // signal handler for when child dies
-    signal (SIGCHLD, waitchildren)
+    signal (SIGCHLD, waitchildren);
 
     // Network server/client context
     int server_sock = -1;
