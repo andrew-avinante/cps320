@@ -76,35 +76,6 @@ int parseHttp(FILE *in, http_request_t **request)
     if((rc = parseRequestLine(line, req->verb, save, VERB_SIZE)) != -1) goto cleanup;
     if((rc = parseRequestLine(NULL, req->path, save, PATH_SIZE)) != -1) goto cleanup;
     if((rc = parseRequestLine(NULL, req->version, save, VERSION_SIZE)) != -1) goto cleanup;
-    // token = strtok_r(line, " ", &save);     //Parses first line for VERB
-    // if(token == NULL)
-    // {
-    //     rc = -2;
-    //     goto cleanup;
-    // }
-    // req->verb = malloc(VERB_SIZE);                  //Allocates memory for VERB
-    // strlcpy(req->verb, token, VERB_SIZE);    //Coppies token to VERB
-    // req->verb[VERB_SIZE - 1] = 0;            //Adds null terminator
-
-    // token = strtok_r(NULL, " ", &save);     //Parses line for PATH
-    // if(token == NULL)
-    // {
-    //     rc = -2;
-    //     goto cleanup;
-    // }
-    // req->path = malloc(PATH_SIZE);           //Allocates memory for PATH
-    // strlcpy(req->path, token, PATH_SIZE);    //Coppies token to PATH
-    // req->path[PATH_SIZE - 1] = 0;              //Adds null terminator
-
-    // token = strtok_r(NULL, " ", &save);     //Parses line for VERSION
-    // if(token == NULL)
-    // {
-    //     rc = -2;
-    //     goto cleanup;
-    // }
-    // req->version = malloc(VERSION_SIZE);              //Allocates memory for VERSION 
-    // strlcpy(req->version, token, VERSION_SIZE);      //Coppies token to VERSION
-    // req->version[VERSION_SIZE - 1] = 0;
     
     if((rc = verifyInput(req)) != -1)
     {
@@ -191,6 +162,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
             if(strcmp(dict.node[i].key.key, fileExt) == 0)
             {
                 snprintf(contentType, CONTENT_SIZE, "Content-type: %s\r\n", dict.node[i].value.value);
+                printf("%s\n", dict.node[i].value.value);
             }
         }
 
