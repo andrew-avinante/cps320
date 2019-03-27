@@ -191,6 +191,7 @@ int main(int argc, char **argv) {
         else
         {
             blog("There are currently %d/%d people connected.", connectedCount, g_settings.socketNum);
+            destroy_client_info(&client);
         }
     }
     ret = 0;
