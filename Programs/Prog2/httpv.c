@@ -30,7 +30,7 @@ int verifyInput(http_request_t *req)
     return -1;
 }
 
-int parseRequestLine(char *token, char *reqWord, cahr *save, const int WORD_SIZE)
+int parseRequestLine(char *token, char *reqWord, char *save, const int WORD_SIZE)
 {
     strtok_r(line, " ", &save);     //Parses first line for VERB
     if(token == NULL)
