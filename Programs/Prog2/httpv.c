@@ -30,6 +30,18 @@ int verifyInput(http_request_t *req)
     return -1;
 }
 
+int parseRequestLine(char *token, char *reqWord, cahr *save, const int WORD_SIZE)
+{
+    strtok_r(line, " ", &save);     //Parses first line for VERB
+    if(token == NULL)
+    {
+        return -2;
+    }
+    strlcpy(reqWord, token, WORD_SIZE);    //Coppies token to VERB
+    reqWord[WORD_SIZE - 1] = 0;            //Adds null terminator
+    return -1;
+}
+
 // Returns 1 on success,
 // -1 on invalid HTTP request,
 // -2 on I/O error,
@@ -58,36 +70,43 @@ int parseHttp(FILE *in, http_request_t **request)
     }
     
     getline(&line, &len, in);  //Gets first line of file
+    
+    req->verb = malloc(VERB_SIZE); 
+    req->path = malloc(PATH_SIZE); 
+    req->version = malloc(VERSION_SIZE);
+    parseRequestLine(strtok_r(line, " ", &save), req->verb, save, VERB_SIZE);
+    parseRequestLine(strtok_r(line, " ", &save), req->path, save, PATH_SIZE);
+    parseRequestLine(strtok_r(line, " ", &save), req->version, save, VERSION_SIZE);
 
-    token = strtok_r(line, " ", &save);     //Parses first line for VERB
-    if(token == NULL)
-    {
-        rc = -2;
-        goto cleanup;
-    }
-    req->verb = malloc(VERB_SIZE);                  //Allocates memory for VERB
-    strlcpy(req->verb, token, VERB_SIZE);    //Coppies token to VERB
-    req->verb[VERB_SIZE - 1] = 0;            //Adds null terminator
+    // token = strtok_r(line, " ", &save);     //Parses first line for VERB
+    // if(token == NULL)
+    // {
+    //     rc = -2;
+    //     goto cleanup;
+    // }
+    // req->verb = malloc(VERB_SIZE);                  //Allocates memory for VERB
+    // strlcpy(req->verb, token, VERB_SIZE);    //Coppies token to VERB
+    // req->verb[VERB_SIZE - 1] = 0;            //Adds null terminator
 
-    token = strtok_r(NULL, " ", &save);     //Parses line for PATH
-    if(token == NULL)
-    {
-        rc = -2;
-        goto cleanup;
-    }
-    req->path = malloc(PATH_SIZE);           //Allocates memory for PATH
-    strlcpy(req->path, token, PATH_SIZE);    //Coppies token to PATH
-    req->path[PATH_SIZE - 1] = 0;              //Adds null terminator
+    // token = strtok_r(NULL, " ", &save);     //Parses line for PATH
+    // if(token == NULL)
+    // {
+    //     rc = -2;
+    //     goto cleanup;
+    // }
+    // req->path = malloc(PATH_SIZE);           //Allocates memory for PATH
+    // strlcpy(req->path, token, PATH_SIZE);    //Coppies token to PATH
+    // req->path[PATH_SIZE - 1] = 0;              //Adds null terminator
 
-    token = strtok_r(NULL, " ", &save);     //Parses line for VERSION
-    if(token == NULL)
-    {
-        rc = -2;
-        goto cleanup;
-    }
-    req->version = malloc(VERSION_SIZE);              //Allocates memory for VERSION 
-    strlcpy(req->version, token, VERSION_SIZE);      //Coppies token to VERSION
-    req->version[VERSION_SIZE - 1] = 0;
+    // token = strtok_r(NULL, " ", &save);     //Parses line for VERSION
+    // if(token == NULL)
+    // {
+    //     rc = -2;
+    //     goto cleanup;
+    // }
+    // req->version = malloc(VERSION_SIZE);              //Allocates memory for VERSION 
+    // strlcpy(req->version, token, VERSION_SIZE);      //Coppies token to VERSION
+    // req->version[VERSION_SIZE - 1] = 0;
     
     if((rc = verifyInput(req)) != -1)
     {
