@@ -39,7 +39,6 @@ int parseRequestLine(char *line, char *reqWord, char **save, const int WORD_SIZE
     }
     strlcpy(reqWord, token, WORD_SIZE);    //Coppies token to VERB
     reqWord[WORD_SIZE - 1] = 0;            //Adds null terminator
-    printf("%s\n", reqWord);
     return -1;
 }
 
@@ -77,7 +76,6 @@ int parseHttp(FILE *in, http_request_t **request)
     if((rc = parseRequestLine(line, req->verb, save, VERB_SIZE)) != -1) goto cleanup;
     if((rc = parseRequestLine(NULL, req->path, save, PATH_SIZE)) != -1) goto cleanup;
     if((rc = parseRequestLine(NULL, req->version, save, VERSION_SIZE)) != -1) goto cleanup;
-    printf("%s %d\n", req->path, rc);
     // token = strtok_r(line, " ", &save);     //Parses first line for VERB
     // if(token == NULL)
     // {
@@ -124,8 +122,8 @@ int parseHttp(FILE *in, http_request_t **request)
         {
             req->headers[i].name = malloc(len);
             req->headers[i].value = malloc(len);
-            strlcpy(req->headers[i].name, strtok_r(line, ":", &save), len);
-            strlcpy(req->headers[i].value, strtok_r(NULL, ":", &save), len);
+            strlcpy(req->headers[i].name, strtok_r(line, ":", save), len);
+            strlcpy(req->headers[i].value, strtok_r(NULL, ":", save), len);
             i++;
         }
     }
