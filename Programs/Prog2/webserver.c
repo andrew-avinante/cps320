@@ -51,7 +51,7 @@ void waitchildren(int signum) {
 // Returns 0 on success, -1 on false...
 int parse_options(int argc, char * const argv[]) {
     int ret = -1; 
-
+    printf("%d", g_settings.socketNum);
     char op;
     while ((op = getopt(argc, argv, "h:p:r:w:")) > -1) {
         switch (op) {
@@ -65,6 +65,7 @@ int parse_options(int argc, char * const argv[]) {
                 ret = chdir(optarg);
                 if(ret < 0) { goto cleanup; }
             case 'w':
+                printf("WHY YOU ARE IN HERE?\n")
                 g_settings.socketNum = atoi(optarg);
                 break;
             default:
