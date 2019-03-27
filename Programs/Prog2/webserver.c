@@ -173,7 +173,8 @@ int main(int argc, char **argv) {
         } else {
             if(connectedCount >= g_settings.socketNum)
             {
-                // destroy_client_info(&client);
+                destroy_client_info(&client);
+                continue;
             }
             child = fork();
             if(child == 0)
