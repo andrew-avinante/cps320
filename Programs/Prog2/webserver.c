@@ -133,7 +133,7 @@ int main(int argc, char **argv) {
     int child;
 
     // signal handler for when child dies
-    signal (SIGCHLD, waitchildren);
+    signal(SIGCHLD, waitchildren);
 
     // Network server/client context
     int server_sock = -1;
@@ -178,13 +178,13 @@ int main(int argc, char **argv) {
             {
                 blog("connection from %s:%d with %d client(s) connected", client.ip, client.port, connectedCount);
                 handle_client(&client); // Client gets cleaned up in here
-                printf("crap\n");
             }
             else if(child < 0)
             {
                 // perror("Failed to fork child\n");
                 connectedCount += 1;
             }
+            printf("%d\n", child);
         }
     }
     ret = 0;
