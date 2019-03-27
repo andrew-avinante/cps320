@@ -188,10 +188,6 @@ int main(int argc, char **argv) {
                 perror("Failed to fork child\n");
             }
         }
-        // else
-        // {
-        //     blog("There are currently %d/%d people connected.", connectedCount, g_settings.socketNum);
-        // }
     }
     ret = 0;
 
