@@ -110,7 +110,6 @@ void handle_client(struct client_info *client) {
     size_t len = 0u;
     ssize_t recd;
     result = parseHttp(stream, &request);
-    printf("OUT HERE\n");
     generateResponse(result, request, stream);
     cleanupHttp(request);
     // while ((recd = getline(&line, &len, stream)) > 0) {
@@ -177,6 +176,7 @@ int main(int argc, char **argv) {
             {
                 blog("connection from %s:%d with %d client(s) connected", client.ip, client.port, connectedCount);
                 handle_client(&client); // Client gets cleaned up in here
+                printf("crap");
             }
             else if(child < 0)
             {
