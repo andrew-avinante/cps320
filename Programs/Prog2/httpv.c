@@ -48,6 +48,18 @@ int parseRequestLine(char *line, char *reqWord, char **save, const int WORD_SIZE
     return -1;
 }
 
+int eatInput(char *line, size_t len, FILE *in)
+{
+    while(getline(&line, &len, in) > 0)
+    {
+        if(strcmp(line, "\r\n") == 0)
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
+
 // Returns 1 on success,
 // -1 on invalid HTTP request,
 // -2 on I/O error,
@@ -86,23 +98,7 @@ int parseHttp(FILE *in, http_request_t **request)
     
     if((rc = verifyInput(req)) != -1) goto cleanup;
 
-    while(getline(&line, &len, in) > 0 && i < MAX_HEADERS)
-    {
-        if(strcmp(line, "\r\n") == 0)
-        {
-            blankline = 1;
-            break;
-        }
-        if(line[0] != 13)
-        {
-            req->headers[i].name = malloc(len);
-            req->headers[i].value = malloc(len);
-            strlcpy(req->headers[i].name, strtok_r(line, ":", save), len);
-            strlcpy(req->headers[i].value, strtok_r(NULL, ":", save), len);
-            i++;
-        }
-    }
-    if(blankline == 0) goto cleanup;
+    if(eatInput(line, len, in) == 0) goto cleanup;
 
     req->num_headers = i;
     free(line);
@@ -114,15 +110,7 @@ int parseHttp(FILE *in, http_request_t **request)
 
 cleanup:
     cleanupHttp(req);
-    while(getline(&line, &len, in) > 0 && i < MAX_HEADERS)
-    {
-        if(strcmp(line, "\r\n") == 0)
-        {
-            blankline = 1;
-            break;
-        }
-        i++;
-    }
+    eatInput(line, len, in);
 
     free(line);
     return rc;
@@ -155,7 +143,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
             fputs("HTTP/1.1 200 OK\r\n", out);
             fputs(contentType, out);
             fputs("\r\n", out);
-            
+
             while ((recd = getline(&line, &len, fstream)) > 0) 
             {
                 fputs(line, out); 
