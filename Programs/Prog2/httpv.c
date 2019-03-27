@@ -77,10 +77,7 @@ int parseHttp(FILE *in, http_request_t **request)
     if((rc = parseRequestLine(NULL, req->path, save, PATH_SIZE)) != -1) goto cleanup;
     if((rc = parseRequestLine(NULL, req->version, save, VERSION_SIZE)) != -1) goto cleanup;
     
-    if((rc = verifyInput(req)) != -1)
-    {
-        goto cleanup;
-    }
+    if((rc = verifyInput(req)) != -1) goto cleanup;
 
     while(getline(&line, &len, in) > 0 && i < MAX_HEADERS)
     {
@@ -114,20 +111,10 @@ int parseHttp(FILE *in, http_request_t **request)
     return rc;
 
 cleanup:
-    if(req != NULL)
-    {
-        free(req->verb);
-        free(req->path);
-        free(req->version);
-    }
-    for (int i = 0; i < req->num_headers; ++i)
-    {
-        free(req->headers[i].name);
-        free(req->headers[i].value);
-    }
+    cleanupHttp(req);
     while(getline(&line, &len, in) > 0 && i < MAX_HEADERS)
     {
-        if(line[0] == 13 && line[1] == 10)
+        if(strcmp(line, "\r\n") == 0)
         {
             blankline = 1;
             break;
@@ -136,7 +123,6 @@ cleanup:
     }
 
     free(line);
-    free(req);  // It's OK to free() a NULL pointer 
     return rc;
 }
 
