@@ -53,7 +53,7 @@ int parse_options(int argc, char * const argv[]) {
     int ret = -1; 
     printf("%d\n", g_settings.socketNum);
     char op;
-    while ((op = getopt(argc, argv, "h:p:r:w:")) > -1) {
+    while ((op = getopt(argc, argv, "h:p:r:w")) > -1) {
         switch (op) {
             case 'h':
                 g_settings.bindhost = optarg;
@@ -65,7 +65,6 @@ int parse_options(int argc, char * const argv[]) {
                 ret = chdir(optarg);
                 if(ret < 0) { goto cleanup; }
             case 'w':
-                printf("WHY YOU ARE IN HERE?\n");
                 g_settings.socketNum = atoi(optarg);
                 break;
             default:
@@ -140,7 +139,7 @@ int main(int argc, char **argv) {
 
     // Handle our options
     if (parse_options(argc, argv)) {
-        printf("usage: %s [-p PORT] [-h HOSTNAME/IP] [-r ROOT DIRECTORY]\n", argv[0]);
+        printf("usage: %s [-p PORT] [-h HOSTNAME/IP] [-r ROOT DIRECTORY] [-w NUM OF SOCKETS]\n", argv[0]);
         goto cleanup;
     }
 
