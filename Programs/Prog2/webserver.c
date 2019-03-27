@@ -171,6 +171,7 @@ int main(int argc, char **argv) {
             // it was  "real" error, report it, but keep serving.
             if (errno != EINTR) { perror("unable to accept connection"); }
         } else {
+            printf("%d %d\n", connectedCount, g_settings);
             if(connectedCount >= g_settings.socketNum)
             {
                 destroy_client_info(&client);
