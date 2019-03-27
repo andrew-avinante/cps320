@@ -31,7 +31,7 @@ struct settings {
 } g_settings = {
     .bindhost = "localhost",    // Default: listen only on localhost interface
     .bindport = "8080",         // Default: listen on TCP port 8080
-    .socketNum = 5;
+    .socketNum = 5,
 };
 
 int connectedCount = 0;
