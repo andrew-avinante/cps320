@@ -123,7 +123,7 @@ cleanup:
     // Shutdown this client
     if (stream) fclose(stream);
     // destroy_client_info(client);
-    fclose(client);
+    fclose(client.fd);
     free(line);
     printf("\tSession ended.\n");
     return;
