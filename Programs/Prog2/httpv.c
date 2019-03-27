@@ -39,6 +39,7 @@ int parseRequestLine(char *line, char *reqWord, char *save, const int WORD_SIZE)
     }
     strlcpy(reqWord, token, WORD_SIZE);    //Coppies token to VERB
     reqWord[WORD_SIZE - 1] = 0;            //Adds null terminator
+    printf("%s\n", req->path);
     return -1;
 }
 
