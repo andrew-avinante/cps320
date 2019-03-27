@@ -164,7 +164,12 @@ int main(int argc, char **argv) {
     server_running = true;
     while (server_running) {
         struct client_info client;
-
+            if(connectedCount >= g_settings.socketNum)
+            {
+                destroy_client_info(&client);
+                blog("Max connections reached! %d/%d current connections.", connectedCount, g_settings.socketNum);
+                continue;
+            }
         // Wait for a connection on that socket
         if (wait_for_client(server_sock, &client)) {
             // Check to make sure our "failure" wasn't due to
@@ -172,13 +177,6 @@ int main(int argc, char **argv) {
             // it was  "real" error, report it, but keep serving.
             if (errno != EINTR) { perror("unable to accept connection"); }
         } else {
-            if(connectedCount >= g_settings.socketNum)
-            {
-                destroy_client_info(&client);
-                blog("Max connections reached! %d/%d current connections.", connectedCount, g_settings.socketNum);
-                continue;
-            }
-            printf("Passed this...\n");
             child = fork();
             if(child == 0)
             {
