@@ -171,12 +171,14 @@ int main(int argc, char **argv) {
             // it was  "real" error, report it, but keep serving.
             if (errno != EINTR) { perror("unable to accept connection"); }
         } else {
-            printf("%d %d\n", connectedCount, g_settings);
+            printf("%d %d\n", connectedCount, g_settings.socketNum);
             if(connectedCount >= g_settings.socketNum)
             {
                 destroy_client_info(&client);
+                printf("IN HERE\n");
                 continue;
             }
+            printf("Passed this...\n");
             child = fork();
             if(child == 0)
             {
