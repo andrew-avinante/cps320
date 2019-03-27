@@ -170,7 +170,7 @@ int main(int argc, char **argv) {
             // a signal interrupting our accept(2) call; if
             // it was  "real" error, report it, but keep serving.
             if (errno != EINTR) { perror("unable to accept connection"); }
-        } else if(connectedCount <= g_settings.socketNum) {
+        } else if(connectedCount < g_settings.socketNum) {
             child = fork();
             if(child == 0)
             {
