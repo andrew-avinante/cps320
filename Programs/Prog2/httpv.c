@@ -17,6 +17,7 @@ int verifyInput(http_request_t *req)
 {
     if(strcmp(req->verb, "GET") != 0 && strcmp(req->verb,"POST") != 0) // test for valid verb
     {
+        printf("HEY\n");
         return -4;
     }
     if(strchr(req->path, '/') != req->path) // test for valid path
