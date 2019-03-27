@@ -51,7 +51,7 @@ void waitchildren(int signum) {
 // Returns 0 on success, -1 on false...
 int parse_options(int argc, char * const argv[]) {
     int ret = -1; 
-    printf("%d\n", g_settings.socketNum);
+
     char op;
     while ((op = getopt(argc, argv, "h:p:r:w:")) > -1) {
         switch (op) {
@@ -172,11 +172,10 @@ int main(int argc, char **argv) {
             // it was  "real" error, report it, but keep serving.
             if (errno != EINTR) { perror("unable to accept connection"); }
         } else {
-            printf("%d %d\n", connectedCount, g_settings.socketNum);
             if(connectedCount >= g_settings.socketNum)
             {
                 destroy_client_info(&client);
-                printf("IN HERE\n");
+                blog("Max connections reached! %d/%d current connections.", connectedCount, g_settings.socketNum);
                 continue;
             }
             printf("Passed this...\n");
