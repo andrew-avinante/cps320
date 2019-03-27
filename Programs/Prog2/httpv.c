@@ -62,7 +62,7 @@ int parseHttp(FILE *in, http_request_t **request)
 {
     http_request_t *req = NULL;
     size_t len = 0u;
-    const int VERB_SIZE = 4;
+    const int VERB_SIZE = 5;
     const int PATH_SIZE = 256;
     const int VERSION_SIZE = 10;
     int i = 0, blankline = 0;
