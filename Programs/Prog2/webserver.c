@@ -91,44 +91,44 @@ void sigint_handler(int signum) {
 // Connection handling logic: reads/echos lines of text until error/EOF,
 // then tears down connection.
 void handle_client(struct client_info *client) {
-    FILE *stream = NULL;
+//     FILE *stream = NULL;
 
-    // Wrap the socket file descriptor in a read/write FILE stream
-    // so we can use tasty stdio functions like getline(3)
-    // [dup(2) the file descriptor so that we don't double-close;
-    // fclose(3) will close the underlying file descriptor,
-    // and so will destroy_client()]
-    if ((stream = fdopen(dup(client->fd), "r+"))== NULL) {
-        perror("unable to wrap socket");
-        goto cleanup;
-    }
+//     // Wrap the socket file descriptor in a read/write FILE stream
+//     // so we can use tasty stdio functions like getline(3)
+//     // [dup(2) the file descriptor so that we don't double-close;
+//     // fclose(3) will close the underlying file descriptor,
+//     // and so will destroy_client()]
+//     if ((stream = fdopen(dup(client->fd), "r+"))== NULL) {
+//         perror("unable to wrap socket");
+//         goto cleanup;
+//     }
 
-    http_request_t *request = NULL;
-    int result = 0;
+//     http_request_t *request = NULL;
+//     int result = 0;
 
-    // Echo all lines
-    char *line = NULL;
-    size_t len = 0u;
-    ssize_t recd;
-    result = parseHttp(stream, &request);
-    generateResponse(result, request, stream);
-    cleanupHttp(request);
-    // while ((recd = getline(&line, &len, stream)) > 0) {
-    //     printf("\tReceived %zd byte line; echoing...\n", recd);
+//     // Echo all lines
+//     char *line = NULL;
+//     size_t len = 0u;
+//     ssize_t recd;
+//     result = parseHttp(stream, &request);
+//     generateResponse(result, request, stream);
+//     cleanupHttp(request);
+//     // while ((recd = getline(&line, &len, stream)) > 0) {
+//     //     printf("\tReceived %zd byte line; echoing...\n", recd);
         
-    //     fputs(line, stream); 
-    // }
+//     //     fputs(line, stream); 
+//     // }
 
-cleanup:
-    // Shutdown this client
-    if (stream)
-    {
-        fclose(stream);
-        printf("CLOSED");
-    }
-    destroy_client_info(client);
-    free(line);
-    printf("\tSession ended.\n");
+// cleanup:
+//     // Shutdown this client
+//     if (stream)
+//     {
+//         fclose(stream);
+//         printf("CLOSED");
+//     }
+//     destroy_client_info(client);
+//     free(line);
+//     printf("\tSession ended.\n");
     return;
 }
 
