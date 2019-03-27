@@ -77,7 +77,7 @@ int parseHttp(FILE *in, http_request_t **request)
     if((rc = parseRequestLine(line, strtok_r(line, " ", &save), req->verb, save, VERB_SIZE)) != -1) goto cleanup;
     if((rc = parseRequestLine(NULL, strtok_r(line, " ", &save), req->path, save, PATH_SIZE)) != -1) goto cleanup;
     if((rc = parseRequestLine(NULL, strtok_r(line, " ", &save), req->version, save, VERSION_SIZE)) != -1) goto cleanup;
-
+    printf("%s\n", req->path);
     // token = strtok_r(line, " ", &save);     //Parses first line for VERB
     // if(token == NULL)
     // {
