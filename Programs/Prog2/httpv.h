@@ -38,6 +38,8 @@ typedef struct dict {
     node_t node[DICT_SIZE];
 } dict_t;
 
+int verifyInput(http_request_t *req);
+
 // Returns 1 on success,
 // -1 on invalid HTTP request,
 // -2 on I/O error,

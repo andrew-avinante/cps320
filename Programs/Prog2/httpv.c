@@ -13,6 +13,23 @@
 
 dict_t dict = {{{"html", "text/html"}, {"htm", "text/html"}, {"gif", "image/gif"}, {"jpeg", "image/jpeg"}, {"jpg", "image/jpeg"}, {"png", "image/png"}, {"css", "text/css"}, {"txt", "text/plain"}}};
 
+int verifyInput(http_request_t *req)
+{
+    if(strcmp(req->verb, "GET") != 0 && strcmp(req->verb,"POST") != 0) // test for valid verb
+    {
+        return = -4;
+    }
+    if(strchr(req->path, '/') != req->path) // test for valid path
+    {
+        return = (strstr(req->path, "..") != NULL) ? -5 : -6; // if path goes outside of root directory then -5 else -6
+    }
+    if(strstr(req->version, "HTTP") == 0) // test for invalid version
+    {
+        return = -7;
+    }
+    return -1;
+}
+
 // Returns 1 on success,
 // -1 on invalid HTTP request,
 // -2 on I/O error,
@@ -72,21 +89,11 @@ int parseHttp(FILE *in, http_request_t **request)
     strlcpy(req->version, token, VERSION_SIZE);      //Coppies token to VERSION
     req->version[VERSION_SIZE - 1] = 0;
     
-    if(strcmp(req->verb, "GET") != 0 && strcmp(req->verb,"POST") != 0) // test for valid verb
+    if((rc = verifyInput(request)) != -1)
     {
-        rc = -4;
         goto cleanup;
     }
-    if(strchr(req->path, '/') != req->path) // test for valid path
-    {
-        rc = (strstr(req->path, "..") != NULL) ? -5 : -6; // if path goes outside of root directory then -5 else -6
-        goto cleanup;
-    }
-    if(strstr(req->version, "HTTP") == 0) // test for invalid version
-    {
-        rc = -7;
-        goto cleanup;
-    }
+
     while(getline(&line, &len, in) > 0 && i < MAX_HEADERS)
     {
         if(strcmp(line, "\r\n") == 0)
