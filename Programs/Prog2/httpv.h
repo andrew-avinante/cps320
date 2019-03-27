@@ -40,7 +40,7 @@ typedef struct dict {
 
 int verifyInput(http_request_t *req);
 
-int parseRequestLine(char *token, char *reqWord, char *save, const int WORD_SIZE);
+int parseRequestLine(char *line, char *token, char *reqWord, char *save, const int WORD_SIZE);
 
 // Returns 1 on success,
 // -1 on invalid HTTP request,
