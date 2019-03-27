@@ -165,7 +165,7 @@ int main(int argc, char **argv) {
         struct client_info client;
 
         // Wait for a connection on that socket
-        if (connectedCount >= g_settings.socketNum || wait_for_client(server_sock, &client)) {
+        if (wait_for_client(server_sock, &client) || connectedCount >= g_settings.socketNum) {
             // Check to make sure our "failure" wasn't due to
             // a signal interrupting our accept(2) call; if
             // it was  "real" error, report it, but keep serving.
