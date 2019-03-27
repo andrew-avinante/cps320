@@ -175,7 +175,7 @@ int main(int argc, char **argv) {
             if(connectedCount >= g_settings.socketNum)
             {
                 destroy_client_info(&client);
-                blog("Max connections reached! %d/%d current connections.", connectedCount, g_settings.socketNum);
+                //blog("Max connections reached! %d/%d current connections.", connectedCount, g_settings.socketNum);
                 continue;
             }
 

@@ -41,11 +41,7 @@ int parseHttp(FILE *in, http_request_t **request)
     }
     
     getline(&line, &len, in);  //Gets first line of file
-    // if(strstr(line, "\n\r") == NULL)
-    // {
-    //     rc = -1;
-    //     goto cleanup;
-    // }
+
     token = strtok_r(line, " ", &save);     //Parses first line for VERB
     if(token == NULL)
     {
