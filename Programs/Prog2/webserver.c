@@ -53,7 +53,7 @@ int parse_options(int argc, char * const argv[]) {
     int ret = -1; 
     printf("%d\n", g_settings.socketNum);
     char op;
-    while ((op = getopt(argc, argv, "h:p:r:w")) > -1) {
+    while ((op = getopt(argc, argv, "h:p:r:w:")) > -1) {
         switch (op) {
             case 'h':
                 g_settings.bindhost = optarg;
@@ -64,6 +64,7 @@ int parse_options(int argc, char * const argv[]) {
             case 'r':
                 ret = chdir(optarg);
                 if(ret < 0) { goto cleanup; }
+                break;
             case 'w':
                 g_settings.socketNum = atoi(optarg);
                 break;
