@@ -29,7 +29,7 @@
 struct settings {
     const char *bindhost;   // Hostname/IP address to bind/listen on
     const char *bindport;   // Portnumber (as a string) to bind/listen on
-    const int socketNum;
+    int socketNum;
 } g_settings = {
     .bindhost = "localhost",    // Default: listen only on localhost interface
     .bindport = "8080",         // Default: listen on TCP port 8080
@@ -65,7 +65,7 @@ int parse_options(int argc, char * const argv[]) {
                 ret = chdir(optarg);
                 if(ret < 0) { goto cleanup; }
             case 'w':
-                g_settings.socketNum = strtol(optarg, strlen(optarg), 10);
+                g_settings.socketNum = strtol(optarg, sizeof(optarg), 10);
                 break;
             default:
                 // Unexpected argument--abort parsing
