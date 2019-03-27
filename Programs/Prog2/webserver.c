@@ -172,19 +172,22 @@ int main(int argc, char **argv) {
             // it was  "real" error, report it, but keep serving.
             if (errno != EINTR) { perror("unable to accept connection"); }
         } else {
-            if(connectedCount < g_settings.socketNum)
+            if(connectedCount <= g_settings.socketNum)
             child = fork();
             if(child == 0)
             {
-                blog("connection from %s:%d with %d client(s) connected", client.ip, client.port, connectedCount);
                 handle_client(&client); // Client gets cleaned up in here
                 break;
             }
             else if(child > 0)
             {
-                // perror("Failed to fork child\n");
-                destroy_client_info(&client);
                 connectedCount += 1;
+                blog("connection from %s:%d with %d client(s) connected", client.ip, client.port, connectedCount);
+                destroy_client_info(&client);
+            }
+            else
+            {
+                perror("Failed to fork child\n");
             }
         }
     }
