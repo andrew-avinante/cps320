@@ -183,7 +183,7 @@ int main(int argc, char **argv) {
             else if(child > 0)
             {
                 // perror("Failed to fork child\n");
-                destroy_client_info(client);
+                destroy_client_info(&client);
                 connectedCount += 1;
             }
         }
