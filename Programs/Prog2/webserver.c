@@ -34,12 +34,14 @@ struct settings {
     .socketNum = 5;
 };
 
+int connectedCount = 0;
+
 // Signal handler for when children die
 void waitchildren(int signum) {
   while (wait3((int *)NULL,
                WNOHANG,
                (struct rusage *)NULL) > 0) {
-    printf("A client disconnected.\n");
+   connectedCount -= 1;
   }
 }
 
@@ -127,6 +129,9 @@ int main(int argc, char **argv) {
     int ret = 1;
     int child;
 
+    // signal handler for when child dies
+    signal (SIGCHLD, waitchildren)
+
     // Network server/client context
     int server_sock = -1;
 
@@ -164,15 +169,17 @@ int main(int argc, char **argv) {
             // it was  "real" error, report it, but keep serving.
             if (errno != EINTR) { perror("unable to accept connection"); }
         } else {
-            blog("connection from %s:%d", client.ip, client.port);
+            if(connectedCount < g_settings.socketNum)
             child = fork();
             if(child == 0)
             {
+                blog("connection from %s:%d with %d client(s) connected", client.ip, client.port, connectedCount);
                 handle_client(&client); // Client gets cleaned up in here
             }
             else if(child < 0)
             {
-                perror("Failed to fork child\n");
+                // perror("Failed to fork child\n");
+                connectedCount += 1;
             }
         }
     }
