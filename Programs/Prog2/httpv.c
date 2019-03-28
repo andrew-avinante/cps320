@@ -12,7 +12,7 @@
 #include <unistd.h>
 #include "httpv.h"
 
-dict_t dict = {{{"html", "text/html"}, {"htm", "text/html"}, {"gif", "image/gif"}, {"jpeg", "image/jpeg"}, {"jpg", "image/jpeg"}, {"png", "image/png"}, {"css", "text/css"}, {"txt", "text/plain"}}};
+dict_t contentDict = {{{"html", "text/html"}, {"htm", "text/html"}, {"gif", "image/gif"}, {"jpeg", "image/jpeg"}, {"jpg", "image/jpeg"}, {"png", "image/png"}, {"css", "text/css"}, {"txt", "text/plain"}}};
 
 int verifyInput(http_request_t *req)
 {        
@@ -133,10 +133,10 @@ int generateResponse(int result, http_request_t *request, FILE *out)
             strtok_r(request->path, ".", &fileExt);
             for(int i = 0; i < DICT_SIZE; i++)
             {
-                if(strcmp(dict.node[i].key, fileExt) == 0)
+                if(strcmp(contentDict.node[i].key, fileExt) == 0)
                 {
-                    snprintf(contentType, CONTENT_SIZE, "Content-type: %s\r\n", dict.node[i].value.value);
-                    printf("%s\n", dict.node[i].value);
+                    snprintf(contentType, CONTENT_SIZE, "Content-type: %s\r\n", contentDict.node[i].value.value);
+                    printf("%s\n", contentDict.node[i].value);
                 }
             }
 
@@ -149,6 +149,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
                 fputs(line, out); 
             }
             break;
+        dict_t errorDict = {{{"html", "text/html"}, {"htm", "text/html"}, {"gif", "image/gif"}, {"jpeg", "image/jpeg"}, {"jpg", "image/jpeg"}, {"png", "image/png"}, {"css", "text/css"}, {"txt", "text/plain"}}};
         case -1:
             fputs("HTTP/1.1 400 Bad Request\r\nContent-type: text/plain\r\n\r\nIllegal HTTP stream\r\n", out);
             break;
