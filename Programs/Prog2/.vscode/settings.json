@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "eznet.h": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "httpv.h": "c"
     }
 }

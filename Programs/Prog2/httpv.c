@@ -133,10 +133,10 @@ int generateResponse(int result, http_request_t *request, FILE *out)
             strtok_r(request->path, ".", &fileExt);
             for(int i = 0; i < DICT_SIZE; i++)
             {
-                if(strcmp(dict.node[i].key.key, fileExt) == 0)
+                if(strcmp(dict.node[i].key, fileExt) == 0)
                 {
                     snprintf(contentType, CONTENT_SIZE, "Content-type: %s\r\n", dict.node[i].value.value);
-                    printf("%s\n", dict.node[i].value.value);
+                    printf("%s\n", dict.node[i].value);
                 }
             }
 
