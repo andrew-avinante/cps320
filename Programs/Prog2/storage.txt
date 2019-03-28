@@ -1,0 +1,28 @@
+//     case -1:
+    //         fputs("HTTP/1.1 *VAR*Content-type: text/plain\r\n\r\n*VAR*", out);
+    //         break;
+    //     case -2:
+    //         fputs("HTTP/1.1 500 Internal Server Error\r\nContent-type: text/plain\r\n\r\nI/O error while reading request\r\n", out);
+    //         break;
+    //     case -3:
+    //         fputs("HTTP/1.1 500 Internal Server Error\r\nContent-type: text/plain\r\n\r\nMalloc failure\r\n", out);
+    //         break;
+    //     case -4:
+    //         fputs("HTTP/1.1 400 Bad Request\r\nContent-type: text/plain\r\n\r\nInvalid verb\r\n", out);
+    //         break;
+    //     case -5:
+    //         fputs("HTTP/1.1 403 Forbidden\r\nContent-type: text/plain\r\n\r\nFile requested is out of root directory\r\n", out);
+    //         break;
+    //     case -6:
+    //         fputs("HTTP/1.1 404 Not Found\r\nContent-type: text/plain\r\n\r\nResource not found\r\n", out);
+    //         break;
+    //     case -7:
+    //         fputs("HTTP/1.1 400 Bad Request\r\nContent-type: text/plain\r\n\r\nInvalid HTTP version\r\n", out);
+    //         break;
+    //     case -8:
+    //         fputs("HTTP/1.1 501 Not Implemented\r\nContent-type: text/plain\r\n\r\nVerb not implemented\r\n", out);
+    //         break;
+    //     default:
+    //         fputs("HTTP/1.1 500 Internal Server Error\r\nContent-type: text/plain\r\n\r\nSomething has gone wrong on our end...\r\n", out);
+    //         break;
+    // }

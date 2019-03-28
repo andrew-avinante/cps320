@@ -13,9 +13,10 @@
 #include "httpv.h"
 
 dict_t contentDict = {{{"html", "text/html"}, {"htm", "text/html"}, {"gif", "image/gif"}, {"jpeg", "image/jpeg"}, {"jpg", "image/jpeg"}, {"png", "image/png"}, {"css", "text/css"}, {"txt", "text/plain"}}};
+
 dict_t errorMap = {{{"400 Bad Request\r\n", "Illegal HTTP stream\r\n"}, {"500 Internal Server Error\r\n", "I/O error while reading request\r\n"}, {"500 Internal Server Error\r\n", "Malloc failure\r\n"}, {"400 Bad Request\r\n", "Invalid verb\r\n"}, {"403 Forbidden\r\n", "File requested is out of root directory\r\n"}, {"404 Not Found\r\n", "Resource not found\r\n"}, {"400 Bad Request\r\n", "Invalid HTTP version\r\n"}, {"501 Not Implemented\r\n", "Verb not implemented\r\n"}}};
 
-
+// This function verifies the request line of the http request
 int verifyInput(http_request_t *req)
 {        
     if(strcmp(req->verb, "GET") != 0 && strcmp(req->verb,"POST") != 0) // test for valid verb
@@ -38,6 +39,7 @@ int verifyInput(http_request_t *req)
     return -1;
 }
 
+// This function parses a portion of the http request and stores it in the variable `reqWord`
 int parseRequestLine(char *line, char *reqWord, char **save, const int WORD_SIZE)
 {
     char *token = strtok_r(line, " ", save);
@@ -50,6 +52,7 @@ int parseRequestLine(char *line, char *reqWord, char **save, const int WORD_SIZE
     return -1;
 }
 
+// This function eats excess input
 int eatInput(char *line, size_t len, FILE *in)
 {
     while(getline(&line, &len, in) > 0)
@@ -71,6 +74,7 @@ int eatInput(char *line, size_t len, FILE *in)
 // -6 invalid path
 // -7 invalid version
 // -8 verb not implimented
+// This function parses the http request
 int parseHttp(FILE *in, http_request_t **request) 
 {
     http_request_t *req = NULL;
@@ -78,7 +82,7 @@ int parseHttp(FILE *in, http_request_t **request)
     const int VERB_SIZE = 5;
     const int PATH_SIZE = 256;
     const int VERSION_SIZE = 10;
-    int i = 0, blankline = 0;
+    int blankline = 0;
     int rc = -1;
     char *line = NULL;
     char **save;
@@ -102,7 +106,6 @@ int parseHttp(FILE *in, http_request_t **request)
 
     if(eatInput(line, len, in) == 0) goto cleanup;
 
-    req->num_headers = i;
     free(line);
 
     *request = req;
@@ -118,6 +121,7 @@ cleanup:
     return rc;
 }
 
+// This function generates and sends the response to the client
 int generateResponse(int result, http_request_t *request, FILE *out)
 {
     char *line = NULL;
@@ -138,10 +142,8 @@ int generateResponse(int result, http_request_t *request, FILE *out)
                 if(strcmp(contentDict.node[i].key, fileExt) == 0)
                 {
                     snprintf(contentType, CONTENT_SIZE, "Content-type: %s\r\n", contentDict.node[i].value);
-                    printf("%s\n", contentDict.node[i].value);
                 }
             }
-
             fputs("HTTP/1.1 200 OK\r\n", out);
             fputs(contentType, out);
             fputs("\r\n", out);
@@ -156,34 +158,6 @@ int generateResponse(int result, http_request_t *request, FILE *out)
             snprintf(errOutput, CONTENT_SIZE, "HTTP/1.1 %sContent-type: text/plain\r\n\r\n%s", errorMap.node[abs(result + 1)].key, errorMap.node[abs(result + 1)].value);
             fputs(errOutput, out);
         }
-    //     case -1:
-    //         fputs("HTTP/1.1 *VAR*Content-type: text/plain\r\n\r\n*VAR*", out);
-    //         break;
-    //     case -2:
-    //         fputs("HTTP/1.1 500 Internal Server Error\r\nContent-type: text/plain\r\n\r\nI/O error while reading request\r\n", out);
-    //         break;
-    //     case -3:
-    //         fputs("HTTP/1.1 500 Internal Server Error\r\nContent-type: text/plain\r\n\r\nMalloc failure\r\n", out);
-    //         break;
-    //     case -4:
-    //         fputs("HTTP/1.1 400 Bad Request\r\nContent-type: text/plain\r\n\r\nInvalid verb\r\n", out);
-    //         break;
-    //     case -5:
-    //         fputs("HTTP/1.1 403 Forbidden\r\nContent-type: text/plain\r\n\r\nFile requested is out of root directory\r\n", out);
-    //         break;
-    //     case -6:
-    //         fputs("HTTP/1.1 404 Not Found\r\nContent-type: text/plain\r\n\r\nResource not found\r\n", out);
-    //         break;
-    //     case -7:
-    //         fputs("HTTP/1.1 400 Bad Request\r\nContent-type: text/plain\r\n\r\nInvalid HTTP version\r\n", out);
-    //         break;
-    //     case -8:
-    //         fputs("HTTP/1.1 501 Not Implemented\r\nContent-type: text/plain\r\n\r\nVerb not implemented\r\n", out);
-    //         break;
-    //     default:
-    //         fputs("HTTP/1.1 500 Internal Server Error\r\nContent-type: text/plain\r\n\r\nSomething has gone wrong on our end...\r\n", out);
-    //         break;
-    // }
     if(fstream)
     {
         free(line);
@@ -192,6 +166,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
     return 0;
 }
 
+// This function cleans allocated memory
 int cleanupHttp(http_request_t *request)
 {
     int rtrn = -1;
@@ -200,10 +175,6 @@ int cleanupHttp(http_request_t *request)
         free(request->verb);
         free(request->path);
         free(request->version);
-        for (int i = 0; i < request->num_headers; ++i) {
-            free(request->headers[i].name);
-            free(request->headers[i].value);
-        }
         rtrn = 0;
     }
     free(request);
