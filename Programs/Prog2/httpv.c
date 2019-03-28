@@ -13,7 +13,8 @@
 #include "httpv.h"
 
 dict_t contentDict = {{{"html", "text/html"}, {"htm", "text/html"}, {"gif", "image/gif"}, {"jpeg", "image/jpeg"}, {"jpg", "image/jpeg"}, {"png", "image/png"}, {"css", "text/css"}, {"txt", "text/plain"}}};
-dict_t errorDict = {{{-1, "400"}, {-2, "500"}, {-3, "500"}, {-4, "400"}, {-5, "403"}, {-6, "404"}, {-7, "400"}, {-8, "501"}}};
+dict_t errorMap = {{{"400 Bad Request\r\n", "Illegal HTTP stream\r\n"}, {"500 Internal Server Error\r\n", "I/O error while reading request\r\n"}, {"500 Internal Server Error\r\n", "Malloc failure\r\n"}, {"400 Bad Request\r\n", "Invalid verb\r\n"}, {"403 Forbidden\r\n", "File requested is out of root directory\r\n"}, {"404 Not Found\r\n", "Resource not found\r\n"}, {"400 Bad Request\r\n", "Invalid HTTP version\r\n"}, {"501 Not Implemented\r\n", "Verb not implemented\r\n"}}};
+
 
 int verifyInput(http_request_t *req)
 {        
@@ -120,23 +121,23 @@ cleanup:
 int generateResponse(int result, http_request_t *request, FILE *out)
 {
     char *line = NULL;
-    const int CONTENT_SIZE = 50;
+    const int CONTENT_SIZE = 150;
     size_t len = 0u;
     ssize_t recd;
     FILE *fstream = NULL;
     char *fileExt;
     char contentType[CONTENT_SIZE];
+    char errOutput[CONTENT_SIZE];
 
-    switch (result)
-    {
-        case 1:
+        if(result == 1)
+        {
             fstream = fopen(&request->path[1], "r+");
             strtok_r(request->path, ".", &fileExt);
             for(int i = 0; i < DICT_SIZE; i++)
             {
                 if(strcmp(contentDict.node[i].key, fileExt) == 0)
                 {
-                    snprintf(contentType, CONTENT_SIZE, "Content-type: %s\r\n", contentDict.node[i].value.value);
+                    snprintf(contentType, CONTENT_SIZE, "Content-type: %s\r\n", contentDict.node[i].value);
                     printf("%s\n", contentDict.node[i].value);
                 }
             }
@@ -149,35 +150,40 @@ int generateResponse(int result, http_request_t *request, FILE *out)
             {
                 fputs(line, out); 
             }
-            break;
-        case -1:
-            fputs("HTTP/1.1 400 Bad Request\r\nContent-type: text/plain\r\n\r\nIllegal HTTP stream\r\n", out);
-            break;
-        case -2:
-            fputs("HTTP/1.1 500 Internal Server Error\r\nContent-type: text/plain\r\n\r\nI/O error while reading request\r\n", out);
-            break;
-        case -3:
-            fputs("HTTP/1.1 500 Internal Server Error\r\nContent-type: text/plain\r\n\r\nMalloc failure\r\n", out);
-            break;
-        case -4:
-            fputs("HTTP/1.1 400 Bad Request\r\nContent-type: text/plain\r\n\r\nInvalid verb\r\n", out);
-            break;
-        case -5:
-            fputs("HTTP/1.1 403 Forbidden\r\nContent-type: text/plain\r\n\r\nFile requested is out of root directory\r\n", out);
-            break;
-        case -6:
-            fputs("HTTP/1.1 404 Not Found\r\nContent-type: text/plain\r\n\r\nResource not found\r\n", out);
-            break;
-        case -7:
-            fputs("HTTP/1.1 400 Bad Request\r\nContent-type: text/plain\r\n\r\nInvalid HTTP version\r\n", out);
-            break;
-        case -8:
-            fputs("HTTP/1.1 501 Not Implemented\r\nContent-type: text/plain\r\n\r\nVerb not implemented\r\n", out);
-            break;
-        default:
-            fputs("HTTP/1.1 500 Internal Server Error\r\nContent-type: text/plain\r\n\r\nSomething has gone wrong on our end...\r\n", out);
-            break;
-    }
+        }
+        else
+        {
+            snprintf(errOutput, CONTENT_SIZE, "HTTP/1.1 %sContent-type: text/plain\r\n\r\n%s", errorMap.node[abs(result + 1)].value);
+            puts(errOutput, out);
+        }
+    //     case -1:
+    //         fputs("HTTP/1.1 *VAR*Content-type: text/plain\r\n\r\n*VAR*", out);
+    //         break;
+    //     case -2:
+    //         fputs("HTTP/1.1 500 Internal Server Error\r\nContent-type: text/plain\r\n\r\nI/O error while reading request\r\n", out);
+    //         break;
+    //     case -3:
+    //         fputs("HTTP/1.1 500 Internal Server Error\r\nContent-type: text/plain\r\n\r\nMalloc failure\r\n", out);
+    //         break;
+    //     case -4:
+    //         fputs("HTTP/1.1 400 Bad Request\r\nContent-type: text/plain\r\n\r\nInvalid verb\r\n", out);
+    //         break;
+    //     case -5:
+    //         fputs("HTTP/1.1 403 Forbidden\r\nContent-type: text/plain\r\n\r\nFile requested is out of root directory\r\n", out);
+    //         break;
+    //     case -6:
+    //         fputs("HTTP/1.1 404 Not Found\r\nContent-type: text/plain\r\n\r\nResource not found\r\n", out);
+    //         break;
+    //     case -7:
+    //         fputs("HTTP/1.1 400 Bad Request\r\nContent-type: text/plain\r\n\r\nInvalid HTTP version\r\n", out);
+    //         break;
+    //     case -8:
+    //         fputs("HTTP/1.1 501 Not Implemented\r\nContent-type: text/plain\r\n\r\nVerb not implemented\r\n", out);
+    //         break;
+    //     default:
+    //         fputs("HTTP/1.1 500 Internal Server Error\r\nContent-type: text/plain\r\n\r\nSomething has gone wrong on our end...\r\n", out);
+    //         break;
+    // }
     if(fstream)
     {
         free(line);
