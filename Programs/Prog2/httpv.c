@@ -154,7 +154,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
         else
         {
             snprintf(errOutput, CONTENT_SIZE, "HTTP/1.1 %sContent-type: text/plain\r\n\r\n%s", errorMap.node[abs(result + 1)].key, errorMap.node[abs(result + 1)].value);
-            puts(errOutput, out);
+            fputs(errOutput, out);
         }
     //     case -1:
     //         fputs("HTTP/1.1 *VAR*Content-type: text/plain\r\n\r\n*VAR*", out);
