@@ -21,9 +21,9 @@ typedef struct http_request {
     http_header_t headers[MAX_HEADERS];
 } http_request_t;
 
-typedef void keys_t;
+typedef void* keys_t;
 
-typedef void value_t;
+typedef void* value_t;
 
 typedef struct Node {
     keys_t key;
