@@ -41,12 +41,12 @@ int verifyInput(http_request_t *req)
 int parseRequestLine(char *line, char *reqWord, char **save, const int WORD_SIZE)
 {
     char test[20] = "Hello bob";
+    strtok_r(test, " ", save);
     char *token = NULL;
     if(token == NULL)
     {
         return -2;
     }
-    strtok_r(test, " ", save);
     strlcpy(reqWord, token, WORD_SIZE);    //Coppies token to VERB
     reqWord[WORD_SIZE - 1] = 0;            //Adds null terminator
     return -1;
