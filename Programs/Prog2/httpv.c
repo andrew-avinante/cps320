@@ -48,8 +48,8 @@ int parseRequestLine(char *line, char *reqWord, char **save, size_t len)
     {
         return -2;
     }
-    reqWord = malloc(sizeof(token) + 1); 
-    printf("%d\n", sizeof(reqWord));
+    reqWord = malloc(stlen(token) + 1); 
+    printf("%d\n", strlen(reqWord));
     strlcpy(reqWord, token, len);    //Coppies token to VERB
     reqWord[strlen(token)] = 0;            //Adds null terminator
     return -1;
@@ -106,11 +106,11 @@ int parseHttp(FILE *in, http_request_t **request)
     // req->path = malloc(PATH_SIZE); 
     // req->version = malloc(VERSION_SIZE);
     if((rc = parseRequestLine(line, req->verb, save, len)) != -1) goto cleanup;
-        printf("%d\n", sizeof(req->verb));
+        printf("%d\n", strlen(req->verb));
     if((rc = parseRequestLine(NULL, req->path, save, len)) != -1) goto cleanup;
-        printf("%d\n", sizeof(req->path));
+        printf("%d\n", strlen(req->path));
     if((rc = parseRequestLine(NULL, req->version, save, len)) != -1) goto cleanup;
-        printf("%d\n", sizeof(req->version));
+        printf("%d\n", strlen(req->version));
     
     if((rc = verifyInput(req)) != -1) goto cleanup;
 
