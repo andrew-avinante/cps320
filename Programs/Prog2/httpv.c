@@ -41,15 +41,15 @@ int verifyInput(http_request_t *req)
 }
 
 // This function parses a portion of the http request and stores it in the variable `reqWord`
-int parseRequestLine(char *line, char *reqWord, char **save, size_t len)
+int parseRequestLine(char *line, char *reqWord, char **save, const int WORD_SIZE)
 {
     char *token = strtok_r(line, " ", save);
     if(token == NULL)
     {
         return -2;
     }
-    strlcpy(reqWord, token, len);    //Coppies token to VERB
-    reqWord[strlen(token)] = 0;            //Adds null terminator
+    strlcpy(reqWord, token, WORD_SIZE);    //Coppies token to VERB
+    reqWord[WORD_SIZE - 1] = 0;            //Adds null terminator
     return -1;
 }
 
@@ -100,12 +100,13 @@ int parseHttp(FILE *in, http_request_t **request)
         goto cleanup;
     }
     // if(ferror(in))
-        req->verb = malloc(VERB_SIZE); 
-    req->path = malloc(len); 
+    
+    req->verb = malloc(VERB_SIZE); 
+    req->path = malloc(PATH_SIZE); 
     req->version = malloc(VERSION_SIZE);
-    if((rc = parseRequestLine(line, req->verb, save, len)) != -1) goto cleanup;
-    if((rc = parseRequestLine(NULL, req->path, save, len)) != -1) goto cleanup;
-    if((rc = parseRequestLine(NULL, req->version, save, len)) != -1) goto cleanup;
+    if((rc = parseRequestLine(line, req->verb, save, VERB_SIZE)) != -1) goto cleanup;
+    if((rc = parseRequestLine(NULL, req->path, save, PATH_SIZE)) != -1) goto cleanup;
+    if((rc = parseRequestLine(NULL, req->version, save, VERSION_SIZE)) != -1) goto cleanup;
     
     if((rc = verifyInput(req)) != -1) goto cleanup;
 
@@ -141,7 +142,6 @@ int generateResponse(int result, http_request_t *request, FILE *out)
         {
             fstream = fopen(&request->path[1], "r+");
             strtok_r(request->path, ".", &fileExt);
-            printf("%s %s\n",&request->path[1], &fileExt);
             for(int i = 0; i < DICT_SIZE; i++)
             {
                 if(strcmp(contentDict[i].key, fileExt) == 0)
@@ -158,7 +158,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
                 fputs(line, out); 
             }
         }
-        if(result != 1)
+        else
         {
             snprintf(errOutput, CONTENT_SIZE, "HTTP/1.1 %sContent-type: text/plain\r\n\r\n%s", errorMap[abs(result + 1)].key, errorMap[abs(result + 1)].value);
             fputs(errOutput, out);
