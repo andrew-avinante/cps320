@@ -37,7 +37,6 @@ int verifyInput(http_request_t *req)
     {
         return -8;
     }
-    printf("daqrap\n");
     return -1;
 }
 
@@ -142,7 +141,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
         {
             fstream = fopen(&request->path[1], "r+");
             strtok_r(request->path, ".", &fileExt);
-            printf("%d\n", getDictLen(contentDict));
+            printf("TEST %ld\n", getDictLen(contentDict));
             for(int i = 0; i < DICT_SIZE; i++)
             {
                 if(strcmp(contentDict[i].key, fileExt) == 0)
