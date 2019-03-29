@@ -21,19 +21,6 @@ typedef struct http_request {
     http_header_t headers[MAX_HEADERS];
 } http_request_t;
 
-typedef char* keys_t;
-
-typedef char* value_t;
-
-typedef struct Node {
-    keys_t key;
-    value_t value;
-} node_t;
-
-typedef struct dict {
-    node_t node[DICT_SIZE];
-} dict_t;
-
 int verifyInput(http_request_t *req);
 
 int parseRequestLine(char *line, char *reqWord, char **save, const int WORD_SIZE);

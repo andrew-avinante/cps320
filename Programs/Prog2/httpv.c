@@ -11,7 +11,9 @@
 #include <errno.h>
 #include <unistd.h>
 #include "httpv.h"
+#include "utils.h"
 
+// Dictionary 
 dict_t contentDict = {{{"html", "text/html"}, {"htm", "text/html"}, {"gif", "image/gif"}, {"jpeg", "image/jpeg"}, {"jpg", "image/jpeg"}, {"png", "image/png"}, {"css", "text/css"}, {"txt", "text/plain"}}};
 
 dict_t errorMap = {{{"400 Bad Request\r\n", "Illegal HTTP stream\r\n"}, {"500 Internal Server Error\r\n", "I/O error while reading request\r\n"}, {"500 Internal Server Error\r\n", "Malloc failure\r\n"}, {"400 Bad Request\r\n", "Invalid verb\r\n"}, {"403 Forbidden\r\n", "File requested is out of root directory\r\n"}, {"404 Not Found\r\n", "Resource not found\r\n"}, {"400 Bad Request\r\n", "Invalid HTTP version\r\n"}, {"501 Not Implemented\r\n", "Verb not implemented\r\n"}}};
@@ -62,7 +64,7 @@ int eatInput(char *line, size_t len, FILE *in)
             return 1;
         }
     }
-    return 0;
+    return -1;
 }
 
 // Returns 1 on success,
@@ -93,7 +95,11 @@ int parseHttp(FILE *in, http_request_t **request)
         goto cleanup;
     }
     
-    getline(&line, &len, in);  //Gets first line of file
+    if(getline(&line, &len, in) <= 0)  //Gets first line of file
+    {
+        rc = -2;
+        goto cleanup;
+    }
     
     req->verb = malloc(VERB_SIZE); 
     req->path = malloc(PATH_SIZE); 
@@ -104,13 +110,12 @@ int parseHttp(FILE *in, http_request_t **request)
     
     if((rc = verifyInput(req)) != -1) goto cleanup;
 
-    if(eatInput(line, len, in) == 0) goto cleanup;
+    if((rc = eatInput(line, len, in)) != 1) goto cleanup;
 
     free(line);
 
     *request = req;
 
-    rc = 1;
     return rc;
 
 cleanup:
@@ -137,6 +142,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
         {
             fstream = fopen(&request->path[1], "r+");
             strtok_r(request->path, ".", &fileExt);
+            printf("%d\n", getDictLen(contentDict));
             for(int i = 0; i < DICT_SIZE; i++)
             {
                 if(strcmp(contentDict.node[i].key, fileExt) == 0)
