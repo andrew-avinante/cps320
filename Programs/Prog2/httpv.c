@@ -62,11 +62,9 @@ int eatInput(size_t len, FILE *in)
     {
         if(strcmp(line, "\r\n") == 0)
         {
-            free(line);
             return 1;
         }
     }
-    free(line);
     return -1;
 }
 
