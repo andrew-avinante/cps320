@@ -44,6 +44,7 @@ int verifyInput(http_request_t *req)
 int parseRequestLine(char *line, char *reqWord, char **save, size_t len)
 {
     char *token = strtok_r(line, " ", save);
+    printf("ASFSDDFSFDSDFSDFSDFSFDS %s\n", token);
     if(token == NULL)
     {
         return -2;
@@ -82,7 +83,6 @@ int parseHttp(FILE *in, http_request_t **request)
     const int VERB_SIZE = 5;
     const int PATH_SIZE = 256;
     const int VERSION_SIZE = 10;
-    int blankline = 0;
     int rc = -1;
     char *line = NULL;
     char **save;
@@ -123,7 +123,7 @@ cleanup:
     cleanupHttp(req);
     eatInput(line, len, in);
     printf("and here?\n");
-    // if(line != NULL) free(line);
+    if(line != NULL) free(line);
     return rc;
 }
 
