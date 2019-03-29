@@ -57,14 +57,16 @@ int parseRequestLine(char *line, char *reqWord, char **save, const int WORD_SIZE
 // This function eats excess input
 int eatInput(size_t len, FILE *in)
 {
-    char *line;
+    char *line = NULL;
     while(getline(&line, &len, in) > 0)
     {
         if(strcmp(line, "\r\n") == 0)
         {
+            free(line);
             return 1;
         }
     }
+    free(line);
     return -1;
 }
 
