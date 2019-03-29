@@ -146,6 +146,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
         {
             fstream = fopen(&request->path[1], "r+");
             strtok_r(strrchr(request->path, '.'), ".", &fileExt);
+            printf("HELLO!!!!! %s\n", fileExt);
             for(int i = 0; i < DICT_SIZE; i++)
             {
                 if(strcmp(contentDict[i].key, fileExt) == 0)
