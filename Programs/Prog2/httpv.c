@@ -19,6 +19,12 @@ dict_t contentDict = {{"html", "text/html"}, {"htm", "text/html"}, {"gif", "imag
 // Map for errors
 dict_t errorMap = {{"400 Bad Request\r\n", "Illegal HTTP stream\r\n"}, {"500 Internal Server Error\r\n", "I/O error while reading request\r\n"}, {"500 Internal Server Error\r\n", "Malloc failure\r\n"}, {"400 Bad Request\r\n", "Invalid verb\r\n"}, {"403 Forbidden\r\n", "File requested is out of root directory\r\n"}, {"404 Not Found\r\n", "Resource not found\r\n"}, {"400 Bad Request\r\n", "Invalid HTTP version\r\n"}, {"501 Not Implemented\r\n", "Verb not implemented\r\n"}};
 
+void alarmHandler(int signum)
+{
+    blog("Connection timed out...");
+    goto cleanup;    
+}
+
 // This function verifies the request line of the http request
 int verifyInput(http_request_t *req)
 {        
@@ -82,6 +88,7 @@ int eatInput(size_t len, FILE *in)
 // This function parses the http request
 int parseHttp(FILE *in, http_request_t **request) 
 {
+    signal(SIGALRM, alarmHandler);
     http_request_t *req = NULL;
     size_t len = 0u;
     const int VERB_SIZE = 5;
@@ -150,6 +157,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
             {
                 strtok_r(request->path, ".", &fileExt);
             }
+            printf("EXTENTION: %s\n", fileExt);
             for(int i = 0; i < DICT_SIZE; i++)
             {
                 if(strcmp(contentDict[i].key, fileExt))
