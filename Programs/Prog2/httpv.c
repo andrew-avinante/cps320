@@ -48,8 +48,8 @@ int parseRequestLine(char *line, char *reqWord, char **save)
     {
         return -2;
     }
+    req->version = malloc(strlen(token));
     strlcpy(reqWord, token, len);    //Coppies token to VERB
-    reqWord[strlen(token) - 1] = 0;            //Adds null terminator
     return -1;
 }
 
@@ -101,9 +101,6 @@ int parseHttp(FILE *in, http_request_t **request)
     }
     // if(ferror(in))
     
-    req->verb = malloc(VERB_SIZE); 
-    req->path = malloc(PATH_SIZE); 
-    req->version = malloc(VERSION_SIZE);
     if((rc = parseRequestLine(line, req->verb, save)) != -1) goto cleanup;
     if((rc = parseRequestLine(NULL, req->path, save)) != -1) goto cleanup;
     if((rc = parseRequestLine(NULL, req->version, save)) != -1) goto cleanup;
