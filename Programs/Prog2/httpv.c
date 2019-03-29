@@ -146,7 +146,6 @@ int generateResponse(int result, http_request_t *request, FILE *out)
         {
             fstream = fopen(&request->path[1], "r+");
             fileExt = &strrchr(request->path, '.')[1];
-            printf("HELLO! %s\n", fileExt);
             for(int i = 0; i < DICT_SIZE; i++)
             {
                 if(strcmp(contentDict[i].key, fileExt) == 0)
@@ -163,7 +162,6 @@ int generateResponse(int result, http_request_t *request, FILE *out)
                 while (getline(&line, &len, fstream) > 0) 
                 {
                     alarm(0);
-                    printf("%s\n", line);
                     fputs(line, out); 
                 }
                 alarm(0);
