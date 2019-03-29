@@ -99,7 +99,7 @@ int parseHttp(FILE *in, http_request_t **request)
         goto cleanup;
     }
     // if(ferror(in))
-    pirntf("ExECUTES here\n");
+    printf("ExECUTES here\n");
     req->verb = malloc(VERB_SIZE); 
     req->path = malloc(len); 
     req->version = malloc(VERSION_SIZE);
