@@ -134,13 +134,12 @@ int generateResponse(int result, http_request_t *request, FILE *out)
     char contentType[CONTENT_SIZE];
     char errOutput[CONTENT_SIZE];
 
-        if(result == 1)
+        if(result == 1 && strchr(request->path, '.') != 0)
         {
             fstream = fopen(&request->path[1], "r+");
-            strtok_r(request->path, ".", &fileExt);
-            if(!ferror(fstream) && fileExt) 
+            if(!ferror(fstream)) 
             {
-                printf("%s\n", fileExt);
+                strtok_r(request->path, ".", &fileExt);
                 for(int i = 0; i < DICT_SIZE; i++)
                 {
                     if(strcmp(contentDict[i].key, fileExt) == 0)
@@ -154,11 +153,6 @@ int generateResponse(int result, http_request_t *request, FILE *out)
 
                 while (getline(&line, &len, fstream) != EOF) 
                 {
-                    if(ferror(fstream))
-                    {
-                        result = -2;
-                        break;
-                    }
                     fputs(line, out);  
                 }
                 printf("DONE\n");
