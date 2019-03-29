@@ -94,7 +94,7 @@ int parseHttp(FILE *in, http_request_t **request)
     char *line = NULL;
     char **save;
     printf("????\n");
-        char parse[strlen(line)];
+        char parse[PATH_SIZE];
     printf("THIS\n");
     if((req = calloc(1, sizeof(http_request_t))) == NULL)   //Allocates memory for req
     {
