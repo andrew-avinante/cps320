@@ -56,6 +56,7 @@ int eatInput(size_t len, FILE *in)
     char *line = NULL;
     while(getline(&line, &len, in) > 0)
     {
+        printf("AGH\n");
         if(strcmp(line, "\r\n") == 0)
         {
             free(line);
@@ -100,17 +101,25 @@ int parseHttp(FILE *in, http_request_t **request)
         goto cleanup;
     }
     printf("here4\n");
-    req->verb = malloc(VERB_SIZE); 
+    req->verb = malloc(VERB_SIZE);
+    printf("here5\n"); 
     req->path = malloc(PATH_SIZE); 
+       printf("heret6\n");
     req->version = malloc(VERSION_SIZE);
+       printf("here7\n");
     if((rc = parseRequestLine(line, req->verb, save, VERB_SIZE)) != -1) goto cleanup;
+       printf("here8\n");
     if((rc = parseRequestLine(NULL, req->path, save, PATH_SIZE)) != -1) goto cleanup;
+       printf("here9\n");
     if((rc = parseRequestLine(NULL, req->version, save, VERSION_SIZE)) != -1) goto cleanup;
+       printf("here10\n");
     
     if((rc = verifyInput(req)) != -1) goto cleanup;
+       printf("here11\n");
 
     if((rc = eatInput(len, in)) != 1) goto cleanup;
-    printf("here5\n");
+       printf("here12\n");
+ 
     free(line);
 
     *request = req;
