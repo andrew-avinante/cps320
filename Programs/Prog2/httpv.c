@@ -158,6 +158,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
 
                 while ((recd = getline(&line, &len, fstream)) > 0) 
                 {
+                    fprintf("%s", line);
                     fputs(line, out); 
                 }
             }
@@ -173,9 +174,9 @@ int generateResponse(int result, http_request_t *request, FILE *out)
         }
     if(fstream)
     {
-        free(line);
         fclose(fstream);
     }
+    if(line != NULL) free(line);
     return 0;
 }
 
