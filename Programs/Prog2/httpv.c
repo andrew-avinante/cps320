@@ -99,6 +99,7 @@ int parseHttp(FILE *in, http_request_t **request)
         rc = -2;
         goto cleanup;
     }
+    // if(ferror(in))
     
     req->verb = malloc(VERB_SIZE); 
     req->path = malloc(PATH_SIZE); 
@@ -111,7 +112,7 @@ int parseHttp(FILE *in, http_request_t **request)
 
     if((rc = eatInput(line, len, in)) != 1) goto cleanup;
 
-    free(line);
+    if(line != NULL) free(line);
 
     *request = req;
 
@@ -121,7 +122,7 @@ cleanup:
     cleanupHttp(req);
     eatInput(line, len, in);
 
-    free(line);
+    if(line != NULL) free(line);
     return rc;
 }
 
