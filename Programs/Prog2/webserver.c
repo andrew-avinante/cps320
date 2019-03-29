@@ -57,8 +57,8 @@ void pipHandler(int signum)
 // Returns 0 on success, -1 on false...
 int parse_options(int argc, char * const argv[]) {
     int ret = -1; 
-    int PATH_MAX = 250;
-    char cwd[PATH_MAX];
+    const int PATH_SIZE = 250;
+    char cwd[PATH_SIZE];
     getcwd(cwd, sizeof(cwd));
     chdir(cwd);
     char op;
