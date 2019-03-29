@@ -47,6 +47,12 @@ void waitchildren(int signum) {
   }
 }
 
+// Signal handler for when pipes are closed early
+void pipHandler(int signum)
+{
+    blog("Pipe Signal Caught!");
+}
+
 // Parse commandline options and sets g_settings accordingly.
 // Returns 0 on success, -1 on false...
 int parse_options(int argc, char * const argv[]) {
@@ -129,6 +135,7 @@ int main(int argc, char **argv) {
 
     // signal handler for when child dies
     signal(SIGCHLD, waitchildren);
+    signal(SIGPIPE, pipHandler);
 
     // Network server/client context
     int server_sock = -1;
@@ -172,7 +179,6 @@ int main(int argc, char **argv) {
                 destroy_client_info(&client);
                 continue;
             }
-
             child = fork();
             if(child == 0)
             {

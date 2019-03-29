@@ -30,10 +30,6 @@ int verifyInput(http_request_t *req)
     {
         return (strstr(req->path, "..") != NULL) ? -5 : -6; // if path goes outside of root directory then -5 else -6
     }
-    if(strstr(req->version, "HTTP") == 0) // test for invalid version
-    {
-        return -7;
-    }
     if(strcmp(req->verb, "POST") == 0) 
     {
         return -8;
