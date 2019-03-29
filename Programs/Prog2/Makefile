@@ -1,14 +1,14 @@
 webserver: webserver.c eznet.o httpv.o utils.o
-	gcc -g webserver.c eznet.o httpv.o utils.o -lbsd -owebserver
+	gcc -g -std=c99 webserver.c eznet.o httpv.o utils.o -lbsd -owebserver
 
 eznet.o : eznet.c eznet.h
-	gcc -c eznet.c
+	gcc -c -std=c99 eznet.c
 
 httpv.o : httpv.c httpv.h
-	gcc -c httpv.c
+	gcc -c -std=c99 httpv.c
 
 utils.o : utils.c utils.h
-	gcc -c utils.c
+	gcc -c -std=c99 utils.c
 
 clean :
 	-rm *.o
