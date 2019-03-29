@@ -121,6 +121,9 @@ int parseHttp(FILE *in, http_request_t **request)
 
     token = strtok_r(NULL, " ", &rest);
     if((rc = parseRequestLine(NULL, req->version, VERSION_SIZE)) != -1) goto cleanup;
+
+    printf("YAY\n");
+    
     
     if((rc = verifyInput(req)) != -1) goto cleanup;
 
