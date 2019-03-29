@@ -14,4 +14,6 @@ typedef node_t dict_t[];
 
 void blog(const char *fmt, ...);
 
+void getDictLen(dict_t dict);
+
 #endif
