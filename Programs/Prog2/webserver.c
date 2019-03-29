@@ -78,6 +78,8 @@ int parse_options(int argc, char * const argv[]) {
             case 'w':
                 g_settings.socketNum = atoi(optarg);
                 break;
+            case 255:
+                break;
             default:
                 printf("%d\n", op);
                 printf("DEFAULT\n");
