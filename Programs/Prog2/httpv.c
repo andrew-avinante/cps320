@@ -140,13 +140,13 @@ int generateResponse(int result, http_request_t *request, FILE *out)
         {
             fstream = fopen(&request->path[1], "r+");
             strtok_r(request->path, ".", &fileExt);
-            while(strchr(fileExt, '.') == 0)
+            while(strchr(fileExt, '.') != NULL)
             {
                 strtok_r(request->path, ".", &fileExt);
             }
             for(int i = 0; i < DICT_SIZE; i++)
             {
-                if(strcmp(contentDict[i].key, fileExt) != NULL)
+                if(strcmp(contentDict[i].key, fileExt))
                 {
                     snprintf(contentType, CONTENT_SIZE, "Content-type: %s\r\n", contentDict[i].value);
                 }
