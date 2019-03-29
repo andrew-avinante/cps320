@@ -26,6 +26,9 @@ int verifyInput(http_request_t *req);
 // This function parses a portion of the http request and stores it in the variable `reqWord`
 int parseRequestLine(char *line, char *reqWord, char **save, const int WORD_SIZE);
 
+// Checks for formatting and throws out rest of lines
+int eatInput(size_t len, FILE *in);
+
 // Returns 1 on success,
 // -1 on invalid HTTP request,
 // -2 on I/O error,
