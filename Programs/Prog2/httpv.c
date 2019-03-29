@@ -116,6 +116,7 @@ int parseHttp(FILE *in, http_request_t **request)
 
     strlcpy(parse, line, strlen(line));
     char *rest = parse;
+    printf("%c\n", parse[1]);
     char *token = strtok_r(parse, " ", &rest);
     printf("SUCCESS\n");
 
