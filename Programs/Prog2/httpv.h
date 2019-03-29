@@ -22,7 +22,7 @@ typedef struct http_request {
 
 int verifyInput(http_request_t *req);
 
-int parseRequestLine(char *line, char *reqWord, char **save, const int WORD_SIZE);
+int parseRequestLine(char *line, char *reqWord, char **save);
 
 // Returns 1 on success,
 // -1 on invalid HTTP request,
