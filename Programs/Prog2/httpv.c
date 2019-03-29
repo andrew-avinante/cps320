@@ -13,9 +13,10 @@
 #include "httpv.h"
 #include "utils.h"
 
-// Dictionary 
+// Dictionary of content types
 dict_t contentDict = {{"html", "text/html"}, {"htm", "text/html"}, {"gif", "image/gif"}, {"jpeg", "image/jpeg"}, {"jpg", "image/jpeg"}, {"png", "image/png"}, {"css", "text/css"}, {"txt", "text/plain"}};
 
+// Dictionary of errors
 dict_t errorMap = {{"400 Bad Request\r\n", "Illegal HTTP stream\r\n"}, {"500 Internal Server Error\r\n", "I/O error while reading request\r\n"}, {"500 Internal Server Error\r\n", "Malloc failure\r\n"}, {"400 Bad Request\r\n", "Invalid verb\r\n"}, {"403 Forbidden\r\n", "File requested is out of root directory\r\n"}, {"404 Not Found\r\n", "Resource not found\r\n"}, {"400 Bad Request\r\n", "Invalid HTTP version\r\n"}, {"501 Not Implemented\r\n", "Verb not implemented\r\n"}};
 
 // This function verifies the request line of the http request
@@ -92,12 +93,11 @@ int parseHttp(FILE *in, http_request_t **request)
         goto cleanup;
     }
     
-    if(getline(&line, &len, in) <= 0)  //Gets first line of file
+    if(getline(&line, &len, in) <= 0 || ferror(in))  //Gets first line of file
     {
         rc = -2;
         goto cleanup;
     }
-    // if(ferror(in))
     printf("ExECUTES here\n");
     req->verb = malloc(VERB_SIZE); 
     req->path = malloc(len); 
@@ -141,24 +141,31 @@ int generateResponse(int result, http_request_t *request, FILE *out)
         if(result == 1)
         {
             fstream = fopen(&request->path[1], "r+");
-            strtok_r(request->path, ".", &fileExt);
-            for(int i = 0; i < DICT_SIZE; i++)
+            if(!ferror(fstream)) 
             {
-                if(strcmp(contentDict[i].key, fileExt) == 0)
+                strtok_r(request->path, ".", &fileExt);
+                for(int i = 0; i < DICT_SIZE; i++)
                 {
-                    snprintf(contentType, CONTENT_SIZE, "Content-type: %s\r\n", contentDict[i].value);
+                    if(strcmp(contentDict[i].key, fileExt) == 0)
+                    {
+                        snprintf(contentType, CONTENT_SIZE, "Content-type: %s\r\n", contentDict[i].value);
+                    }
+                }
+                fputs("HTTP/1.1 200 OK\r\n", out);
+                fputs(contentType, out);
+                fputs("\r\n", out);
+
+                while ((recd = getline(&line, &len, fstream)) > 0) 
+                {
+                    fputs(line, out); 
                 }
             }
-            fputs("HTTP/1.1 200 OK\r\n", out);
-            fputs(contentType, out);
-            fputs("\r\n", out);
-
-            while ((recd = getline(&line, &len, fstream)) > 0) 
+            else
             {
-                fputs(line, out); 
+                result = -2;
             }
         }
-        else
+        if(result != 1)
         {
             snprintf(errOutput, CONTENT_SIZE, "HTTP/1.1 %sContent-type: text/plain\r\n\r\n%s", errorMap[abs(result + 1)].key, errorMap[abs(result + 1)].value);
             fputs(errOutput, out);
