@@ -113,6 +113,7 @@ int parseHttp(FILE *in, http_request_t **request)
     if((rc = eatInput(line, len, in)) != 1) goto cleanup;
 
     printf("here\n");
+    line = NULL;
     if(line != NULL) free(line);
     printf("after here\n");
     *request = req;
