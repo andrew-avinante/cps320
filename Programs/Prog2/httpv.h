@@ -24,7 +24,7 @@ typedef struct http_request {
 int verifyInput(http_request_t *req);
 
 // This function parses a portion of the http request and stores it in the variable `reqWord`
-int parseRequestLine(char *line, char *reqWord, const int WORD_SIZE);
+int parseRequestLine(char *token, char *reqWord, const int WORD_SIZE);
 
 // Checks for formatting and throws out rest of lines
 int eatInput(size_t len, FILE *in);
