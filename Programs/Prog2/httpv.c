@@ -109,7 +109,7 @@ int parseHttp(FILE *in, http_request_t **request)
         goto cleanup;
     }
     alarm(0);
-    
+    printf("UP HERE\n");
     req->verb = malloc(VERB_SIZE); 
     req->path = malloc(PATH_SIZE); 
     req->version = malloc(VERSION_SIZE);
