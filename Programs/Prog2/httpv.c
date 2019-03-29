@@ -41,14 +41,14 @@ int verifyInput(http_request_t *req)
 }
 
 // This function parses a portion of the http request and stores it in the variable `reqWord`
-int parseRequestLine(char *line, char *reqWord, char **save, size_t len)
+int copyRequest(char *reqWord, size_t len)
 {
-    char *token = strtok_r(line, " ", save);
     if(token == NULL)
     {
         return -2;
     }
     strlcpy(reqWord, token, len);    //Coppies token to VERB
+    reqWord[strlen(token)] = 0;            //Adds null terminator
     return -1;
 }
 
@@ -99,12 +99,15 @@ int parseHttp(FILE *in, http_request_t **request)
         goto cleanup;
     }
     // if(ferror(in))
+    char *token = strtok_r(line, " ", save);
     req->verb = malloc(VERB_SIZE); 
-    req->path = malloc(len); 
+    char *token = strtok_r(NULL, " ", save);
+    req->path = malloc(PATH_SIZE); 
+    char *token = strtok_r(NULL, " ", save);
     req->version = malloc(VERSION_SIZE);
-    if((rc = parseRequestLine(line, req->verb, save, len)) != -1) goto cleanup;
-    if((rc = parseRequestLine(NULL, req->path, save, len)) != -1) goto cleanup;
-    if((rc = parseRequestLine(NULL, req->version, save, len)) != -1) goto cleanup;
+    if((rc = parseRequestLine(req->verb, len)) != -1) goto cleanup;
+    if((rc = parseRequestLine(req->path, len)) != -1) goto cleanup;
+    if((rc = parseRequestLine(req->version, len)) != -1) goto cleanup;
     
     if((rc = verifyInput(req)) != -1) goto cleanup;
 
