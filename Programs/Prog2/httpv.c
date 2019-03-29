@@ -41,6 +41,7 @@ int verifyInput(http_request_t *req)
 int parseRequestLine(char *line, char *reqWord, char **save, const int WORD_SIZE)
 {
        printf("line43\n");
+       printf("%s\n", line);
     char *token = strtok_r(line, " ", save);
        printf("line45\n");
     if(token == NULL)
