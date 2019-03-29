@@ -99,6 +99,7 @@ int parseHttp(FILE *in, http_request_t **request)
         rc = -2;
         goto cleanup;
     }
+    // if(ferror(in))
     
     req->verb = malloc(VERB_SIZE); 
     req->path = malloc(PATH_SIZE); 
@@ -139,25 +140,31 @@ int generateResponse(int result, http_request_t *request, FILE *out)
 
         if(result == 1)
         {
-            fstream = fopen(&request->path[1], "r+");
-            strtok_r(request->path, ".", &fileExt);
-            for(int i = 0; i < DICT_SIZE; i++)
+            if((fstream = fopen(&request->path[1], "r+") != NULL)
             {
-                if(strcmp(contentDict[i].key, fileExt) == 0)
+                strtok_r(request->path, ".", &fileExt);
+                for(int i = 0; i < DICT_SIZE; i++)
                 {
-                    snprintf(contentType, CONTENT_SIZE, "Content-type: %s\r\n", contentDict[i].value);
+                    if(strcmp(contentDict[i].key, fileExt) == 0)
+                    {
+                        snprintf(contentType, CONTENT_SIZE, "Content-type: %s\r\n", contentDict[i].value);
+                    }
+                }
+                fputs("HTTP/1.1 200 OK\r\n", out);
+                fputs(contentType, out);
+                fputs("\r\n", out);
+
+                while ((recd = getline(&line, &len, fstream)) > 0) 
+                {
+                    fputs(line, out); 
                 }
             }
-            fputs("HTTP/1.1 200 OK\r\n", out);
-            fputs(contentType, out);
-            fputs("\r\n", out);
-
-            while ((recd = getline(&line, &len, fstream)) > 0) 
+            else
             {
-                fputs(line, out); 
+                result = -3;
             }
         }
-        else
+        if(result != 1)
         {
             snprintf(errOutput, CONTENT_SIZE, "HTTP/1.1 %sContent-type: text/plain\r\n\r\n%s", errorMap[abs(result + 1)].key, errorMap[abs(result + 1)].value);
             fputs(errOutput, out);
