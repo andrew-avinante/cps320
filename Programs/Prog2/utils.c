@@ -41,6 +41,6 @@ void blog(const char *fmt, ...) {
 
 size_t getDictLen(dict_t dict)
 {
-    printf("%d %d\n", sizeof(dict), sizeof(node_t));
+    printf("%d %d\n", sizeof(dict_t), sizeof(node_t));
     return sizeof(dict) / sizeof(node_t);
 }
