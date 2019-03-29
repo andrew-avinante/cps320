@@ -114,16 +114,16 @@ int parseHttp(FILE *in, http_request_t **request)
     char *rest = parse;
     
     token = strtok_r(rest, " ", &rest);
-    if((rc = parseRequestLine(rest, req->verb, VERB_SIZE)) != -1) goto cleanup;
+    if((rc = parseRequestLine(token, req->verb, VERB_SIZE)) != -1) goto cleanup;
 
     token = strtok_r(NULL, " ", &rest);
-    if((rc = parseRequestLine(NULL, req->path, PATH_SIZE)) != -1) goto cleanup;
+    if((rc = parseRequestLine(token, req->path, PATH_SIZE)) != -1) goto cleanup;
 
     token = strtok_r(NULL, " ", &rest);
-    if((rc = parseRequestLine(NULL, req->version, VERSION_SIZE)) != -1) goto cleanup;
+    if((rc = parseRequestLine(token, req->version, VERSION_SIZE)) != -1) goto cleanup;
 
     printf("YAY\n");
-    
+
     
     if((rc = verifyInput(req)) != -1) goto cleanup;
 
