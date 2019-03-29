@@ -1,5 +1,6 @@
 #ifndef utils
 #define utils
+#define DICT_SIZE 8
 
 typedef char* keys_t;
 
@@ -13,7 +14,5 @@ typedef struct Node {
 typedef node_t dict_t[];
 
 void blog(const char *fmt, ...);
-
-size_t getDictLen(dict_t dict);
 
 #endif
