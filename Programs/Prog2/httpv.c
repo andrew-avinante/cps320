@@ -140,28 +140,22 @@ int generateResponse(int result, http_request_t *request, FILE *out)
 
         if(result == 1)
         {
-            if((fstream = fopen(&request->path[1], "r+")) != NULL)
+            fstream = fopen(&request->path[1], "r+");
+            strtok_r(request->path, ".", &fileExt);
+            for(int i = 0; i < DICT_SIZE; i++)
             {
-                strtok_r(request->path, ".", &fileExt);
-                for(int i = 0; i < DICT_SIZE; i++)
+                if(strcmp(contentDict[i].key, fileExt) == 0)
                 {
-                    if(strcmp(contentDict[i].key, fileExt) == 0)
-                    {
-                        snprintf(contentType, CONTENT_SIZE, "Content-type: %s\r\n", contentDict[i].value);
-                    }
-                }
-                fputs("HTTP/1.1 200 OK\r\n", out);
-                fputs(contentType, out);
-                fputs("\r\n", out);
-
-                while ((recd = getline(&line, &len, fstream)) > 0) 
-                {
-                    fputs(line, out); 
+                    snprintf(contentType, CONTENT_SIZE, "Content-type: %s\r\n", contentDict[i].value);
                 }
             }
-            else
+            fputs("HTTP/1.1 200 OK\r\n", out);
+            fputs(contentType, out);
+            fputs("\r\n", out);
+
+            while ((recd = getline(&line, &len, fstream)) > 0) 
             {
-                result = -3;
+                fputs(line, out); 
             }
         }
         if(result != 1)
