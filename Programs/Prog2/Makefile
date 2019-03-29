@@ -1,5 +1,5 @@
 webserver: webserver.c eznet.o httpv.o utils.o
-	gcc -g -static-libasan -fsanitize=address -fno-omit-frame-pointer webserver.c eznet.o httpv.o utils.o -lbsd -owebserver
+	gcc -g webserver.c eznet.o httpv.o utils.o -lbsd -owebserver
 
 eznet.o : eznet.c eznet.h
 	gcc -c eznet.c
