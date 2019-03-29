@@ -40,7 +40,7 @@ int verifyInput(http_request_t *req)
 // This function parses a portion of the http request and stores it in the variable `reqWord`
 int parseRequestLine(char *line, char *reqWord, char **save, const int WORD_SIZE)
 {
-      char parse[250];
+      char parse[strlen(line)];
     strlcpy(parse, line, strlen(line));
     char *rest = parse;
     char *token = strtok_r(rest, " ", &rest);
@@ -112,6 +112,11 @@ int parseHttp(FILE *in, http_request_t **request)
     req->verb = malloc(VERB_SIZE); 
     req->path = malloc(PATH_SIZE); 
     req->version = malloc(VERSION_SIZE);
+    char parse[strlen(line)];
+    strlcpy(parse, line, strlen(line));
+    char *rest = parse;
+    char *token = strtok_r(rest, " ", &rest);
+    printf("SUCCESS\n");
     if((rc = parseRequestLine(line, req->verb, save, VERB_SIZE)) != -1) goto cleanup;
     if((rc = parseRequestLine(NULL, req->path, save, PATH_SIZE)) != -1) goto cleanup;
     if((rc = parseRequestLine(NULL, req->version, save, VERSION_SIZE)) != -1) goto cleanup;
