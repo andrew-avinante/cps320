@@ -111,6 +111,7 @@ int parseHttp(FILE *in, http_request_t **request)
     token = strtok_r(NULL, " ", save);
     req->version = malloc(strlen(token) + 1);
     if((rc = copyRequest(token, req->version, len)) != -1) goto cleanup;
+    printf("LOOK AT THIS %s\n", req->path);
     
     if((rc = verifyInput(req)) != -1) goto cleanup;
 
