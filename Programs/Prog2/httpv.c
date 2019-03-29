@@ -118,7 +118,7 @@ int parseHttp(FILE *in, http_request_t **request)
 cleanup:
     cleanupHttp(req);
     eatInput(line, len, in);
-    free(line);
+    if(line != NULL) free(line);
     return rc;
 }
 
