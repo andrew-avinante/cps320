@@ -14,7 +14,7 @@
 #include "utils.h"
 
 // Dictionary of content types
-dict_t contentDict = {{"html", "text/html"}, {"htm", "text/html"}, {"gif", "image/gif"}, {"jpeg", "image/jpeg"}, {"jpg", "image/jpeg"}, {"png", "image/png"}, {"css", "text/css"}, {"txt", "text/plain"}};
+dict_t contentDict = {{"html", "text/html"}, {"htm", "text/html"}, {"gif", "image/gif"}, {"jpeg", "image/jpeg"}, {"jpg", "image/jpeg"}, {"png", "text/plain"}, {"css", "text/css"}, {"txt", "text/plain"}};
 
 // Dictionary of errors
 dict_t errorMap = {{"400 Bad Request\r\n", "Illegal HTTP stream\r\n"}, {"500 Internal Server Error\r\n", "I/O error while reading request\r\n"}, {"500 Internal Server Error\r\n", "Malloc failure\r\n"}, {"400 Bad Request\r\n", "Invalid verb\r\n"}, {"403 Forbidden\r\n", "File requested is out of root directory\r\n"}, {"404 Not Found\r\n", "Resource not found\r\n"}, {"400 Bad Request\r\n", "Invalid HTTP version\r\n"}, {"501 Not Implemented\r\n", "Verb not implemented\r\n"}};
@@ -99,22 +99,18 @@ int parseHttp(FILE *in, http_request_t **request)
         rc = -2;
         goto cleanup;
     }
-    printf("ExECUTES here\n");
+
     req->verb = malloc(VERB_SIZE); 
     req->path = malloc(len); 
     req->version = malloc(VERSION_SIZE);
     if((rc = parseRequestLine(line, req->verb, save, len)) != -1) goto cleanup;
     if((rc = parseRequestLine(NULL, req->path, save, len)) != -1) goto cleanup;
     if((rc = parseRequestLine(NULL, req->version, save, len)) != -1) goto cleanup;
-    printf("how about here\n");
     
     if((rc = verifyInput(req)) != -1) goto cleanup;
 
     if((rc = eatInput(line, len, in)) != 1) goto cleanup;
 
-    printf("%s\n", line);
-    line = "Exit";
-    printf("after here\n");
     *request = req;
 
     return rc;
@@ -122,7 +118,6 @@ int parseHttp(FILE *in, http_request_t **request)
 cleanup:
     cleanupHttp(req);
     eatInput(line, len, in);
-    printf("and here?\n");
     free(line);
     return rc;
 }
@@ -158,7 +153,6 @@ int generateResponse(int result, http_request_t *request, FILE *out)
 
                 while ((recd = getline(&line, &len, fstream)) > 0) 
                 {
-                    fprintf("%s", line);
                     fputs(line, out); 
                 }
             }
@@ -174,9 +168,9 @@ int generateResponse(int result, http_request_t *request, FILE *out)
         }
     if(fstream)
     {
+        free(line);
         fclose(fstream);
     }
-    if(line != NULL) free(line);
     return 0;
 }
 
