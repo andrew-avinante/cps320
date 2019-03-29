@@ -13,10 +13,10 @@
 #include "httpv.h"
 #include "utils.h"
 
-// Dictionary of content types
-dict_t contentDict = {{"html", "text/html"}, {"htm", "text/html"}, {"gif", "image/gif"}, {"jpeg", "image/jpeg"}, {"jpg", "image/jpeg"}, {"png", "text/plain"}, {"css", "text/css"}, {"txt", "text/plain"}};
+// Dictionary for content type
+dict_t contentDict = {{"html", "text/html"}, {"htm", "text/html"}, {"gif", "image/gif"}, {"jpeg", "image/jpeg"}, {"jpg", "image/jpeg"}, {"png", "image/png"}, {"css", "text/css"}, {"txt", "text/plain"}};
 
-// Dictionary of errors
+// Map for errors
 dict_t errorMap = {{"400 Bad Request\r\n", "Illegal HTTP stream\r\n"}, {"500 Internal Server Error\r\n", "I/O error while reading request\r\n"}, {"500 Internal Server Error\r\n", "Malloc failure\r\n"}, {"400 Bad Request\r\n", "Invalid verb\r\n"}, {"403 Forbidden\r\n", "File requested is out of root directory\r\n"}, {"404 Not Found\r\n", "Resource not found\r\n"}, {"400 Bad Request\r\n", "Invalid HTTP version\r\n"}, {"501 Not Implemented\r\n", "Verb not implemented\r\n"}};
 
 // This function verifies the request line of the http request
@@ -42,14 +42,15 @@ int verifyInput(http_request_t *req)
 }
 
 // This function parses a portion of the http request and stores it in the variable `reqWord`
-int parseRequestLine(char *line, char *reqWord, char **save, size_t len)
+int parseRequestLine(char *line, char *reqWord, char **save, const int WORD_SIZE)
 {
     char *token = strtok_r(line, " ", save);
     if(token == NULL)
     {
         return -2;
     }
-    strlcpy(reqWord, token, len);    //Coppies token to VERB
+    strlcpy(reqWord, token, WORD_SIZE);    //Coppies token to VERB
+    reqWord[WORD_SIZE - 1] = 0;            //Adds null terminator
     return -1;
 }
 
@@ -60,7 +61,6 @@ int eatInput(char *line, size_t len, FILE *in)
     {
         if(strcmp(line, "\r\n") == 0)
         {
-            free(line);
             return 1;
         }
     }
@@ -84,6 +84,7 @@ int parseHttp(FILE *in, http_request_t **request)
     const int VERB_SIZE = 5;
     const int PATH_SIZE = 256;
     const int VERSION_SIZE = 10;
+    int blankline = 0;
     int rc = -1;
     char *line = NULL;
     char **save;
@@ -94,22 +95,24 @@ int parseHttp(FILE *in, http_request_t **request)
         goto cleanup;
     }
     
-    if(getline(&line, &len, in) <= 0 || ferror(in))  //Gets first line of file
+    if(getline(&line, &len, in) <= 0)  //Gets first line of file
     {
         rc = -2;
         goto cleanup;
     }
-
+    
     req->verb = malloc(VERB_SIZE); 
-    req->path = malloc(len); 
+    req->path = malloc(PATH_SIZE); 
     req->version = malloc(VERSION_SIZE);
-    if((rc = parseRequestLine(line, req->verb, save, len)) != -1) goto cleanup;
-    if((rc = parseRequestLine(NULL, req->path, save, len)) != -1) goto cleanup;
-    if((rc = parseRequestLine(NULL, req->version, save, len)) != -1) goto cleanup;
+    if((rc = parseRequestLine(line, req->verb, save, VERB_SIZE)) != -1) goto cleanup;
+    if((rc = parseRequestLine(NULL, req->path, save, PATH_SIZE)) != -1) goto cleanup;
+    if((rc = parseRequestLine(NULL, req->version, save, VERSION_SIZE)) != -1) goto cleanup;
     
     if((rc = verifyInput(req)) != -1) goto cleanup;
 
     if((rc = eatInput(line, len, in)) != 1) goto cleanup;
+
+    free(line);
 
     *request = req;
 
@@ -118,6 +121,8 @@ int parseHttp(FILE *in, http_request_t **request)
 cleanup:
     cleanupHttp(req);
     eatInput(line, len, in);
+
+    free(line);
     return rc;
 }
 
@@ -133,35 +138,27 @@ int generateResponse(int result, http_request_t *request, FILE *out)
     char contentType[CONTENT_SIZE];
     char errOutput[CONTENT_SIZE];
 
-        if(result == 1 && strchr(request->path, '.') != 0)
+        if(result == 1)
         {
             fstream = fopen(&request->path[1], "r+");
-            if(!ferror(fstream)) 
+            strtok_r(request->path, ".", &fileExt);
+            for(int i = 0; i < DICT_SIZE; i++)
             {
-                strtok_r(request->path, ".", &fileExt);
-                for(int i = 0; i < DICT_SIZE; i++)
+                if(strcmp(contentDict[i].key, fileExt) == 0)
                 {
-                    if(strcmp(contentDict[i].key, fileExt) == 0)
-                    {
-                        snprintf(contentType, CONTENT_SIZE, "Content-type: %s\r\n", contentDict[i].value);
-                    }
+                    snprintf(contentType, CONTENT_SIZE, "Content-type: %s\r\n", contentDict[i].value);
                 }
-                fputs("HTTP/1.1 200 OK\r\n", out);
-                fputs(contentType, out);
-                fputs("\r\n", out);
-
-                while (getline(&line, &len, fstream) != EOF) 
-                {
-                    fputs(line, out);  
-                }
-                printf("DONE\n");
             }
-            else
+            fputs("HTTP/1.1 200 OK\r\n", out);
+            fputs(contentType, out);
+            fputs("\r\n", out);
+
+            while ((recd = getline(&line, &len, fstream)) > 0) 
             {
-                result = -2;
+                fputs(line, out); 
             }
         }
-        if(result != 1)
+        else
         {
             snprintf(errOutput, CONTENT_SIZE, "HTTP/1.1 %sContent-type: text/plain\r\n\r\n%s", errorMap[abs(result + 1)].key, errorMap[abs(result + 1)].value);
             fputs(errOutput, out);

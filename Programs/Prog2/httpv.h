@@ -20,11 +20,11 @@ typedef struct http_request {
     http_header_t headers[MAX_HEADERS];
 } http_request_t;
 
-// this function verifies the input
+// This function verifies the request line of the http request
 int verifyInput(http_request_t *req);
 
 // This function parses a portion of the http request and stores it in the variable `reqWord`
-int parseRequestLine(char *line, char *reqWord, char **save, size_t len);
+int parseRequestLine(char *line, char *reqWord, char **save, const int WORD_SIZE);
 
 // Returns 1 on success,
 // -1 on invalid HTTP request,
