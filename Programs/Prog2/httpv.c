@@ -114,7 +114,7 @@ int parseHttp(FILE *in, http_request_t **request)
 
     printf("here\n");
     if(line != NULL) free(line);
-
+    printf("after here\n");
     *request = req;
 
     return rc;
