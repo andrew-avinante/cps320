@@ -44,7 +44,6 @@ int verifyInput(http_request_t *req)
 int parseRequestLine(char *line, char *reqWord, char **save, size_t len)
 {
     char *token = strtok_r(line, " ", save);
-    printf("ASFSDDFSFDSDFSDFSDFSFDS %s\n", token);
     if(token == NULL)
     {
         return -2;
@@ -113,7 +112,6 @@ int parseHttp(FILE *in, http_request_t **request)
     if((rc = eatInput(line, len, in)) != 1) goto cleanup;
 
     printf("here\n");
-    line = NULL;
     free(line);
     printf("after here\n");
     *request = req;
