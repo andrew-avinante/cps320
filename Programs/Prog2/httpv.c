@@ -26,7 +26,7 @@ int verifyInput(http_request_t *req)
     {
         return -4;
     }
-    if(strchr(req->path, '/') != req->path || access(&req->path[1], F_OK) == -1) // test for valid path
+    if(strchr(req->path, '/') != req->path) // test for valid path
     {
         return (strstr(req->path, "..") != NULL) ? -5 : -6; // if path goes outside of root directory then -5 else -6
     }
