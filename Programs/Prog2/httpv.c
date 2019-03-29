@@ -99,7 +99,6 @@ int parseHttp(FILE *in, http_request_t **request)
         rc = -2;
         goto cleanup;
     }
-    // if(ferror(in))
     
     req->verb = malloc(VERB_SIZE); 
     req->path = malloc(PATH_SIZE); 

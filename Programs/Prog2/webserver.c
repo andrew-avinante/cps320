@@ -150,7 +150,6 @@ int main(int argc, char **argv) {
     };
     if (sigaction(SIGINT, &sa_int, NULL)) {
         LOG_ERROR("sigaction(SIGINT, ...) -> '%s'", strerror(errno));
-        if(server_sock != -1) close(server_sock);
         goto cleanup;
     }
 
