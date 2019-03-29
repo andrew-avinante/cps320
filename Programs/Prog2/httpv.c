@@ -40,6 +40,7 @@ int verifyInput(http_request_t *req)
 // This function parses a portion of the http request and stores it in the variable `reqWord`
 int parseRequestLine(char *line, char *reqWord, char **save, const int WORD_SIZE)
 {
+    printf("Before HERE\n");
     char *token = __strtok_r(line, " ", save);
     printf("AFETER HERE\n");
     if(token == NULL)
