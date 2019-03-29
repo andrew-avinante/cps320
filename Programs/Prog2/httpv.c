@@ -38,11 +38,8 @@ int verifyInput(http_request_t *req)
 }
 
 // This function parses a portion of the http request and stores it in the variable `reqWord`
-int parseRequestLine(char *line, char *reqWord, char **save, const int WORD_SIZE)
+int parseRequestLine(char *line, char *reqWord, const int WORD_SIZE)
 {
-      char parse[strlen(line)];
-    strlcpy(parse, line, strlen(line));
-    char *rest = parse;
     char *token = strtok_r(rest, " ", &rest);
     if(token == NULL)
     {
@@ -92,7 +89,6 @@ int parseHttp(FILE *in, http_request_t **request)
     int blankline = 0;
     int rc = -1;
     char *line = NULL;
-    char **save;
 
     if((req = calloc(1, sizeof(http_request_t))) == NULL)   //Allocates memory for req
     {
@@ -116,11 +112,10 @@ int parseHttp(FILE *in, http_request_t **request)
     char parse[256];
     strlcpy(parse, line, strlen(line));
     char *rest = parse;
-    char *token = strtok_r(rest, " ", &rest);
-    printf("SUCC\n");
-    if((rc = parseRequestLine(line, req->verb, save, VERB_SIZE)) != -1) goto cleanup;
-    if((rc = parseRequestLine(NULL, req->path, save, PATH_SIZE)) != -1) goto cleanup;
-    if((rc = parseRequestLine(NULL, req->version, save, VERSION_SIZE)) != -1) goto cleanup;
+ 
+    if((rc = parseRequestLine(rest, req->verb, VERB_SIZE)) != -1) goto cleanup;
+    if((rc = parseRequestLine(NULL, req->path, PATH_SIZE)) != -1) goto cleanup;
+    if((rc = parseRequestLine(NULL, req->version, VERSION_SIZE)) != -1) goto cleanup;
     
     if((rc = verifyInput(req)) != -1) goto cleanup;
 
