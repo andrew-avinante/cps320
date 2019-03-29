@@ -41,6 +41,7 @@ int verifyInput(http_request_t *req)
 int parseRequestLine(char *line, char *reqWord, char **save, const int WORD_SIZE)
 {
     char parse[strlen(line)];
+    strlcpy(parse, line, strlen(line));
     char *rest = parse;
     char *token = strtok_r(rest, " ", &rest);
     if(token == NULL)
