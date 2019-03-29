@@ -22,7 +22,7 @@ typedef struct http_request {
 
 int verifyInput(http_request_t *req);
 
-int copyRequest(char *reqWord, size_t len);
+int copyRequest(char *token, char *reqWord, size_t len);
 
 // Returns 1 on success,
 // -1 on invalid HTTP request,
