@@ -41,6 +41,7 @@ int verifyInput(http_request_t *req)
 int parseRequestLine(char *line, char *reqWord, char **save, const int WORD_SIZE)
 {
     char *token = __strtok_r(line, " ", save);
+    printf("AFETER HERE\n");
     if(token == NULL)
     {
         return -2;
