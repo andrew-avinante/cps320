@@ -79,7 +79,7 @@ int parse_options(int argc, char * const argv[]) {
                 g_settings.socketNum = atoi(optarg);
                 break;
             default:
-                printf("%c\n", op);
+                printf("%d\n", op);
                 printf("DEFAULT\n");
                 // Unexpected argument--abort parsing
                 goto cleanup;
