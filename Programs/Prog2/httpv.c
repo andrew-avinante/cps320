@@ -154,11 +154,21 @@ int generateResponse(int result, http_request_t *request, FILE *out)
             fputs("HTTP/1.1 200 OK\r\n", out);
             fputs(contentType, out);
             fputs("\r\n", out);
-
-            while (getline(&line, &len, fstream) > 0) 
+            if(strstr(contentType, "text"))
             {
-                printf("%s\n", line);
-                fputs(line, out); 
+                while (getline(&line, &len, fstream) > 0) 
+                {
+                    printf("%s\n", line);
+                    fputs(line, out); 
+                }
+            }
+            else
+            {
+                line = malloc(1);
+                while (fread(line, 1, 1, fstream)) 
+                {
+                    fwrite(line, 1, 1, out); 
+                }
             }
         }
         else
