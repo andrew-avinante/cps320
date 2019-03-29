@@ -45,7 +45,6 @@ void waitchildren(int signum) {
                (struct rusage *)NULL) > 0) {
    connectedCount -= 1;
   }
-  printf("A child died\n");
 }
 
 // Catches server time out
