@@ -123,8 +123,11 @@ void handle_client(struct client_info *client) {
     size_t len = 0u;
     ssize_t recd;
     result = parseHttp(stream, &request);
+    printf("HERE 4\n");
     generateResponse(result, request, stream);
+    printf("HERE 5\n");
     cleanupHttp(request);
+    printf("HERE 6\n");
 
 cleanup:
     // Shutdown this client
