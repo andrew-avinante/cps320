@@ -47,6 +47,12 @@ void waitchildren(int signum) {
   }
 }
 
+// Catches server time out
+void alarmHandler(int signum)
+{
+    blog("Connection timed out..."); 
+}
+
 // Signal handler for when pipes are closed early
 void pipHandler(int signum)
 {
@@ -133,6 +139,7 @@ cleanup:
 }
 
 int main(int argc, char **argv) {
+    signal(SIGALRM, alarmHandler);
     int ret = 1;
     int child;
 
