@@ -90,19 +90,19 @@ int parseHttp(FILE *in, http_request_t **request)
     char *line = NULL;
     char *token;
 
-    if((req = calloc(1, sizeof(http_request_t))) == NULL)   //Allocates memory for req
-    {
-        rc = -3;
-        goto cleanup;
-    }
-    
     alarm(5);
-    int gtln = getline(&line, &len, in);
+    int gtln = getline(&line, &len, in); // call getline first so I can allocate parse
     char parse[strlen(line)];
     alarm(0);
     if(gtln <= 0)  //Gets first line of file
     {
         rc = -2;
+        goto cleanup;
+    }
+
+    if((req = calloc(1, sizeof(http_request_t))) == NULL)   //Allocates memory for req
+    {
+        rc = -3;
         goto cleanup;
     }
     
