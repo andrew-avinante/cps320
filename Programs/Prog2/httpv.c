@@ -60,6 +60,7 @@ int eatInput(char *line, size_t len, FILE *in)
     {
         if(strcmp(line, "\r\n") == 0)
         {
+            free(line);
             return 1;
         }
     }
@@ -111,9 +112,8 @@ int parseHttp(FILE *in, http_request_t **request)
 
     if((rc = eatInput(line, len, in)) != 1) goto cleanup;
 
-    printf("%d\n", line);
+    printf("%s\n", line);
     line = "Exit";
-    free(line);
     printf("after here\n");
     *request = req;
 
