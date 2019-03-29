@@ -48,7 +48,7 @@ int parseRequestLine(char *line, char *reqWord, char **save, size_t len)
     {
         return -2;
     }
-    &reqWord = malloc(sizeof(token)); 
+    &reqWord = malloc(sizeof(token) + 1); 
     strlcpy(reqWord, token, len);    //Coppies token to VERB
     reqWord[strlen(token)] = 0;            //Adds null terminator
     return -1;
