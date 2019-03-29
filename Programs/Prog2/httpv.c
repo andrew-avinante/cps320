@@ -146,7 +146,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
             }
             for(int i = 0; i < DICT_SIZE; i++)
             {
-                if(strcmp(contentDict[i].key, fileExt) == 0)
+                if(strcmp(contentDict[i].key, fileExt) != NULL)
                 {
                     snprintf(contentType, CONTENT_SIZE, "Content-type: %s\r\n", contentDict[i].value);
                 }
