@@ -37,7 +37,6 @@ struct settings {
 };
 
 int connectedCount = 0;
-struct client_info curClient;
 
 // Signal handler for when children die
 void waitchildren(int signum) {
@@ -46,13 +45,6 @@ void waitchildren(int signum) {
                (struct rusage *)NULL) > 0) {
    connectedCount -= 1;
   }
-}
-
-// Catches server time out
-void alarmHandler(int signum)
-{
-    blog("Connection timed out..."); 
-    destroy_client_info(&curClient);
 }
 
 // Signal handler for when pipes are closed early
@@ -139,9 +131,12 @@ cleanup:
     printf("\tSession ended.\n");
     return;
 }
-
+// // Catches server time out
+// void alarmHandler(int signum)
+// {
+//     blog("Connection timed out..."); 
+// }
 int main(int argc, char **argv) {
-    signal(SIGALRM, alarmHandler);
     int ret = 1;
     int child;
 
@@ -178,6 +173,7 @@ int main(int argc, char **argv) {
     server_running = true;
     while (server_running) {
         struct client_info client;
+        signal(SIGALRM, destroy_client_info, &client);
 
         // Wait for a connection on that socket
         if (wait_for_client(server_sock, &client)) {
@@ -194,7 +190,6 @@ int main(int argc, char **argv) {
             child = fork();
             if(child == 0)
             {
-                curClient = client;
                 handle_client(&client); // Client gets cleaned up in here
                 break;
             }
