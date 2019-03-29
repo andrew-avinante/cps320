@@ -52,7 +52,7 @@ void waitchildren(int signum) {
 void alarmHandler(int signum)
 {
     blog("Connection timed out..."); 
-    destroy_client_info(curClient);
+    destroy_client_info(&curClient);
 }
 
 // Signal handler for when pipes are closed early
