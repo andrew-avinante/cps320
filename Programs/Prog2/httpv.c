@@ -14,9 +14,9 @@
 #include "utils.h"
 
 // Dictionary 
-dict_t contentDict = {{{"html", "text/html"}, {"htm", "text/html"}, {"gif", "image/gif"}, {"jpeg", "image/jpeg"}, {"jpg", "image/jpeg"}, {"png", "image/png"}, {"css", "text/css"}, {"txt", "text/plain"}}};
+dict_t contentDict = {{"html", "text/html"}, {"htm", "text/html"}, {"gif", "image/gif"}, {"jpeg", "image/jpeg"}, {"jpg", "image/jpeg"}, {"png", "image/png"}, {"css", "text/css"}, {"txt", "text/plain"}};
 
-dict_t errorMap = {{{"400 Bad Request\r\n", "Illegal HTTP stream\r\n"}, {"500 Internal Server Error\r\n", "I/O error while reading request\r\n"}, {"500 Internal Server Error\r\n", "Malloc failure\r\n"}, {"400 Bad Request\r\n", "Invalid verb\r\n"}, {"403 Forbidden\r\n", "File requested is out of root directory\r\n"}, {"404 Not Found\r\n", "Resource not found\r\n"}, {"400 Bad Request\r\n", "Invalid HTTP version\r\n"}, {"501 Not Implemented\r\n", "Verb not implemented\r\n"}}};
+dict_t errorMap = {{"400 Bad Request\r\n", "Illegal HTTP stream\r\n"}, {"500 Internal Server Error\r\n", "I/O error while reading request\r\n"}, {"500 Internal Server Error\r\n", "Malloc failure\r\n"}, {"400 Bad Request\r\n", "Invalid verb\r\n"}, {"403 Forbidden\r\n", "File requested is out of root directory\r\n"}, {"404 Not Found\r\n", "Resource not found\r\n"}, {"400 Bad Request\r\n", "Invalid HTTP version\r\n"}, {"501 Not Implemented\r\n", "Verb not implemented\r\n"}};
 
 // This function verifies the request line of the http request
 int verifyInput(http_request_t *req)
