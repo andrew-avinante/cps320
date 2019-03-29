@@ -113,11 +113,6 @@ void handle_client(struct client_info *client) {
     result = parseHttp(stream, &request);
     generateResponse(result, request, stream);
     cleanupHttp(request);
-    // while ((recd = getline(&line, &len, stream)) > 0) {
-    //     printf("\tReceived %zd byte line; echoing...\n", recd);
-        
-    //     fputs(line, stream); 
-    // }
 
 cleanup:
     // Shutdown this client
