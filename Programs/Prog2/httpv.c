@@ -158,6 +158,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
 
             while ((recd = getline(&line, &len, fstream)) > 0) 
             {
+                printf("%s\n", line);
                 fputs(line, out); 
             }
         }
