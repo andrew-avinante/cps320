@@ -145,8 +145,8 @@ int generateResponse(int result, http_request_t *request, FILE *out)
 
         if(result == 1)
         {
-            fstream = fopen(request->path, "r+");
-            printf("THIS? %s\n", request->path);
+            fstream = fopen(&request->path[1], "r+");
+            printf("%s\n", &request->path[1]);
             strtok_r(request->path, ".", &fileExt);
             printf("%s %s\n",request->path, &fileExt);
             for(int i = 0; i < DICT_SIZE; i++)
