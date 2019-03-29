@@ -47,6 +47,13 @@ void waitchildren(int signum) {
   }
 }
 
+// Catches server time out
+void alarmHandler(int signum)
+{
+    blog("Connection timed out...");
+    exit(-1);
+}
+
 // Signal handler for when pipes are closed early
 void pipHandler(int signum)
 {
@@ -131,12 +138,9 @@ cleanup:
     printf("\tSession ended.\n");
     return;
 }
-// // Catches server time out
-// void alarmHandler(int signum)
-// {
-//     blog("Connection timed out..."); 
-// }
+
 int main(int argc, char **argv) {
+    signal(SIGALRM, alarmHandler);
     int ret = 1;
     int child;
 
@@ -173,7 +177,6 @@ int main(int argc, char **argv) {
     server_running = true;
     while (server_running) {
         struct client_info client;
-        signal(SIGALRM, destroy_client_info, &client);
 
         // Wait for a connection on that socket
         if (wait_for_client(server_sock, &client)) {
