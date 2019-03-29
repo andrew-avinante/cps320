@@ -135,7 +135,6 @@ int generateResponse(int result, http_request_t *request, FILE *out)
     char *line = NULL;
     const int CONTENT_SIZE = 150;
     size_t len = 0u;
-    ssize_t recd;
     FILE *fstream = NULL;
     char *fileExt;
     char contentType[CONTENT_SIZE];
@@ -156,7 +155,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
             fputs(contentType, out);
             fputs("\r\n", out);
 
-            while ((recd = getline(&line, &len, fstream))) 
+            while (getline(&line, &len, fstream)) 
             {
                 printf("%s\n", line);
                 fputs(line, out); 
