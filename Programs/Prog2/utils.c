@@ -38,9 +38,3 @@ void blog(const char *fmt, ...) {
     // Print said string to STDOUT prefixed by our timestamp and pid indicators
     printf("%s:%d:%s\n", timestamp, getpid(), user_msg_buff);
 }
-
-size_t getDictLen(dict_t dict)
-{
-    printf("%ld\n", sizeof(dict));
-    return sizeof(dict);
-}

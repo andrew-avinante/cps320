@@ -136,12 +136,11 @@ int generateResponse(int result, http_request_t *request, FILE *out)
     char *fileExt;
     char contentType[CONTENT_SIZE];
     char errOutput[CONTENT_SIZE];
-            printf("TEST %ld\n", getDictLen(contentDict));
         if(result == 1)
         {
             fstream = fopen(&request->path[1], "r+");
             strtok_r(request->path, ".", &fileExt);
-            for(int i = 0; i < DICT_SIZE; i++)
+            for(int i = 0; i < sizeof(contentDict); i++)
             {
                 if(strcmp(contentDict[i].key, fileExt) == 0)
                 {

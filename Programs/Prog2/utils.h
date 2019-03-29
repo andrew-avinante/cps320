@@ -12,12 +12,6 @@ typedef struct Node {
 
 typedef node_t dict_t[];
 
-// typedef struct dict {
-//     node_t node[DICT_SIZE];
-// } dict_t;
-
-size_t getDictLen(dict_t dict);
-
 void blog(const char *fmt, ...);
 
 #endif
