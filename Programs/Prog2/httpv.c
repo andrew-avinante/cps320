@@ -140,7 +140,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
 
         if(result == 1)
         {
-            if((fstream = fopen(&request->path[1], "r+") != NULL)
+            if((fstream = fopen(&request->path[1], "r+")) != NULL)
             {
                 strtok_r(request->path, ".", &fileExt);
                 for(int i = 0; i < DICT_SIZE; i++)
