@@ -139,7 +139,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
         if(result == 1)
         {
             fstream = fopen(&request->path[1], "r+");
-            fileExt = strrchr(request->path, ".");
+            fileExt = strrchr(request->path, ''.');
             for(int i = 0; i < DICT_SIZE; i++)
             {
                 if(strcmp(contentDict[i].key, fileExt) == 0)

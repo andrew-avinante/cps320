@@ -61,7 +61,7 @@ int parse_options(int argc, char * const argv[]) {
     char cwd[PATH_SIZE];
     getcwd(cwd, sizeof(cwd));
     chdir(cwd);
-    char op;
+    int op;
     while ((op = getopt(argc, argv, "h:p:r:w:")) > -1) {
         switch (op) {
             case 'h':
