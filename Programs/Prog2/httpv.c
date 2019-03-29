@@ -54,14 +54,18 @@ int parseRequestLine(char *line, char *reqWord, char **save, const int WORD_SIZE
 int eatInput(size_t len, FILE *in)
 {
     char *line = NULL;
+    alarm(5);
     while(getline(&line, &len, in) > 0)
     {
+        alarm(0);
         if(strcmp(line, "\r\n") == 0)
         {
             free(line);
             return 1;
         }
+        alarm(5);
     }
+    alarm(0);
     free(line);
     return -1;
 }
@@ -93,12 +97,14 @@ int parseHttp(FILE *in, http_request_t **request)
         rc = -3;
         goto cleanup;
     }
-    
+    alarm(5);
     if(getline(&line, &len, in) <= 0)  //Gets first line of file
     {
+        alarm(0);
         rc = -2;
         goto cleanup;
     }
+    alarm(0);
     
     req->verb = malloc(VERB_SIZE); 
     req->path = malloc(PATH_SIZE); 
@@ -156,11 +162,15 @@ int generateResponse(int result, http_request_t *request, FILE *out)
             fputs("\r\n", out);
             if(strstr(contentType, "text"))
             {
+                alarm(5);
                 while (getline(&line, &len, fstream) > 0) 
                 {
+                    alarm(0);
                     printf("%s\n", line);
                     fputs(line, out); 
+                    alarm(5);
                 }
+                alarm(0);
             }
             else
             {
