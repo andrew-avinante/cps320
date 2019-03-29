@@ -2,7 +2,7 @@
 // Submitted by: Andrew Avinante (aavin894)
 //
 // Build command: gcc -fsanitize=address -g -fno-omit-frame-pointer httpv.c -lbsd -ohttpv
-#define _GNU_SOURCE
+// #define _GNU_SOURCE
 #include <stdio.h>
 #include <string.h>
 #include <bsd/string.h>
@@ -40,7 +40,7 @@ int verifyInput(http_request_t *req)
 // This function parses a portion of the http request and stores it in the variable `reqWord`
 int parseRequestLine(char *line, char *reqWord, char **save, const int WORD_SIZE)
 {
-    char *token = strtok_r(line, " ", save);
+    char *token = __strtok_r(line, " ", save);
     if(token == NULL)
     {
         return -2;
