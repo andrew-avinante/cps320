@@ -58,9 +58,7 @@ void pipHandler(int signum)
 int parse_options(int argc, char * const argv[]) {
     int ret = -1; 
     const int PATH_SIZE = 250;
-    char cwd[PATH_SIZE];
-    getcwd(cwd, sizeof(cwd));
-    chdir(cwd);
+
     char op;
     while ((op = getopt(argc, argv, "h:p:r:w:")) > -1) {
         switch (op) {
