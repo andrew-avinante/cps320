@@ -113,7 +113,7 @@ int parseHttp(FILE *in, http_request_t **request)
     req->verb = malloc(VERB_SIZE); 
     req->path = malloc(PATH_SIZE); 
     req->version = malloc(VERSION_SIZE);
-
+    printf("HERE\n");
     strlcpy(parse, line, strlen(line));
     char *rest = parse;
     printf("%c\n", parse[1]);
