@@ -86,6 +86,7 @@ int parseHttp(FILE *in, http_request_t **request)
     int rc = -1;
     char *line = NULL;
     char **save;
+    char *token 
 
     if((req = calloc(1, sizeof(http_request_t))) == NULL)   //Allocates memory for req
     {
@@ -99,14 +100,16 @@ int parseHttp(FILE *in, http_request_t **request)
         goto cleanup;
     }
     // if(ferror(in))
-    char *token = strtok_r(line, " ", save);
-    req->verb = malloc(VERB_SIZE); 
-    char *token = strtok_r(NULL, " ", save);
-    req->path = malloc(PATH_SIZE); 
-    char *token = strtok_r(NULL, " ", save);
-    req->version = malloc(VERSION_SIZE);
+    token = strtok_r(line, " ", save);
+    req->verb = malloc(strlen(token) + 1); 
     if((rc = parseRequestLine(req->verb, len)) != -1) goto cleanup;
+
+    token = strtok_r(NULL, " ", save);
+    req->path = malloc(strlen(token) + 1); 
     if((rc = parseRequestLine(req->path, len)) != -1) goto cleanup;
+    
+    token = strtok_r(NULL, " ", save);
+    req->version = malloc(strlen(token) + 1);
     if((rc = parseRequestLine(req->version, len)) != -1) goto cleanup;
     
     if((rc = verifyInput(req)) != -1) goto cleanup;
