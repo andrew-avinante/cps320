@@ -99,7 +99,7 @@ int parseHttp(FILE *in, http_request_t **request)
         rc = -2;
         goto cleanup;
     }
-    
+    printf("here4\n");
     req->verb = malloc(VERB_SIZE); 
     req->path = malloc(PATH_SIZE); 
     req->version = malloc(VERSION_SIZE);
@@ -110,7 +110,7 @@ int parseHttp(FILE *in, http_request_t **request)
     if((rc = verifyInput(req)) != -1) goto cleanup;
 
     if((rc = eatInput(len, in)) != 1) goto cleanup;
-
+    printf("here5\n");
     free(line);
 
     *request = req;
