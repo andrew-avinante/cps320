@@ -41,8 +41,9 @@ int verifyInput(http_request_t *req)
 }
 
 // This function parses a portion of the http request and stores it in the variable `reqWord`
-int copyRequest(char* token, char *reqWord, size_t len)
+int parseRequestLine(char *line, char *reqWord, char **save, size_t len)
 {
+    char *token = strtok_r(line, " ", save);
     if(token == NULL)
     {
         return -2;
@@ -86,7 +87,6 @@ int parseHttp(FILE *in, http_request_t **request)
     int rc = -1;
     char *line = NULL;
     char **save;
-    char *token; 
 
     if((req = calloc(1, sizeof(http_request_t))) == NULL)   //Allocates memory for req
     {
@@ -100,18 +100,12 @@ int parseHttp(FILE *in, http_request_t **request)
         goto cleanup;
     }
     // if(ferror(in))
-    token = strtok_r(line, " ", save);
-    req->verb = malloc(strlen(token) + 1); 
-    if((rc = copyRequest(token, req->verb, len)) != -1) goto cleanup;
-
-    token = strtok_r(NULL, " ", save);
-    req->path = malloc(strlen(token) + 1); 
-    if((rc = copyRequest(token, req->path, len)) != -1) goto cleanup;
-    
-    token = strtok_r(NULL, " ", save);
-    req->version = malloc(strlen(token) + 1);
-    if((rc = copyRequest(token, req->version, len)) != -1) goto cleanup;
-    printf("LOOK AT THIS %s\n", req->path);
+        req->verb = malloc(VERB_SIZE); 
+    req->path = malloc(len); 
+    req->version = malloc(VERSION_SIZE);
+    if((rc = parseRequestLine(line, req->verb, save, len)) != -1) goto cleanup;
+    if((rc = parseRequestLine(NULL, req->path, save, len)) != -1) goto cleanup;
+    if((rc = parseRequestLine(NULL, req->version, save, len)) != -1) goto cleanup;
     
     if((rc = verifyInput(req)) != -1) goto cleanup;
 
@@ -146,9 +140,8 @@ int generateResponse(int result, http_request_t *request, FILE *out)
         if(result == 1)
         {
             fstream = fopen(&request->path[1], "r+");
-            printf("%s\n", &request->path[1]);
             strtok_r(request->path, ".", &fileExt);
-            printf("%s %s\n",request->path, fileExt);
+            printf("%s %s\n",&request->path[1], &fileExt);
             for(int i = 0; i < DICT_SIZE; i++)
             {
                 if(strcmp(contentDict[i].key, fileExt) == 0)
