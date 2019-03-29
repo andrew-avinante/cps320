@@ -10,6 +10,7 @@
 #include <limits.h>
 #include <errno.h>
 #include <unistd.h>
+#include <signal.h>
 #include "httpv.h"
 #include "utils.h"
 
