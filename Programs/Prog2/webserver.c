@@ -71,7 +71,6 @@ int parse_options(int argc, char * const argv[]) {
                 g_settings.bindport = optarg;
                 break;
             case 'r':
-                printf("WHY IN HERE\n");
                 ret = chdir(optarg);
                 if(ret < 0) { goto cleanup; }
                 break;
@@ -79,8 +78,6 @@ int parse_options(int argc, char * const argv[]) {
                 g_settings.socketNum = atoi(optarg);
                 break;
             default:
-                printf("%d\n", op);
-                printf("DEFAULT\n");
                 // Unexpected argument--abort parsing
                 goto cleanup;
         }
@@ -114,20 +111,17 @@ void handle_client(struct client_info *client) {
         perror("unable to wrap socket");
         goto cleanup;
     }
-          printf("HERE 2\n");
+
     http_request_t *request = NULL;
     int result = 0;
-      printf("HERE 3\n");
+
     // Echo all lines
     char *line = NULL;
     size_t len = 0u;
     ssize_t recd;
     result = parseHttp(stream, &request);
-    printf("HERE 4\n");
     generateResponse(result, request, stream);
-    printf("HERE 5\n");
     cleanupHttp(request);
-    printf("HERE 6\n");
 
 cleanup:
     // Shutdown this client
@@ -191,7 +185,6 @@ int main(int argc, char **argv) {
             child = fork();
             if(child == 0)
             {
-                printf("HERE\n");
                 handle_client(&client); // Client gets cleaned up in here
                 break;
             }
