@@ -194,7 +194,7 @@ int main(int argc, char **argv) {
             child = fork();
             if(child == 0)
             {
-
+                curClient = client;
                 handle_client(&client); // Client gets cleaned up in here
                 break;
             }
