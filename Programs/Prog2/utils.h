@@ -10,9 +10,11 @@ typedef struct Node {
     value_t value;
 } node_t;
 
-typedef struct dict {
-    node_t node[DICT_SIZE];
-} dict_t;
+typedef node_t dict_t[];
+
+// typedef struct dict {
+//     node_t node[DICT_SIZE];
+// } dict_t;
 
 size_t getDictLen(dict_t dict);
 

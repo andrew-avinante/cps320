@@ -145,9 +145,9 @@ int generateResponse(int result, http_request_t *request, FILE *out)
             printf("%d\n", getDictLen(contentDict));
             for(int i = 0; i < DICT_SIZE; i++)
             {
-                if(strcmp(contentDict.node[i].key, fileExt) == 0)
+                if(strcmp(contentDict[i].key, fileExt) == 0)
                 {
-                    snprintf(contentType, CONTENT_SIZE, "Content-type: %s\r\n", contentDict.node[i].value);
+                    snprintf(contentType, CONTENT_SIZE, "Content-type: %s\r\n", contentDict[i].value);
                 }
             }
             fputs("HTTP/1.1 200 OK\r\n", out);
@@ -161,7 +161,7 @@ int generateResponse(int result, http_request_t *request, FILE *out)
         }
         else
         {
-            snprintf(errOutput, CONTENT_SIZE, "HTTP/1.1 %sContent-type: text/plain\r\n\r\n%s", errorMap.node[abs(result + 1)].key, errorMap.node[abs(result + 1)].value);
+            snprintf(errOutput, CONTENT_SIZE, "HTTP/1.1 %sContent-type: text/plain\r\n\r\n%s", errorMap[abs(result + 1)].key, errorMap[abs(result + 1)].value);
             fputs(errOutput, out);
         }
     if(fstream)
