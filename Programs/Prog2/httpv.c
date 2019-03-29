@@ -97,13 +97,14 @@ int parseHttp(FILE *in, http_request_t **request)
     }
     
     alarm(5);
-    if(getline(&line, &len, in) <= 0)  //Gets first line of file
+    int gtln = getline(&line, &len, in);
+    char parse[strlen(line)];
+    alarm(0);
+    if(gtln <= 0)  //Gets first line of file
     {
-        alarm(0);
         rc = -2;
         goto cleanup;
     }
-    alarm(0);
     
     req->verb = malloc(VERB_SIZE); 
     req->path = malloc(PATH_SIZE); 
