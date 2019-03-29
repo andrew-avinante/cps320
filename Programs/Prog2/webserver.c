@@ -71,6 +71,7 @@ int parse_options(int argc, char * const argv[]) {
                 g_settings.bindport = optarg;
                 break;
             case 'r':
+                printf("WHY IN HERE");
                 ret = chdir(optarg);
                 if(ret < 0) { goto cleanup; }
                 break;
@@ -78,6 +79,7 @@ int parse_options(int argc, char * const argv[]) {
                 g_settings.socketNum = atoi(optarg);
                 break;
             default:
+                printf("DEFAULT");
                 // Unexpected argument--abort parsing
                 goto cleanup;
         }
