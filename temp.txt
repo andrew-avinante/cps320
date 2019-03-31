@@ -1,0 +1,56 @@
+pi@raspberrypi:~/Desktop/cps320/Programs/Prog2 $ ./warproxy.py -- ./webserver -r ./wwwroot
+2019-03-31 13:20:20,431|2005|warden|INFO|Spawning webserver (logging to webserver.log)
+
+*** Webserver spawned; testing connectivity...
+
+
+*** OK: we're off to the races!
+
+pi@raspberrypi:~/Desktop/cps320/Programs/Prog2 $ ./webserver -p 8080 -r ./../../prog2
+2019-03-31 13:21:19:2029:Bound and listening on 0.0.0.0:8080
+2019-03-31 13:21:30:2029:connection from 192.168.1.69:49504 with 1 client(s) connected
+	Session ended.
+2019-03-31 13:21:30:2029:connection from 192.168.1.69:49505 with 1 client(s) connected
+	Session ended.
+2019-03-31 13:21:30:2029:connection from 192.168.1.69:49506 with 1 client(s) connected
+	Session ended.
+2019-03-31 13:21:30:2029:connection from 192.168.1.69:49507 with 1 client(s) connected
+	Session ended.
+2019-03-31 13:21:30:2029:connection from 192.168.1.69:49508 with 1 client(s) connected
+	Session ended.
+2019-03-31 13:21:30:2029:connection from 192.168.1.69:49509 with 1 client(s) connected
+	Session ended.
+2019-03-31 13:21:47:2029:connection from 192.168.1.69:49513 with 1 client(s) connected
+	Session ended.
+2019-03-31 13:21:48:2029:connection from 192.168.1.69:49514 with 1 client(s) connected
+	Session ended.
+2019-03-31 13:21:52:2029:connection from 192.168.1.69:49515 with 1 client(s) connected
+	Session ended.
+2019-03-31 13:21:54:2029:connection from 192.168.1.69:49518 with 1 client(s) connected
+2019-03-31 13:21:54:2029:connection from 192.168.1.69:49519 with 2 client(s) connected
+2019-03-31 13:21:54:2029:connection from 192.168.1.69:49520 with 3 client(s) connected
+2019-03-31 13:21:54:2029:connection from 192.168.1.69:49521 with 4 client(s) connected
+	Session ended.
+2019-03-31 13:21:54:2029:connection from 192.168.1.69:49522 with 5 client(s) connected
+	Session ended.
+	Session ended.
+	Session ended.
+	Session ended.
+2019-03-31 13:21:54:2029:connection from 192.168.1.69:49524 with 1 client(s) connected
+	Session ended.
+2019-03-31 13:21:54:2029:connection from 192.168.1.69:49525 with 1 client(s) connected
+2019-03-31 13:21:54:2029:connection from 192.168.1.69:49526 with 2 client(s) connected
+2019-03-31 13:21:54:2029:connection from 192.168.1.69:49527 with 3 client(s) connected
+2019-03-31 13:21:54:2029:connection from 192.168.1.69:49528 with 4 client(s) connected
+2019-03-31 13:21:54:2029:connection from 192.168.1.69:49529 with 5 client(s) connected
+	Session ended.
+	Session ended.
+	Session ended.
+	Session ended.
+	Session ended.
+2019-03-31 13:21:54:2029:connection from 192.168.1.69:49530 with 1 client(s) connected
+2019-03-31 13:21:54:2029:connection from 192.168.1.69:49531 with 2 client(s) connected
+	Session ended.
+	Session ended.
+^C2019-03-31 13:21:58:2029:Ctrl-C (SIGINT) detected; shutting down...
+pi@raspberrypi:~/Desktop/cps320/Programs/Prog2 $ 
