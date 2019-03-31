@@ -31,7 +31,7 @@ struct settings {
     const char *bindport;   // Portnumber (as a string) to bind/listen on
     int socketNum;
 } g_settings = {
-    .bindhost = "localhost",    // Default: listen only on localhost interface
+    .bindhost = "0.0.0.0",    // Default: listen only on localhost interface
     .bindport = "8080",         // Default: listen on TCP port 8080
     .socketNum = 5,
 };
