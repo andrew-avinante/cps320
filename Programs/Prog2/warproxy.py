@@ -114,6 +114,7 @@ class AttackUmpire:
         self._time_limit = time_limit
         self._ats = AttackTurnstile()
         self._cur = None
+        self._inc = 0
 
     def _reset_cur(self, timestamp):
         '''Helper to reset the "current attacker" tracker.
@@ -140,6 +141,9 @@ class AttackUmpire:
         Invokes ".forward()" on any queued dispatchers that need to start relaying traffic.
         '''
         if self._cur is None:
+            self._inc = (self._inc + 1) % 4
+            if self._inc == 0:
+                self._judge._warden.check()
             return
         
         if current_time is None:
@@ -365,6 +369,7 @@ class Warden:
         self._exec_args = exec_args
         
         self._proc = None
+        self._is_online = False
         self._respawn()
     
     def __del__(self):
@@ -378,9 +383,10 @@ class Warden:
     
     def _respawn(self):
         ''' Internal helper to actually [re-]launch the webserver.'''
+        self._is_online = False
         args = self._exec_args + ['-h', self._listen_host, '-p', str(self._listen_port)]
         try:
-            self.log.info("Spawning webserver (logging to {0})".format(self._logfile_name))
+            self.log.info("Spawning webserver at port {} (logging to {})".format(self._listen_port, self._logfile_name))
             with open(self._logfile_name, "ab") as logfile:
                 self._proc = subprocess.Popen(args,
                                 stdin=subprocess.DEVNULL,
@@ -431,6 +437,7 @@ class Warden:
             exit_status = self._proc.poll()
             if exit_status is not None:
                 self.log.info("webserver DIED (status={0}); respawning...".format(exit_status))
+                notify_observer('STATUS', 'Offline')
                 self._respawn()
                 return (True, exit_status)
             else:
@@ -439,10 +446,14 @@ class Warden:
                     self._proc.kill()
                 except:
                     self.log.exception("Error killing webserver process:")
+                notify_observer('STATUS', 'Offline')
                 self._respawn()
                 return (True, None)
         
         # All checks passed!
+        if not self._is_online:
+            self._is_online = True
+            notify_observer('STATUS', 'Online')
         return (False, None)
 
 class Judge:
@@ -465,13 +476,17 @@ class Judge:
         if score:
             if status is None:
                 # Hung server
+                result = "HUNG SERVER"
                 self.log.info("Attack from {0} results in HUNG SERVER!".format(attacker))
             else:
                 # Crashed server
+                result = "KILL"
                 self.log.info("BOOM! Attack from {0} KILLED the server! (exit code: {1})".format(attacker, status))
         else:
+            result = "OK"
             self.log.info("Attack from {0} passes without incident...".format(attacker))
 
+        notify_observer('ATTACK', attacker + ':' + result)
             
 def can_bind(listen_host: str) -> bool:
     """Can we bind a socket to the given hostname/IP?
@@ -486,6 +501,8 @@ def can_bind(listen_host: str) -> bool:
     else:
         return True
 
+def notify_observer(msgType,info):
+    logging.getLogger('observer').info(msgType + "|" + info)
 
 def main(argv):
     import argparse
@@ -494,26 +511,25 @@ def main(argv):
     ap.add_argument("-v", "--verbose", default=False, action="store_true", help="Turn on verbose/debugging log messages.")
     ap.add_argument("-t", "--timeout", type=float, default=5.0, help="Maximum time allotted to each attacker (by source IP) at a time.")
     ap.add_argument("-n", "--listen-host", default="0.0.0.0", help="Hostname/interface on which listen.")
-    ap.add_argument("-p", "--listen-port", type=int, default=5000, help="Port number on which to listen.")
+    ap.add_argument("-p", "--listen-port", type=int, default=8080, help="Port number on which to listen.")
     ap.add_argument("-N", "--forward-host", default="localhost", help="Hostname/IP to which to forward connections.")
     ap.add_argument("-P", "--forward-port", type=int, default=5001, help="Port number to which to forward connections.")
-    ap.add_argument("-o", "--observer-host", default=None, help="Observer server hostname/IP.")
+    ap.add_argument("-o", "--observer-host", default='localhost', help="Observer server hostname/IP.")
     ap.add_argument("-q", "--observer-port", default=1337, help="Observer server port number.")
     ap.add_argument("execargs", nargs="+", help="Command[s] to launch webserver (without -h/-p options).")
     args = ap.parse_args(argv[1:])
     
     if not can_bind(args.listen_host):
-        print("\n*** ERROR: cannot bind to '{0}'--are you NATted??".format(args.listen_host), file=sys.stderr)
+        print("\n*** ERROR: cannot bind to '{0}'--make sure your VM network adapter is set to Bridged!".format(args.listen_host), file=sys.stderr)
         sys.exit(1)
     
     fmt = "%(asctime)s|%(process)d|%(name)s|%(levelname)s|%(message)s"
     lvl = logging.DEBUG if args.verbose else logging.INFO
     logging.basicConfig(format=fmt, level=lvl)
     
-    # Only judge messages should go to the observer
-    if args.observer_host is not None:
-        dgram_logger = logging.handlers.DatagramHandler(args.observer_host, args.observer_port)
-        logging.getLogger('judge').addHandler(dgram_logger)
+    # Configure observer logger
+    dgram_logger = logging.handlers.DatagramHandler(args.observer_host, args.observer_port)
+    logging.getLogger('observer').addHandler(dgram_logger)
     
     warden = Warden(args.execargs, listen_host=args.forward_host, listen_port=args.forward_port)
     print("\n*** Webserver spawned; testing connectivity...\n")
@@ -527,7 +543,7 @@ def main(argv):
         print("\n*** ERROR: the webserver was not successfully launched (or isn't properly configured to serve up /test.txt)", file=sys.stderr)
         sys.exit(1)
     
-    print("\n*** OK: we're off to the races!\n")
+    print("\n*** OK: we're off to the races! Direct your attacks to http://{}:{}\n".format(args.listen_host, args.listen_port))
     judge = Judge(warden)
     umpire = AttackUmpire(judge, time_limit=args.timeout)
     proxy = ProxyServer((args.listen_host, args.listen_port), warden, umpire)
