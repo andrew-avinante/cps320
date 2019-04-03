@@ -3,13 +3,16 @@ import re
 import ctypes
 
 rdblah = ctypes.cdll.LoadLibrary("./readblah.so")
+rdblah.open_blah.restype = ctypes.c_void_p
 
 def search(path : str) -> list:
     connections = []
     if('.blah' in path):
-        f = rdblah.open_blah(str.encode('UTF-8'))
+        f = rdblah.open_blah(str.encode('utf-8'))
+        print(f)
         # blahString = rdblah.read_blah(f)
         rdblah.close_blah(f)
+        print("HI")
     else:
         f = open(path, "r")
     for i in f:
