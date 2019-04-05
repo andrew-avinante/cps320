@@ -6,8 +6,19 @@ else
     UNAME=$1
 fi
 
+if [ "$2" == "" ]; then
+    read -p "Please enter your handle (max 20 chars): " HANDLE
+else
+    HANDLE=$2
+    if [ ${#HANDLE} -gt 20 ]; then
+        echo "That's too long."
+        exit 1
+    fi
+fi
+    
+
 echo "Registering via CSUNIX..."
-ssh $UNAME@csunix.bju.edu /home/cps320/wswars/register >stdout.txt 2>stderr.txt
+ssh $UNAME@csunix.bju.edu /home/cps320/wswars/register "$HANDLE" >stdout.txt 2>stderr.txt
 read IPADDR <stdout.txt
 read ERROR <stderr.txt
 rm stdout.txt stderr.txt

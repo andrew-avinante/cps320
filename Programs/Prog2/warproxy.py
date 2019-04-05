@@ -109,12 +109,13 @@ class AttackUmpire:
     
     log = logging.getLogger("umpire")
     
-    def __init__(self, judge, time_limit: float = 1.0):
+    def __init__(self, judge, allow_repeat_attacks: bool, time_limit: float = 1.0):
         self._judge = judge
         self._time_limit = time_limit
         self._ats = AttackTurnstile()
         self._cur = None
         self._inc = 0
+        self._allow_repeat_attacks = allow_repeat_attacks
 
     def _reset_cur(self, timestamp):
         '''Helper to reset the "current attacker" tracker.
@@ -183,6 +184,11 @@ class AttackUmpire:
         if current_time is None:
             current_time = time.time()
 
+        if not self._allow_repeat_attacks and dispatcher.attacker in successful_attackers:
+            self.log.info("rejecting attack from previously successful attacker [{}]".format(dispatcher.attacker))
+            dispatcher.close()
+            return
+
         if self._cur is None:
             self.log.info("new attacker [{0}] starting at {1} with its first connection".format(dispatcher.attacker, current_time))
             self._cur = AttackQueue(current_time, dispatcher.attacker, [dispatcher])
@@ -207,7 +213,7 @@ def test_AttackUmpire():
         def forward(self):
             self._forwarded += 1
 
-    ump = AttackUmpire(None, time_limit=10.0)
+    ump = AttackUmpire(None, True, time_limit=10.0)
     
     A1 = PhonyDispatch("alice")
     ump.handle_accepted(A1, 1)
@@ -478,10 +484,14 @@ class Judge:
                 # Hung server
                 result = "HUNG SERVER"
                 self.log.info("Attack from {0} results in HUNG SERVER!".format(attacker))
+                if attacker not in successful_attackers:
+                    successful_attackers.append(attacker) 
             else:
                 # Crashed server
                 result = "KILL"
                 self.log.info("BOOM! Attack from {0} KILLED the server! (exit code: {1})".format(attacker, status))
+                if attacker not in successful_attackers:
+                    successful_attackers.append(attacker) 
         else:
             result = "OK"
             self.log.info("Attack from {0} passes without incident...".format(attacker))
@@ -516,6 +526,7 @@ def main(argv):
     ap.add_argument("-P", "--forward-port", type=int, default=5001, help="Port number to which to forward connections.")
     ap.add_argument("-o", "--observer-host", default='localhost', help="Observer server hostname/IP.")
     ap.add_argument("-q", "--observer-port", default=1337, help="Observer server port number.")
+    ap.add_argument("-a", "--allow-repeat-attacks", default=False, action="store_true", help="Block repeat attacks")
     ap.add_argument("execargs", nargs="+", help="Command[s] to launch webserver (without -h/-p options).")
     args = ap.parse_args(argv[1:])
     
@@ -545,11 +556,12 @@ def main(argv):
     
     print("\n*** OK: we're off to the races! Direct your attacks to http://{}:{}\n".format(args.listen_host, args.listen_port))
     judge = Judge(warden)
-    umpire = AttackUmpire(judge, time_limit=args.timeout)
+    umpire = AttackUmpire(judge, args.allow_repeat_attacks, time_limit=args.timeout)
     proxy = ProxyServer((args.listen_host, args.listen_port), warden, umpire)
     while True:
         asyncore.loop(0.5, count=1)
         umpire.heartbeat()
 
 if __name__ == "__main__":
+    successful_attackers = []
     main(sys.argv)
