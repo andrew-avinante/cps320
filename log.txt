@@ -1,0 +1,12 @@
+Listening on port 2000
+Rate: 22050 Period Size: 2205
+Size to r/w: 4410
+  51 sec  4410 bytes,   1 packets, rate =     87 bytes/s  
+  52 sec  48510 bytes,  11 packets, rate =  47161 bytes/s  
+  53 sec  48510 bytes,  11 packets, rate =  43041 bytes/s  
+  54 sec  44100 bytes,  10 packets, rate =  44002 bytes/s  
+  55 sec  39690 bytes,   9 packets, rate =  39340 bytes/s  
+  56 sec  52920 bytes,  12 packets, rate =  47489 bytes/s  
+  57 sec  48510 bytes,  11 packets, rate =  43700 bytes/s  
+  58 sec  44100 bytes,  10 packets, rate =  43665 bytes/s  
+  59 sec  44100 bytes,  10 packets, rate =  43064 bytes/s 
