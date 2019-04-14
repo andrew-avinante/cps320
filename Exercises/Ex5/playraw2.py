@@ -22,7 +22,7 @@ def play(device, f):
     bytes_to_rw = periodsize * bytes_per_frame
     
     data = f.read(bytes_to_rw * 2)
-    print(data[3])
+
     while data:
         mydata = bytearray(int(bytes_to_rw))
         for i in range(periodsize):

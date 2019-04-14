@@ -17,20 +17,13 @@ def millis():
    return ms
 
 if len(sys.argv) != 5:
-    print('Usage: python3 aclient.py sample_rate period_size hostname')
+    print('Usage: python3 aclient.py sample_rate period_size hostname <file>')
     sys.exit(1)
 
 sample_rate = int(sys.argv[1])
 period_size = int(sys.argv[2])
 hostname=sys.argv[3]
 file_read = sys.argv[4]
-
-device = alsaaudio.PCM(alsaaudio.PCM_CAPTURE, device='default')
-
-device.setchannels(1)
-device.setrate(sample_rate)
-device.setformat(alsaaudio.PCM_FORMAT_S16_LE) # 16 bit little endian frames
-device.setperiodsize(period_size)
 
 size_to_rw = period_size * 2  # 2 bytes per mono sample
 
@@ -45,15 +38,12 @@ bytecount = 0
 packet_count = 0
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 f = open(file_read, 'rb')
-data = f.read(size_to_rw)
-sock.sendto(data, (hostname, PORT))
-bytecount += len(data)
-packet_count += 1
+data = "a"
 try:
-    while True:
+    while data:
         data = f.read(size_to_rw)
         sock.sendto(data, (hostname, PORT))
-        time.sleep(period_size/100000)
+        time.sleep(1/size_to_rw/4.5)
         #sock.send(data)
         bytecount += len(data)
         packet_count += 1
@@ -69,4 +59,3 @@ try:
 
 except KeyboardInterrupt:   
     print("\ndevice off.")
-    device.close()
