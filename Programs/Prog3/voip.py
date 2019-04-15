@@ -18,8 +18,9 @@ class Broadcast(Thread):
             sock.sendto(handle.encode('UTF-8'), ('<broadcast>', PORT))
             data, addr = sock.recvfrom(1024)
             data = data.decode("UTF-8")
+            print(data)
             if data != handle:
-                discovered[data] = datetime.now()
+                Broadcast.discovered[data] = datetime.now()
             time.sleep(1)
 
 class Display(Thread):
@@ -28,11 +29,15 @@ class Display(Thread):
         
     def run(self):
         while True:
+            remove = []
             for i in Broadcast.discovered:
-                if datetime.now() - Broadcast.discovered[i] > 10000:
-                    del Broadcast.discovered[i]
+                dt = datetime.now() - Broadcast.discovered[i]
+                if dt.days * 24 * 60 * 60 + dt.seconds * 1000 + dt.microseconds / 1000.0 > 10000:
+                    remvoe.append(Broadcast.discovered[i])
+            for i in remove:
+                del Broadcast.discovered[i]
             print(Broadcast.discovered)
-            time.sleep(10)
+            time.sleep(5)
         
 
 PORT = 2000    # Port to transmit to
