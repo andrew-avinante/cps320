@@ -23,21 +23,24 @@ class Broadcast(Thread):
             time.sleep(1)
 
 class Display(Thread):
+    status = 'Awaiting call'
     def __init__(self):
         super().__init__()
         
     def run(self):
         while True:
             remove = []
-            print('\fDEVICES')
+            print('\fSTATS\n---------------')
+            print('DEVICES')
             for i in Broadcast.discovered:
                 dt = datetime.now() - Broadcast.discovered[i]
                 if dt.days * 24 * 60 * 60 + dt.seconds * 1000 + dt.microseconds / 1000.0 > 5000:
                     remvoe.append(Broadcast.discovered[i])
                 else:
-                    print(i + '\n')
+                    print('- ' + i)
             for i in remove:
                 del Broadcast.discovered[i]
+            print(f'STATUS: {Display.status}')
             time.sleep(1)
         
 
