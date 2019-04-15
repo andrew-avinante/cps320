@@ -1,4 +1,4 @@
-import alsaaudio # use sudo apt install python3-pyaudio to get this module
+#import alsaaudio # use sudo apt install python3-pyaudio to get this module
 import wave
 import socket
 import sys
@@ -46,7 +46,7 @@ if len(sys.argv) != 2:
 handle = sys.argv[1] + '@awaiting'
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-sock.bind(("", 2001))
+sock.bind(("", 2000))
 
 broadcast = Broadcast(handle)
 display = Display()
