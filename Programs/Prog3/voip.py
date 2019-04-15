@@ -37,7 +37,7 @@ class Display(Thread):
             for i in remove:
                 del Broadcast.discovered[i]
             print(Broadcast.discovered)
-            time.sleep(5)
+            time.sleep(1)
         
 
 PORT = 2000    # Port to transmit to
