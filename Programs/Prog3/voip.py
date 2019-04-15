@@ -1,4 +1,4 @@
-import alsaaudio # use sudo apt install python3-pyaudio to get this module
+#import alsaaudio # use sudo apt install python3-pyaudio to get this module
 import wave
 import socket
 import sys
