@@ -6,6 +6,7 @@ import time
 from datetime import datetime
 from threading import Thread
 from time import sleep
+from termcolor import colored
 
 class Broadcast(Thread):
     discovered = {}
@@ -18,7 +19,6 @@ class Broadcast(Thread):
             sock.sendto(handle.encode('UTF-8'), ('<broadcast>', PORT))
             data, addr = sock.recvfrom(1024)
             data = data.decode("UTF-8")
-            print(data)
             if data != handle:
                 Broadcast.discovered[data] = datetime.now()
             time.sleep(1)
@@ -30,13 +30,17 @@ class Display(Thread):
     def run(self):
         while True:
             remove = []
+            text = colored('DEVICES', 'red')
+            print('\f' + text)
             for i in Broadcast.discovered:
                 dt = datetime.now() - Broadcast.discovered[i]
-                if dt.days * 24 * 60 * 60 + dt.seconds * 1000 + dt.microseconds / 1000.0 > 10000:
+                if dt.days * 24 * 60 * 60 + dt.seconds * 1000 + dt.microseconds / 1000.0 > 5000:
                     remvoe.append(Broadcast.discovered[i])
+                else:
+                    text = colored(i, 'green')
+                    print(text)
             for i in remove:
                 del Broadcast.discovered[i]
-            print(Broadcast.discovered)
             time.sleep(1)
         
 
