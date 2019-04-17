@@ -63,7 +63,7 @@ class Display(Thread):
     def __init__(self):
         super().__init__()
             
-    def self.getStatus():
+    def getStatus(self):
         statusText = {'await': 'Awaiting call', 'call' :'Calling ' + Broadcast.deviceToCall, 'accept': 'Call in progress', 'reject' : 'Awaiting call', 'endcall': 'Awaiting call', 'incoming' : }
         return 'Incoming call from ' + Broadcast.recieverHandle if Broadcast.incomingRequest else statusText[Broadcast.curAction]
         
