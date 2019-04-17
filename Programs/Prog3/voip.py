@@ -11,8 +11,9 @@ import pyttsx3
 class Broadcast(Thread):
     discovered = {}
     deviceToCall = ''
+    recieverHandle = ''
     curAction = 'await'
-    statuses = {'await': '@awaiting', 'call' :'@call', 'accept': '@accept', 'reject' : '@reject', 'endcall': '@endcall'}
+    statuses = {'await': '@awaiting', 'call' :'@call', 'accept': '@accept', 'reject' : '@reject', 'endcall': '@endcall', 'incoming' : '@awaiting'}
     incomingRequest = False
     def __init__(self, handle):
         super().__init__()
@@ -39,13 +40,10 @@ class Broadcast(Thread):
             senderHandle, senderData = data.decode("UTF-8").split('@')
 
             recieveAction = ''
-            recieverHandle = ''
 
             if 'awaiting' not in senderData:
                 recieveAction, recieverHandle = senderData.split(' ')
-
             if recieveAction == 'call' and action != '@call' and recieverHandle == handle:
-                Display.status = 'Incoming call from ' + recieverHandle
                 Broadcast.incomingRequest = True
             elif recieveAction == 'reject':
                 command = handle + action + ' ' + Broadcast.deviceToCall
@@ -61,11 +59,13 @@ class Broadcast(Thread):
             time.sleep(.1)
 
 class Display(Thread):
-    statusText = {'await': 'Awaiting call', 'call' :'Calling', 'accept': 'Call in progress', 'reject' : 'Awaiting call', 'endcall': 'Awaiting call'}
-    status = statusText[Broadcast.curAction]
     selected = 0
     def __init__(self):
         super().__init__()
+            
+    def self.getStatus():
+        statusText = {'await': 'Awaiting call', 'call' :'Calling ' + Broadcast.deviceToCall, 'accept': 'Call in progress', 'reject' : 'Awaiting call', 'endcall': 'Awaiting call', 'incoming' : }
+        return 'Incoming call from ' + Broadcast.recieverHandle if Broadcast.incomingRequest else statusText[Broadcast.curAction]
         
     def run(self):
         while True:
@@ -85,9 +85,8 @@ class Display(Thread):
                 del Broadcast.discovered[i]
                 remove.remove(i)
                 if Broadcast.deviceToCall == i:
-                    Display.status = 'Awaiting call'
                     Broadcast.curAction = 'await'
-            print(f'STATUS: {Display.status}')
+            print(f'STATUS: {getStatus()}')
             time.sleep(.1)
 
 class Input(Thread):
@@ -106,11 +105,9 @@ class Input(Thread):
                 self.engine.say(list(Broadcast.discovered)[Display.selected])
                 self.engine.runAndWait()
             elif input() == 'c' and len(Broadcast.discovered) != 0:
-                Display.status = 'Calling ' + list(Broadcast.discovered)[Display.selected]
                 Broadcast.deviceToCall = list(Broadcast.discovered)[Display.selected]
                 Broadcast.curAction = 'call'
             elif input() == 'x' and len(Broadcast.discovered) != 0:
-                Display.status = 'Awaiting call'
                 Broadcast.deviceToCall = ''
                 Broadcast.curAction = 'await'
             elif input() == 'r' and len(Broadcast.discovered) != 0 and Broadcast.incomingRequest:
