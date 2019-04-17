@@ -105,6 +105,10 @@ class Input(Thread):
                 Display.status = 'Calling ' + list(Broadcast.discovered)[Display.selected]
                 Broadcast.deviceToCall = list(Broadcast.discovered)[Display.selected]
                 Broadcast.curAction = 'call'
+            elif input() == 'x' and len(Broadcast.discovered) != 0:
+                Display.status = 'Awaiting call'
+                Broadcast.deviceToCall = ''
+                Broadcast.curAction = 'await'
             else:
                 self.engine.say(list(Broadcast.discovered)[Display.selected])
                 self.engine.runAndWait()
