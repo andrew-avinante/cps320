@@ -39,7 +39,7 @@ class Display(Thread):
             for i in Broadcast.discovered:
                 dt = datetime.now() - Broadcast.discovered[i]
                 if dt.days * 24 * 60 * 60 + dt.seconds * 1000 + dt.microseconds / 1000.0 > 5000:
-                    remove.append(i)
+                    remove.append(Broadcast.discovered[i])
                 else:
                     print('- ' + i[0])
             for i in remove:
