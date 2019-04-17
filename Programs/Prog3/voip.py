@@ -9,7 +9,7 @@ from time import sleep
 import pyttsx3
 
 class Broadcast(Thread):
-    discovered = []
+    discovered = {}
     def __init__(self, handle):
         super().__init__()
         self.handle = handle
@@ -20,7 +20,7 @@ class Broadcast(Thread):
             data, addr = sock.recvfrom(1024)
             data = data.decode("UTF-8")
             if data != handle:
-                Broadcast.discovered.append([data, datetime.now()])
+                Broadcast.discovered[data] = datetime.now()
             time.sleep(1)
 
 class Display(Thread):
@@ -37,17 +37,18 @@ class Display(Thread):
             print('\fSTATS\n---------------')
             print('DEVICES')
             for i in Broadcast.discovered:
-                dt = datetime.now() - i[1]
+                dt = datetime.now() - discovered[i]
                 if dt.days * 24 * 60 * 60 + dt.seconds * 1000 + dt.microseconds / 1000.0 > 5000:
-                    remvoe.append(i)
+                    remove.append(i)
                 else:
                     print('- ' + i[0])
             for i in remove:
-                Broadcast.discovered.remove(i)
+                del Broadcast.discovered[i]
             print(f'STATUS: {Display.status}')
             if Display.enter:
-                engine.say(Display.discovered[selected][0])
+                engine.say(list(Broadcast.discovered))
                 engine.runAndWait()
+                Display.enter = False
             time.sleep(1)
 
 class Input(Thread):
@@ -62,6 +63,8 @@ class Input(Thread):
             elif input() == 's' and Display.selected - 1 >= 0:
                 Display.selected -= 1
                 Display.enter = True
+            else:
+                display.enter = True
 
 PORT = 2000    # Port to transmit to
 
