@@ -35,6 +35,8 @@ class Broadcast(Thread):
             sock.sendto(command.encode('UTF-8'), ('<broadcast>', PORT))
             data, addr = sock.recvfrom(1024)
             senderHandle, senderData = data.decode("UTF-8").split('@')
+
+            recieveAction = ''
             
             print(senderData)
             if 'awaiting' not in senderData:
