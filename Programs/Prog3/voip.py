@@ -17,7 +17,7 @@ class Broadcast(Thread):
         
     def run(self):
         while True:
-            sock.sendto((handle + statuses[Display.status]).encode('UTF-8'), ('<broadcast>', PORT))
+            sock.sendto((handle + Broadcast.statuses[Display.status]).encode('UTF-8'), ('<broadcast>', PORT))
             data, addr = sock.recvfrom(1024)
             data, action = data.decode("UTF-8").split('@')
             if data != handle:
