@@ -37,7 +37,7 @@ class Broadcast(Thread):
             senderHandle, senderData = data.decode("UTF-8").split('@')
             
             print(senderData)
-            if '@awaiting' not in senderData:
+            if 'awaiting' not in senderData:
                 recieveAction, recieverHandle = senderData.split(' ')
 
             if recieveAction == 'call' and action != '@call' and recieverHandle == handle:
