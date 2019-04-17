@@ -10,17 +10,18 @@ import pyttsx3
 
 class Broadcast(Thread):
     discovered = {}
+    statuses = {'Awaiting call': '@awaiting'}
     def __init__(self, handle):
         super().__init__()
         self.handle = handle
         
     def run(self):
         while True:
-            sock.sendto(handle.encode('UTF-8'), ('<broadcast>', PORT))
+            sock.sendto((handle + statuses[Display.status]).encode('UTF-8'), ('<broadcast>', PORT))
             data, addr = sock.recvfrom(1024)
-            data = data.decode("UTF-8")
+            data, action = data.decode("UTF-8").split('@')
             if data != handle:
-                Broadcast.discovered[data] = datetime.now()
+                Broadcast.discovered[data] = [datetime.now(), action]
             time.sleep(1)
 
 class Display(Thread):
@@ -36,12 +37,13 @@ class Display(Thread):
             print('DEVICES')
             count = 0
             for i in Broadcast.discovered:
-                dt = datetime.now() - Broadcast.discovered[i]
+                dt = datetime.now() - Broadcast.discovered[i][0]
                 if dt.days * 24 * 60 * 60 + dt.seconds * 1000 + dt.microseconds / 1000.0 > 5000:
                     remove.append(Broadcast.discovered[i])
                 else:
                     bullet = '- ' if Display.selected != count else '* '
                     print(bullet + i)
+                count += 1
             for i in remove:
                 del Broadcast.discovered[i]
             print(f'STATUS: {Display.status}')
@@ -56,14 +58,14 @@ class Input(Thread):
         while True:
             if input() == 'a' and Display.selected + 1 < len(Broadcast.discovered):
                 Display.selected += 1
-                self.engine.say(list(Broadcast.discovered)[Display.selected].split('@')[0])
+                self.engine.say(list(Broadcast.discovered)[Display.selected])
                 self.engine.runAndWait()
             elif input() == 's' and Display.selected - 1 >= 0:
                 Display.selected -= 1
-                self.engine.say(list(Broadcast.discovered)[Display.selected].split('@')[0])
+                self.engine.say(list(Broadcast.discovered)[Display.selected])
                 self.engine.runAndWait()
             else:
-                self.engine.say(list(Broadcast.discovered)[Display.selected].split('@')[0])
+                self.engine.say(list(Broadcast.discovered)[Display.selected])
                 self.engine.runAndWait()
 
 PORT = 2000    # Port to transmit to
@@ -72,7 +74,7 @@ if len(sys.argv) != 2:
     print('Usage: python3 voip.py handle')
     sys.exit(1)
 
-handle = sys.argv[1] + '@awaiting'
+handle = sys.argv[1]
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 sock.bind(("", 2000))
