@@ -38,7 +38,7 @@ class Broadcast(Thread):
 
             recieveAction, recieverHandle = recieveAction.split(' ')
 
-            if recieveAction == 'call' and action != '@call' and recieverHandle == handle:
+            if recieveAction == 'call' and action != '@call':
                 Display.status = 'Incoming call from ' + data
             elif recieveAction == 'reject':
                 command = handle + action + ' ' + Broadcast.deviceToCall
@@ -95,7 +95,6 @@ class Input(Thread):
                 self.engine.runAndWait()
             elif input() == 'c' and len(Broadcast.discovered) != 0:
                 Display.status = 'Calling ' + list(Broadcast.discovered)[Display.selected]
-                Broadcast.deviceToCall = list(Broadcast.discovered)[Display.selected]
                 Broadcast.curAction = 'call'
             else:
                 self.engine.say(list(Broadcast.discovered)[Display.selected])
