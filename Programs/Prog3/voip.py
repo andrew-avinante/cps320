@@ -40,7 +40,7 @@ class Broadcast(Thread):
             senderHandle, senderData = data.decode("UTF-8").split('@')
 
             recieveAction = ''
-            print(data)
+
             if 'awaiting' not in senderData:
                 recieveAction, recieverHandle = senderData.split(' ')
             if recieveAction == 'call' and action != '@call' and recieverHandle == handle:
@@ -91,7 +91,7 @@ class Display(Thread):
                 if Broadcast.deviceToCall == i:
                     Broadcast.curAction = 'await'
             print(f'STATUS: {self.getStatus()}')
-            time.sleep(.1)
+            time.sleep(.01)
 
 class Input(Thread):
     def __init__(self):
