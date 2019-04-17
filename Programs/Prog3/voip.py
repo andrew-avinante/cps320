@@ -37,12 +37,13 @@ class Broadcast(Thread):
             senderHandle, senderData = data.decode("UTF-8").split('@')
 
             recieveAction = ''
+            recieverHandle = ''
 
             if 'awaiting' not in senderData:
                 recieveAction, recieverHandle = senderData.split(' ')
 
             if recieveAction == 'call' and action != '@call' and recieverHandle == handle:
-                Display.status = 'Incoming call from ' + data
+                Display.status = 'Incoming call from ' + recieverHandle
             elif recieveAction == 'reject':
                 command = handle + action + ' ' + Broadcast.deviceToCall
             elif recieveAction == 'accept':
@@ -54,7 +55,7 @@ class Broadcast(Thread):
 
             if senderHandle != handle:
                 Broadcast.discovered[senderHandle] = [datetime.now(), action]
-            time.sleep(1)
+            time.sleep(.1)
 
 class Display(Thread):
     status = 'Awaiting call'
