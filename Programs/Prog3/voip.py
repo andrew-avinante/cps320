@@ -48,8 +48,8 @@ class Broadcast(Thread):
                 command = handle + action + ' ' + Broadcast.deviceToCall
             else:
                 recieveAction = handle + '@awaiting'
-            if data != handle:
-                Broadcast.discovered[data] = [datetime.now(), action]
+            if senderHandle != handle:
+                Broadcast.discovered[senderHandle] = [datetime.now(), action]
             time.sleep(1)
 
 class Display(Thread):
