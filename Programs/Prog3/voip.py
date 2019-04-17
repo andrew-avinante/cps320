@@ -36,7 +36,7 @@ class Broadcast(Thread):
             data, addr = sock.recvfrom(1024)
             senderHandle, senderData = data.decode("UTF-8").split('@')
             
-            pritn(senderData)
+            print(senderData)
             if '@awaiting' not in senderData:
                 recieveAction, recieverHandle = senderData.split(' ')
 
