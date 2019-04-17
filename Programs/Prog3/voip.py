@@ -36,9 +36,9 @@ class Broadcast(Thread):
             data, addr = sock.recvfrom(1024)
             senderHandle, senderData = data.decode("UTF-8").split('@')
 
-            recieveAction, recieverHandle = recieveAction.split(' ')
+            recieveAction, recieverHandle = senderData.split(' ')
 
-            if recieveAction == 'call' and action != '@call':
+            if recieveAction == 'call' and action != '@call' and recieverHandle == handle:
                 Display.status = 'Incoming call from ' + data
             elif recieveAction == 'reject':
                 command = handle + action + ' ' + Broadcast.deviceToCall
@@ -48,8 +48,9 @@ class Broadcast(Thread):
                 command = handle + action + ' ' + Broadcast.deviceToCall
             else:
                 recieveAction = handle + '@awaiting'
-            if data != handle:
-                Broadcast.discovered[data] = [datetime.now(), action]
+            print(senderHandle)
+            if senderHandle != handle:
+                Broadcast.discovered[senderHandle] = [datetime.now(), action]
             time.sleep(1)
 
 class Display(Thread):
@@ -75,6 +76,9 @@ class Display(Thread):
             for i in remove:
                 del Broadcast.discovered[i]
                 remove.remove(i)
+                if Broadcast.deviceToCall == i:
+                    Display.status = 'Awaiting call'
+                    Broadcast.curAction = 'await'
             print(f'STATUS: {Display.status}')
             time.sleep(1)
 
@@ -95,6 +99,7 @@ class Input(Thread):
                 self.engine.runAndWait()
             elif input() == 'c' and len(Broadcast.discovered) != 0:
                 Display.status = 'Calling ' + list(Broadcast.discovered)[Display.selected]
+                Broadcast.deviceToCall = list(Broadcast.discovered)[Display.selected]
                 Broadcast.curAction = 'call'
             else:
                 self.engine.say(list(Broadcast.discovered)[Display.selected])
