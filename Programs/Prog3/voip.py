@@ -26,46 +26,45 @@ class Broadcast(Thread):
 class Display(Thread):
     status = 'Awaiting call'
     selected = 0
-    enter = False
     def __init__(self):
         super().__init__()
-        engine = pyttsx3.init()
         
     def run(self):
         while True:
             remove = []
             print('\fSTATS\n---------------')
             print('DEVICES')
+            count = 0
             for i in Broadcast.discovered:
                 dt = datetime.now() - Broadcast.discovered[i]
                 if dt.days * 24 * 60 * 60 + dt.seconds * 1000 + dt.microseconds / 1000.0 > 5000:
                     remove.append(Broadcast.discovered[i])
                 else:
-                    print('- ' + i)
-                    print(list(Broadcast.discovered))
+                    bullet = '- ' if Display.selected != count else '* '
+                    print(bullet + i)
             for i in remove:
                 del Broadcast.discovered[i]
             print(f'STATUS: {Display.status}')
-            if Display.enter:
-                engine.say(list(Broadcast.discovered)[selected])
-                engine.runAndWait()
-                Display.enter = False
             time.sleep(1)
 
 class Input(Thread):
     def __init__(self):
         super().__init__()
+        self.engine = pyttsx3.init()
         
     def run(self):
         while True:
-            if input() == 'a' and Display.selected + 1 < Broadcast.discovered:
+            if input() == 'a' and Display.selected + 1 < len(Broadcast.discovered):
                 Display.selected += 1
-                Display.enter = True
+                self.engine.say(list(Broadcast.discovered)[Display.selected].split('@')[0])
+                self.engine.runAndWait()
             elif input() == 's' and Display.selected - 1 >= 0:
                 Display.selected -= 1
-                Display.enter = True
+                self.engine.say(list(Broadcast.discovered)[Display.selected].split('@')[0])
+                self.engine.runAndWait()
             else:
-                display.enter = True
+                self.engine.say(list(Broadcast.discovered)[Display.selected].split('@')[0])
+                self.engine.runAndWait()
 
 PORT = 2000    # Port to transmit to
 
@@ -80,5 +79,8 @@ sock.bind(("", 2000))
 
 broadcast = Broadcast(handle)
 display = Display()
+inputs = Input()
+
 broadcast.start()
 display.start()
+inputs.start()
