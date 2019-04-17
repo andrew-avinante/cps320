@@ -48,6 +48,7 @@ class Broadcast(Thread):
                 command = handle + action + ' ' + Broadcast.deviceToCall
             else:
                 recieveAction = handle + '@awaiting'
+            print(senderHandle)
             if senderHandle != handle:
                 Broadcast.discovered[senderHandle] = [datetime.now(), action]
             time.sleep(1)
