@@ -104,21 +104,22 @@ class Input(Thread):
         
     def run(self):
         while True:
-            if input() == 'w' and Display.selected + 1 < len(Broadcast.discovered):
+            inputChar = input()
+            if inputChar == 'w' and Display.selected + 1 < len(Broadcast.discovered):
                 Display.selected += 1
                 self.engine.say(list(Broadcast.discovered)[Display.selected])
                 self.engine.runAndWait()
-            elif input() == 's' and Display.selected - 1 >= 0:
+            elif inputChar == 's' and Display.selected - 1 >= 0:
                 Display.selected -= 1
                 self.engine.say(list(Broadcast.discovered)[Display.selected])
                 self.engine.runAndWait()
-            elif input() == 'c' and len(Broadcast.discovered) != 0:
+            elif inputChar == 'c' and len(Broadcast.discovered) != 0:
                 Broadcast.deviceToCall = list(Broadcast.discovered)[Display.selected]
                 Broadcast.curAction = 'call'
-            elif input() == 'x' and len(Broadcast.discovered) != 0:
+            elif inputChar == 'x' and len(Broadcast.discovered) != 0:
                 Broadcast.deviceToCall = ''
                 Broadcast.curAction = 'await'
-            elif input() == 'r' and len(Broadcast.discovered) != 0 and Broadcast.incomingRequest:
+            elif inputChar == 'r' and len(Broadcast.discovered) != 0 and Broadcast.incomingRequest:
                 Broadcast.deviceToCall = ''
                 Broadcast.curAction = 'reject'
             else:
