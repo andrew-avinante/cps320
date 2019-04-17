@@ -91,7 +91,7 @@ class Display(Thread):
                 if Broadcast.deviceToCall == i:
                     Broadcast.curAction = 'await'
             print(f'STATUS: {self.getStatus()}')
-            time.sleep(.01)
+            time.sleep(.1)
 
 class Input(Thread):
     def __init__(self):
