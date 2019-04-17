@@ -45,6 +45,7 @@ class Broadcast(Thread):
                 recieveAction, recieverHandle = senderData.split(' ')
             if recieveAction == 'call' and action != '@call' and recieverHandle == handle:
                 Broadcast.incomingRequest = True
+                Broadcast.curAction = 'incoming'
             elif recieveAction == 'reject':
                 command = handle + action + ' ' + Broadcast.deviceToCall
             elif recieveAction == 'accept':
@@ -64,8 +65,8 @@ class Display(Thread):
         super().__init__()
             
     def getStatus(self):
-        statusText = {'await': 'Awaiting call', 'call' :'Calling ' + Broadcast.deviceToCall, 'accept': 'Call in progress', 'reject' : 'Awaiting call', 'endcall': 'Awaiting call', 'incoming' : }
-        return 'Incoming call from ' + Broadcast.recieverHandle if Broadcast.incomingRequest else statusText[Broadcast.curAction]
+        statusText = {'await': 'Awaiting call', 'call' :'Calling ' + Broadcast.deviceToCall, 'accept': 'Call in progress', 'reject' : 'Awaiting call', 'endcall': 'Awaiting call', 'incoming' : 'Incoming call from ' + Broadcast.recieverHandle}
+        return  statusText[Broadcast.curAction]
         
     def run(self):
         while True:
