@@ -41,7 +41,7 @@ class Display(Thread):
                 if dt.days * 24 * 60 * 60 + dt.seconds * 1000 + dt.microseconds / 1000.0 > 5000:
                     remove.append(Broadcast.discovered[i])
                 else:
-                    print('- ' + Broadcast.discovered[i])
+                    print('- ' + i)
                     print(list(Broadcast.discovered))
             for i in remove:
                 del Broadcast.discovered[i]
