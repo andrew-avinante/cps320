@@ -22,7 +22,7 @@ class Broadcast(Thread):
             command = ''
             action = Broadcast.statuses[Broadcast.curAction]
             if action == '@call':
-                command = handle + action + ' ' + Broadcast.deviceToCal
+                command = handle + action + ' ' + Broadcast.deviceToCall
             elif action == '@reject':
                 command = handle + action + ' ' + Broadcast.deviceToCall
             elif action == '@accept':
@@ -35,7 +35,7 @@ class Broadcast(Thread):
             sock.sendto(command.encode('UTF-8'), ('<broadcast>', PORT))
             data, addr = sock.recvfrom(1024)
             data, recieveAction = data.decode("UTF-8").split('@')
-
+            print(recieveAction + ' ' + action)
             if recieveAction == '@call' and action != '@call':
                 Display.status = 'Incoming call from ' + data
             elif recieveAction == '@reject':
