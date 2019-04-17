@@ -11,7 +11,8 @@ import pyttsx3
 class Broadcast(Thread):
     discovered = {}
     deviceToCall = ''
-    statuses = {'Awaiting call': '@awaiting', 'Calling' :'@call'}
+    curAction = 'await'
+    statuses = {'await': '@awaiting', 'call' :'@call', 'accept': '@accept', 'reject' : '@reject', 'endcall': '@endcall'}
     def __init__(self, handle):
         super().__init__()
         self.handle = handle
@@ -19,10 +20,9 @@ class Broadcast(Thread):
     def run(self):
         while True:
             command = ''
-            action = Broadcast.statuses[Display.status]
+            action = Broadcast.statuses[Broadcast.curAction]
             if action == '@call':
-                command = handle + action + ' ' + Broadcast.deviceToCall
-
+                command = handle + action + ' ' + Broadcast.deviceToCal
             elif action == '@reject':
                 command = handle + action + ' ' + Broadcast.deviceToCall
             elif action == '@accept':
@@ -34,21 +34,21 @@ class Broadcast(Thread):
             
             sock.sendto(command.encode('UTF-8'), ('<broadcast>', PORT))
             data, addr = sock.recvfrom(1024)
-            data, action = data.decode("UTF-8").split('@')
+            data, recieveAction = data.decode("UTF-8").split('@')
 
-            # if action == '@call':
-            #     Display.status = 'Incoming call from ' + data
-            # elif action == '@reject':
-            #     command = handle + action + ' ' + Broadcast.deviceToCall
-            # elif action == '@accept':
-            #     command = handle + action + ' ' + Broadcast.deviceToCall
-            # elif action == '@endcall':
-            #     command = handle + action + ' ' + Broadcast.deviceToCall
-            # else:
-            #     command = handle + '@awaiting'
+            if recieveAction == '@call' and action != '@call':
+                Display.status = 'Incoming call from ' + data
+            elif recieveAction == '@reject':
+                command = handle + action + ' ' + Broadcast.deviceToCall
+            elif recieveAction == '@accept':
+                command = handle + action + ' ' + Broadcast.deviceToCall
+            elif recieveAction == '@endcall':
+                command = handle + action + ' ' + Broadcast.deviceToCall
+            else:
+                recieveAction = handle + '@awaiting'
             if data != handle:
                 Broadcast.discovered[data] = [datetime.now(), action]
-            time.sleep(1)
+            time.sleep(.25)
 
 class Display(Thread):
     status = 'Awaiting call'
@@ -93,6 +93,7 @@ class Input(Thread):
                 self.engine.runAndWait()
             elif input() == 'c' and len(Broadcast.discovered) != 0:
                 Display.status = 'Calling ' + list(Broadcast.discovered)[Display.selected]
+                Broadcast.curAction = 'call'
             else:
                 self.engine.say(list(Broadcast.discovered)[Display.selected])
                 self.engine.runAndWait()
