@@ -34,9 +34,11 @@ class Broadcast(Thread):
             
             sock.sendto(command.encode('UTF-8'), ('<broadcast>', PORT))
             data, addr = sock.recvfrom(1024)
-            data, recieveAction = data.decode("UTF-8").split('@')
-         
-            if recieveAction == 'call' and action != '@call':
+            senderHandle, senderData = data.decode("UTF-8").split('@')
+
+            recieveAction, recieverHandle = recieveAction.split(' ')
+
+            if recieveAction == 'call' and action != '@call' and recieverHandle == handle:
                 Display.status = 'Incoming call from ' + data
             elif recieveAction == 'reject':
                 command = handle + action + ' ' + Broadcast.deviceToCall
@@ -48,7 +50,7 @@ class Broadcast(Thread):
                 recieveAction = handle + '@awaiting'
             if data != handle:
                 Broadcast.discovered[data] = [datetime.now(), action]
-            time.sleep(.25)
+            time.sleep(1)
 
 class Display(Thread):
     status = 'Awaiting call'
