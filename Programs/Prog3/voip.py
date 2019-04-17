@@ -40,7 +40,7 @@ class Broadcast(Thread):
             senderHandle, senderData = data.decode("UTF-8").split('@')
 
             recieveAction = ''
-
+            print(data)
             if 'awaiting' not in senderData:
                 recieveAction, recieverHandle = senderData.split(' ')
             if recieveAction == 'call' and action != '@call' and recieverHandle == handle:
@@ -54,6 +54,7 @@ class Broadcast(Thread):
             elif recieveAction == 'endcall':
                 command = handle + action + ' ' + Broadcast.deviceToCall
             elif recieveAction == 'await' and senderHandle == Broadcast.partyHandle:
+                print("IN HERE")
                 Broadcast.curAction = 'await'
                 Broadcast.partyHandle = ''
                 Broadcast.incomingRequest = False
