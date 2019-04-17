@@ -11,7 +11,7 @@ import pyttsx3
 class Broadcast(Thread):
     discovered = {}
     deviceToCall = ''
-    recieverHandle = ''
+    senderHandle = ''
     curAction = 'await'
     statuses = {'await': '@awaiting', 'call' :'@call', 'accept': '@accept', 'reject' : '@reject', 'endcall': '@endcall', 'incoming' : '@awaiting'}
     incomingRequest = False
@@ -37,13 +37,14 @@ class Broadcast(Thread):
             
             sock.sendto(command.encode('UTF-8'), ('<broadcast>', PORT))
             data, addr = sock.recvfrom(1024)
-            senderHandle, senderData = data.decode("UTF-8").split('@')
+            Broadcast.senderHandle, senderData = data.decode("UTF-8").split('@')
 
             recieveAction = ''
+            recieverHandle = ''
 
             if 'awaiting' not in senderData:
-                recieveAction, Broadcast.recieverHandle = senderData.split(' ')
-            if recieveAction == 'call' and action != '@call' and Broadcast.recieverHandle == handle:
+                recieveAction, recieverHandle = senderData.split(' ')
+            if recieveAction == 'call' and action != '@call' and recieverHandle == handle:
                 Broadcast.incomingRequest = True
                 Broadcast.curAction = 'incoming'
             elif recieveAction == 'reject':
@@ -52,7 +53,7 @@ class Broadcast(Thread):
                 command = handle + action + ' ' + Broadcast.deviceToCall
             elif recieveAction == 'endcall':
                 command = handle + action + ' ' + Broadcast.deviceToCall
-            elif Broadcast.curAction != 'call':
+            elif Broadcast.curAction != 'call' and not Broadcast.incomingRequest:
                 Broadcast.curAction = 'await'
 
             if senderHandle != handle:
@@ -65,7 +66,7 @@ class Display(Thread):
         super().__init__()
             
     def getStatus(self):
-        statusText = {'await': 'Awaiting call', 'call' :'Calling ' + Broadcast.deviceToCall, 'accept': 'Call in progress', 'reject' : 'Awaiting call', 'endcall': 'Awaiting call', 'incoming' : 'Incoming call from ' + Broadcast.recieverHandle}
+        statusText = {'await': 'Awaiting call', 'call' :'Calling ' + Broadcast.deviceToCall, 'accept': 'Call in progress', 'reject' : 'Awaiting call', 'endcall': 'Awaiting call', 'incoming' : 'Incoming call from ' + Broadcast.senderHandle}
         return  statusText[Broadcast.curAction]
         
     def run(self):
