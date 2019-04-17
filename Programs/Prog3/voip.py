@@ -48,9 +48,8 @@ class Broadcast(Thread):
                 command = handle + action + ' ' + Broadcast.deviceToCall
             else:
                 recieveAction = handle + '@awaiting'
-            print(senderHandle)
-            if senderHandle != handle:
-                Broadcast.discovered[senderHandle] = [datetime.now(), action]
+            if data != handle:
+                Broadcast.discovered[data] = [datetime.now(), action]
             time.sleep(1)
 
 class Display(Thread):
@@ -76,9 +75,6 @@ class Display(Thread):
             for i in remove:
                 del Broadcast.discovered[i]
                 remove.remove(i)
-                if Broadcast.deviceToCall == i:
-                    Display.status = 'Awaiting call'
-                    Broadcast.curAction = 'await'
             print(f'STATUS: {Display.status}')
             time.sleep(1)
 
