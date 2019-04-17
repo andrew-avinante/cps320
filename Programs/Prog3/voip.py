@@ -75,6 +75,8 @@ class Display(Thread):
             for i in remove:
                 del Broadcast.discovered[i]
                 remove.remove(i)
+                if Broadcast.deviceToCall == i:
+                    status = 'Awaiting call'
             print(f'STATUS: {Display.status}')
             time.sleep(1)
 
