@@ -27,7 +27,9 @@ class Broadcast(Thread):
                 command = handle + action + ' ' + Broadcast.deviceToCall
             elif action == '@reject':
                 command = handle + action + ' ' + Broadcast.deviceToCall
-                action = 'await'
+                Broadcast.curAction = 'await'
+                Broadcast.partyHandle = ''
+                Broadcast.incomingRequest = False
             elif action == '@accept':
                 command = handle + action + ' ' + Broadcast.deviceToCall
             elif action == '@endcall':
@@ -53,7 +55,8 @@ class Broadcast(Thread):
                 Broadcast.curAction = 'incoming'
                 Broadcast.partyHandle = senderHandle
             elif recieveAction == 'reject':
-                command = handle + action + ' ' + Broadcast.deviceToCall
+                Broadcast.deviceToCall = ''
+                Broadcast.curAction = 'await'
             elif recieveAction == 'accept':
                 command = handle + action + ' ' + Broadcast.deviceToCall
             elif recieveAction == 'endcall':
