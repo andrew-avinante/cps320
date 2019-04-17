@@ -35,7 +35,6 @@ class Broadcast(Thread):
             else:
                 command = handle + '@awaiting'
             
-            print(command)
             sock.sendto(command.encode('UTF-8'), ('<broadcast>', PORT))
             data, addr = sock.recvfrom(1024)
             senderHandle, senderData = data.decode("UTF-8").split('@')
@@ -54,7 +53,7 @@ class Broadcast(Thread):
                 command = handle + action + ' ' + Broadcast.deviceToCall
             elif recieveAction == 'endcall':
                 command = handle + action + ' ' + Broadcast.deviceToCall
-            elif recieveAction == 'await' and senderHandle == Broadcast.partyHandle:
+            elif recieveAction == 'awaiting' and senderHandle == Broadcast.partyHandle:
                 Broadcast.curAction = 'await'
                 Broadcast.partyHandle = ''
                 Broadcast.incomingRequest = False
