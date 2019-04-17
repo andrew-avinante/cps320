@@ -84,7 +84,7 @@ class Display(Thread):
                     Display.status = 'Awaiting call'
                     Broadcast.curAction = 'await'
             print(f'STATUS: {Display.status}')
-            time.sleep(1)
+            time.sleep(.1)
 
 class Input(Thread):
     def __init__(self):
