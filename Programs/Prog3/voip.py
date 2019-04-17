@@ -35,14 +35,14 @@ class Broadcast(Thread):
             sock.sendto(command.encode('UTF-8'), ('<broadcast>', PORT))
             data, addr = sock.recvfrom(1024)
             data, recieveAction = data.decode("UTF-8").split('@')
-            print(recieveAction + ' ' + action)
-            if recieveAction == '@call' and action != '@call':
+         
+            if recieveAction == 'call' and action != '@call':
                 Display.status = 'Incoming call from ' + data
-            elif recieveAction == '@reject':
+            elif recieveAction == 'reject':
                 command = handle + action + ' ' + Broadcast.deviceToCall
-            elif recieveAction == '@accept':
+            elif recieveAction == 'accept':
                 command = handle + action + ' ' + Broadcast.deviceToCall
-            elif recieveAction == '@endcall':
+            elif recieveAction == 'endcall':
                 command = handle + action + ' ' + Broadcast.deviceToCall
             else:
                 recieveAction = handle + '@awaiting'
