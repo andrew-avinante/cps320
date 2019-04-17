@@ -35,6 +35,7 @@ class Broadcast(Thread):
             else:
                 command = handle + '@awaiting'
             
+            print(command)
             sock.sendto(command.encode('UTF-8'), ('<broadcast>', PORT))
             data, addr = sock.recvfrom(1024)
             senderHandle, senderData = data.decode("UTF-8").split('@')
@@ -60,7 +61,7 @@ class Broadcast(Thread):
 
             if senderHandle != handle:
                 Broadcast.discovered[senderHandle] = [datetime.now(), action]
-            time.sleep(.01)
+            time.sleep(.1)
 
 class Display(Thread):
     selected = 0
@@ -91,7 +92,7 @@ class Display(Thread):
                 if Broadcast.deviceToCall == i:
                     Broadcast.curAction = 'await'
             print(f'STATUS: {self.getStatus()}')
-            time.sleep(.01)
+            time.sleep(.1)
 
 class Input(Thread):
     def __init__(self):
