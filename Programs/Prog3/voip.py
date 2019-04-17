@@ -62,7 +62,7 @@ class Broadcast(Thread):
 
 class Display(Thread):
     statusText = {'await': 'Awaiting call', 'call' :'Calling', 'accept': 'Call in progress', 'reject' : 'Awaiting call', 'endcall': 'Awaiting call'}
-    status = Display.statusText[Broadcast.curAction]
+    status = statusText[Broadcast.curAction]
     selected = 0
     def __init__(self):
         super().__init__()
