@@ -10,16 +10,42 @@ import pyttsx3
 
 class Broadcast(Thread):
     discovered = {}
-    statuses = {'Awaiting call': '@awaiting'}
+    deviceToCall = ''
+    statuses = {'Awaiting call': '@awaiting', 'Calling' :'@call'}
     def __init__(self, handle):
         super().__init__()
         self.handle = handle
         
     def run(self):
         while True:
-            sock.sendto((handle + Broadcast.statuses[Display.status]).encode('UTF-8'), ('<broadcast>', PORT))
+            command = ''
+            action = Broadcast.statuses[Display.status]
+            if action == '@call':
+                command = handle + action + ' ' + Broadcast.deviceToCall
+
+            elif action == '@reject':
+                command = handle + action + ' ' + Broadcast.deviceToCall
+            elif action == '@accept':
+                command = handle + action + ' ' + Broadcast.deviceToCall
+            elif action == '@endcall':
+                command = handle + action + ' ' + Broadcast.deviceToCall
+            else:
+                command = handle + '@awaiting'
+            
+            sock.sendto(command.encode('UTF-8'), ('<broadcast>', PORT))
             data, addr = sock.recvfrom(1024)
             data, action = data.decode("UTF-8").split('@')
+
+            # if action == '@call':
+            #     Display.status = 'Incoming call from ' + data
+            # elif action == '@reject':
+            #     command = handle + action + ' ' + Broadcast.deviceToCall
+            # elif action == '@accept':
+            #     command = handle + action + ' ' + Broadcast.deviceToCall
+            # elif action == '@endcall':
+            #     command = handle + action + ' ' + Broadcast.deviceToCall
+            # else:
+            #     command = handle + '@awaiting'
             if data != handle:
                 Broadcast.discovered[data] = [datetime.now(), action]
             time.sleep(1)
@@ -57,7 +83,7 @@ class Input(Thread):
         
     def run(self):
         while True:
-            if input() == 'a' and Display.selected + 1 < len(Broadcast.discovered):
+            if input() == 'w' and Display.selected + 1 < len(Broadcast.discovered):
                 Display.selected += 1
                 self.engine.say(list(Broadcast.discovered)[Display.selected])
                 self.engine.runAndWait()
@@ -65,6 +91,8 @@ class Input(Thread):
                 Display.selected -= 1
                 self.engine.say(list(Broadcast.discovered)[Display.selected])
                 self.engine.runAndWait()
+            elif input() == 'c' and len(Broadcast.discovered) != 0:
+                Display.status = 'Calling ' + list(Broadcast.discovered)[Display.selected]
             else:
                 self.engine.say(list(Broadcast.discovered)[Display.selected])
                 self.engine.runAndWait()
