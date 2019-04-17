@@ -47,7 +47,7 @@ class Display(Thread):
                 del Broadcast.discovered[i]
             print(f'STATUS: {Display.status}')
             if Display.enter:
-                engine.say(list(Broadcast.discovered))
+                engine.say(list(Broadcast.discovered)[selected])
                 engine.runAndWait()
                 Display.enter = False
             time.sleep(1)
