@@ -52,7 +52,7 @@ class Broadcast(Thread):
                 command = handle + action + ' ' + Broadcast.deviceToCall
             elif recieveAction == 'endcall':
                 command = handle + action + ' ' + Broadcast.deviceToCall
-            else:
+            elif Broadcast.curAction != 'call':
                 Broadcast.curAction = 'await'
 
             if senderHandle != handle:
