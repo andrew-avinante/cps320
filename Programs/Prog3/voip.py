@@ -43,7 +43,7 @@ class Broadcast(Thread):
 
             if 'awaiting' not in senderData:
                 recieveAction, Broadcast.recieverHandle = senderData.split(' ')
-            if recieveAction == 'call' and action != '@call' and recieverHandle == handle:
+            if recieveAction == 'call' and action != '@call' and Broadcast.recieverHandle == handle:
                 Broadcast.incomingRequest = True
                 Broadcast.curAction = 'incoming'
             elif recieveAction == 'reject':
