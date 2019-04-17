@@ -13,6 +13,7 @@ class Broadcast(Thread):
     deviceToCall = ''
     curAction = 'await'
     statuses = {'await': '@awaiting', 'call' :'@call', 'accept': '@accept', 'reject' : '@reject', 'endcall': '@endcall'}
+    incomingRequest = False
     def __init__(self, handle):
         super().__init__()
         self.handle = handle
@@ -25,6 +26,7 @@ class Broadcast(Thread):
                 command = handle + action + ' ' + Broadcast.deviceToCall
             elif action == '@reject':
                 command = handle + action + ' ' + Broadcast.deviceToCall
+                action = 'await'
             elif action == '@accept':
                 command = handle + action + ' ' + Broadcast.deviceToCall
             elif action == '@endcall':
@@ -44,6 +46,7 @@ class Broadcast(Thread):
 
             if recieveAction == 'call' and action != '@call' and recieverHandle == handle:
                 Display.status = 'Incoming call from ' + recieverHandle
+                Broadcast.incomingRequest = True
             elif recieveAction == 'reject':
                 command = handle + action + ' ' + Broadcast.deviceToCall
             elif recieveAction == 'accept':
@@ -58,7 +61,8 @@ class Broadcast(Thread):
             time.sleep(.1)
 
 class Display(Thread):
-    status = 'Awaiting call'
+    statusText = {'await': 'Awaiting call', 'call' :'Calling', 'accept': 'Call in progress', 'reject' : 'Awaiting call', 'endcall': 'Awaiting call'}
+    status = Display.statusText[Broadcast.curAction]
     selected = 0
     def __init__(self):
         super().__init__()
@@ -109,6 +113,9 @@ class Input(Thread):
                 Display.status = 'Awaiting call'
                 Broadcast.deviceToCall = ''
                 Broadcast.curAction = 'await'
+            elif input() == 'r' and len(Broadcast.discovered) != 0 and Broadcast.incomingRequest:
+                Broadcast.deviceToCall = ''
+                Broadcast.curAction = 'reject'
             else:
                 self.engine.say(list(Broadcast.discovered)[Display.selected])
                 self.engine.runAndWait()
