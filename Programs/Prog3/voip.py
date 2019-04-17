@@ -37,8 +37,7 @@ class Broadcast(Thread):
             senderHandle, senderData = data.decode("UTF-8").split('@')
 
             recieveAction = ''
-            
-            print(senderData)
+
             if 'awaiting' not in senderData:
                 recieveAction, recieverHandle = senderData.split(' ')
 
@@ -52,7 +51,7 @@ class Broadcast(Thread):
                 command = handle + action + ' ' + Broadcast.deviceToCall
             else:
                 recieveAction = handle + '@awaiting'
-            print(senderHandle)
+
             if senderHandle != handle:
                 Broadcast.discovered[senderHandle] = [datetime.now(), action]
             time.sleep(1)
