@@ -53,9 +53,10 @@ class Broadcast(Thread):
                 command = handle + action + ' ' + Broadcast.deviceToCall
             elif recieveAction == 'endcall':
                 command = handle + action + ' ' + Broadcast.deviceToCall
-            elif Broadcast.curAction != 'call' and not Broadcast.incomingRequest:
+            elif recieveAction == 'await' and senderHandle == Broadcast.partyHandle:
                 Broadcast.curAction = 'await'
                 Broadcast.partyHandle = ''
+                Broadcast.incomingRequest = False
 
             if senderHandle != handle:
                 Broadcast.discovered[senderHandle] = [datetime.now(), action]
