@@ -54,14 +54,13 @@ class Broadcast(Thread):
             elif recieveAction == 'endcall':
                 command = handle + action + ' ' + Broadcast.deviceToCall
             elif recieveAction == 'await' and senderHandle == Broadcast.partyHandle:
-                print("IN HERE")
                 Broadcast.curAction = 'await'
                 Broadcast.partyHandle = ''
                 Broadcast.incomingRequest = False
 
             if senderHandle != handle:
                 Broadcast.discovered[senderHandle] = [datetime.now(), action]
-            time.sleep(.1)
+            time.sleep(.01)
 
 class Display(Thread):
     selected = 0
@@ -92,7 +91,7 @@ class Display(Thread):
                 if Broadcast.deviceToCall == i:
                     Broadcast.curAction = 'await'
             print(f'STATUS: {self.getStatus()}')
-            time.sleep(.1)
+            time.sleep(.01)
 
 class Input(Thread):
     def __init__(self):
