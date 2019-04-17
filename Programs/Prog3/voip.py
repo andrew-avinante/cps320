@@ -87,7 +87,7 @@ class Display(Thread):
                 remove.remove(i)
                 if Broadcast.deviceToCall == i:
                     Broadcast.curAction = 'await'
-            print(f'STATUS: {getStatus()}')
+            print(f'STATUS: {self.getStatus()}')
             time.sleep(.1)
 
 class Input(Thread):
