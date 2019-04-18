@@ -31,7 +31,6 @@ class Broadcast(Thread):
                 Broadcast.curAction = 'await'
                 Broadcast.partyHandle = ''
                 Broadcast.incomingRequest = False
-                Display.stat
             elif Broadcast.action == '@accept':
                 command = handle + Broadcast.action + ' ' + Broadcast.deviceToCall
             elif Broadcast.action == '@endcall':
@@ -59,7 +58,7 @@ class Recieve(Thread):
                 Broadcast.curAction = 'await'
                 Broadcast.partyHandle = ''
                 Broadcast.incomingRequest = False
-            print(senderData)
+
             if recieveAction == 'call' and Broadcast.action != '@call' and recieverHandle == handle:
                 Broadcast.incomingRequest = True
                 Broadcast.curAction = 'incoming'
