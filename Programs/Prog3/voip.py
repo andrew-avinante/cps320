@@ -23,7 +23,7 @@ class Broadcast(Thread):
     def run(self):
         while True:
             command = ''
-            action = Broadcast.statuses[Broadcast.curAction]
+            Broadcast.action = Broadcast.statuses[Broadcast.curAction]
             if Broadcast.action == '@call':
                 command = handle + Broadcast.action + ' ' + Broadcast.deviceToCall
             elif Broadcast.action == '@reject':
@@ -52,14 +52,14 @@ class Recieve(Thread):
             senderHandle, senderData = data.decode("UTF-8").split('@')
 
             recieveAction = ''
-
+            
             if 'awaiting' not in senderData:
                 recieveAction, recieverHandle = senderData.split(' ')
             elif senderHandle == Broadcast.partyHandle:
                 Broadcast.curAction = 'await'
                 Broadcast.partyHandle = ''
                 Broadcast.incomingRequest = False
-
+            print(senderData)
             if recieveAction == 'call' and Broadcast.action != '@call' and recieverHandle == handle:
                 Broadcast.incomingRequest = True
                 Broadcast.curAction = 'incoming'
