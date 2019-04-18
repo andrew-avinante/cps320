@@ -14,6 +14,7 @@ class Broadcast(Thread):
     partyHandle = ''
     curAction = 'await'
     statuses = {'await': '@awaiting', 'call' :'@call', 'accept': '@accept', 'reject' : '@reject', 'endcall': '@endcall', 'incoming' : '@awaiting'}
+    action = statuses[curAction]
     incomingRequest = False
     def __init__(self, handle):
         super().__init__()
@@ -23,21 +24,30 @@ class Broadcast(Thread):
         while True:
             command = ''
             action = Broadcast.statuses[Broadcast.curAction]
-            if action == '@call':
-                command = handle + action + ' ' + Broadcast.deviceToCall
-            elif action == '@reject':
-                command = handle + action + ' ' + Broadcast.deviceToCall
+            if Broadcast.action == '@call':
+                command = handle + Broadcast.action + ' ' + Broadcast.deviceToCall
+            elif Broadcast.action == '@reject':
+                command = handle + Broadcast.action + ' ' + Broadcast.deviceToCall
                 Broadcast.curAction = 'await'
                 Broadcast.partyHandle = ''
                 Broadcast.incomingRequest = False
-            elif action == '@accept':
-                command = handle + action + ' ' + Broadcast.deviceToCall
-            elif action == '@endcall':
-                command = handle + action + ' ' + Broadcast.deviceToCall
+                Display.stat
+            elif Broadcast.action == '@accept':
+                command = handle + Broadcast.action + ' ' + Broadcast.deviceToCall
+            elif Broadcast.action == '@endcall':
+                command = handle + Broadcast.action + ' ' + Broadcast.deviceToCall
             else:
                 command = handle + '@awaiting'
             
             sock.sendto(command.encode('UTF-8'), ('<broadcast>', PORT))
+            time.sleep(1)
+
+class Recieve(Thread):
+    def __init__(self):
+        super().__init__()
+
+    def run(self):
+        while True:
             data, addr = sock.recvfrom(1024)
             senderHandle, senderData = data.decode("UTF-8").split('@')
 
@@ -50,7 +60,7 @@ class Broadcast(Thread):
                 Broadcast.partyHandle = ''
                 Broadcast.incomingRequest = False
 
-            if recieveAction == 'call' and action != '@call' and recieverHandle == handle:
+            if recieveAction == 'call' and Broadcast.action != '@call' and recieverHandle == handle:
                 Broadcast.incomingRequest = True
                 Broadcast.curAction = 'incoming'
                 Broadcast.partyHandle = senderHandle
@@ -58,13 +68,12 @@ class Broadcast(Thread):
                 Broadcast.deviceToCall = ''
                 Broadcast.curAction = 'await'
             elif recieveAction == 'accept':
-                command = handle + action + ' ' + Broadcast.deviceToCall
+                command = handle +' ' + Broadcast.deviceToCall
             elif recieveAction == 'endcall':
-                command = handle + action + ' ' + Broadcast.deviceToCall
+                command = handle + ' ' + Broadcast.deviceToCall
 
             if senderHandle != handle:
-                Broadcast.discovered[senderHandle] = [datetime.now(), action]
-            time.sleep(.1)
+                Broadcast.discovered[senderHandle] = [datetime.now(), senderData]
 
 class Display(Thread):
     selected = 0
@@ -95,7 +104,7 @@ class Display(Thread):
                 if Broadcast.deviceToCall == i:
                     Broadcast.curAction = 'await'
             print(f'STATUS: {self.getStatus()}')
-            time.sleep(.1)
+            time.sleep(1)
 
 class Input(Thread):
     def __init__(self):
@@ -140,7 +149,9 @@ sock.bind(("", 2000))
 broadcast = Broadcast(handle)
 display = Display()
 inputs = Input()
+recieve = Recieve()
 
 broadcast.start()
 display.start()
 inputs.start()
+recieve.start()
