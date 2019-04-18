@@ -19,6 +19,7 @@ class Broadcast(Thread):
     def __init__(self, handle):
         super().__init__()
         self.handle = handle
+        self.engine = pyttsx3.init()
         
     def run(self):
         while True:
@@ -44,6 +45,7 @@ class Broadcast(Thread):
 class Recieve(Thread):
     def __init__(self):
         super().__init__()
+        self.engine = pyttsx3.init()
 
     def run(self):
         while True:
@@ -63,9 +65,13 @@ class Recieve(Thread):
                 Broadcast.incomingRequest = True
                 Broadcast.curAction = 'incoming'
                 Broadcast.partyHandle = senderHandle
+                self.engine.say("Pick up the phone")
+                self.engine.runAndWait()
             elif recieveAction == 'reject':
                 Broadcast.deviceToCall = ''
                 Broadcast.curAction = 'await'
+                self.engine.say("You just got REJECTED")
+                self.engine.runAndWait()
             elif recieveAction == 'accept':
                 command = handle +' ' + Broadcast.deviceToCall
             elif recieveAction == 'endcall':
