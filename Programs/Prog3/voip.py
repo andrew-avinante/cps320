@@ -138,6 +138,7 @@ class VOIP(Thread):
                 data = self.sock.recv(self.size_to_rw)
                 if data:
                     self.device.write(data)
+                    print("HI")
                 if elapsed_time - prev_elapsed_time > 1000:        
                     cur_elapsed_time = elapsed_time - prev_elapsed_time
                     self.prev_elapsed_time = elapsed_time
