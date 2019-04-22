@@ -141,7 +141,8 @@ class VOIPR(Thread):
                 if data:
                     device.write(data)
                 elapsed_time = millis() - start
-                if elapsed_time - prev_elapsed_time > 1000:        
+                if elapsed_time - prev_elapsed_time > 1000: 
+                    print("HI")       
                     cur_elapsed_time = elapsed_time - prev_elapsed_time
                     prev_elapsed_time = elapsed_time
         
