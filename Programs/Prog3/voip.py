@@ -68,7 +68,7 @@ class Recieve(Thread):
                 Broadcast.incomingRequest = True
                 Broadcast.curAction = 'incoming'
                 Broadcast.partyHandle = senderHandle
-                self.engine.say("Pick up the phone")
+                self.engine.say("Call from " + senderHandle)
                 self.engine.runAndWait()
             elif recieveAction == 'reject':
                 Broadcast.deviceToCall = ''
