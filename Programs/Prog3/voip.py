@@ -59,10 +59,10 @@ class Recieve(Thread):
             
             if 'awaiting' not in senderData and 'incall' not in senderData:
                 recieveAction, recieverHandle = senderData.split(' ')
-            # elif senderHandle == Broadcast.partyHandle:
-            #     Broadcast.curAction = 'await'
-            #     Broadcast.partyHandle = ''
-            #     Broadcast.incomingRequest = False
+            elif senderHandle == Broadcast.partyHandle and not Broadcast.incall:
+                Broadcast.curAction = 'await'
+                Broadcast.partyHandle = ''
+                Broadcast.incomingRequest = False
 
             if recieveAction == 'call' and Broadcast.action != '@call' and recieverHandle == handle and not Broadcast.incall:
                 Broadcast.incomingRequest = True
