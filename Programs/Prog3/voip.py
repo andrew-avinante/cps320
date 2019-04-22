@@ -7,7 +7,15 @@ from datetime import datetime
 from threading import Thread
 from time import sleep
 import pyttsx3
+import alsaaudio
 
+start_time = datetime.now()
+
+# returns the elapsed milliseconds since the start of the program
+def millis():
+   dt = datetime.now() - start_time
+   ms = (dt.days * 24 * 60 * 60 + dt.seconds) * 1000 + dt.microseconds / 1000.0
+   return ms
 
 class Broadcast(Thread):
     discovered = {}
@@ -50,6 +58,7 @@ class Broadcast(Thread):
             time.sleep(1)
 
 class Recieve(Thread):
+    partyIP = ''
     def __init__(self):
         super().__init__()
         self.engine = pyttsx3.init()
@@ -74,6 +83,7 @@ class Recieve(Thread):
                 Broadcast.partyHandle = senderHandle
                 self.engine.say("Call from " + senderHandle)
                 self.engine.runAndWait()
+                Recieve.partyIP = ip
             elif recieveAction == 'reject':
                 Broadcast.deviceToCall = ''
                 Broadcast.curAction = 'await'
@@ -84,6 +94,7 @@ class Recieve(Thread):
                 Broadcast.incall = True
                 Broadcast.curAction = 'incall'
                 Broadcast.partyHandle = senderHandle
+                Recieve.partyIP = ip
             elif recieveAction == 'endcall':
                 command = handle + ' ' + Broadcast.deviceToCall
                 Broadcast.incall = False
@@ -94,12 +105,35 @@ class Recieve(Thread):
             if senderHandle != handle:
                 Broadcast.discovered[senderHandle] = [datetime.now(), senderData]
 
-# class VOIP(Thread):
-#     def __init__(self):
-#         super().__init__()
+class VOIP(Thread):
+    def __init__(self):
+        super().__init__()
+        self.sample_rate = 44100
+        self.period_size = 1000
+        self.device = alsaaudio.PCM(alsaaudio.PCM_CAPTURE, device='default')
+        self.device.setchannels(1)
+        self.device.setrate(self.sample_rate)
+        self.device.setformat(alsaaudio.PCM_FORMAT_S16_LE) # 16 bit little endian frames
+        self.device.setperiodsize(self.period_size)
+        self.size_to_rw = self.period_size * 2  # 2 bytes per mono sample
+        self.prev_elapsed_time = self.start
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-#     def run(self):
-#         if(Broadcast.incall)
+    def run(self):
+        start = millis()
+        while True:
+            if(Broadcast.incall):
+                numframes, data = selfdevice.read()
+                self.sock.sendto(data, (Recieve.partyIP, 4098))
+                #sock.send(data)
+                bytecount += len(data)
+                elapsed_time = millis() - self.start
+                if elapsed_time - prev_elapsed_time > 1000:        
+                    cur_elapsed_time = elapsed_time - prev_elapsed_time
+                    bps_rate = bytecount / cur_elapsed_time * 1000
+                    self.prev_elapsed_time = elapsed_time
+
+        
 
 class Display(Thread):
     selected = 0
@@ -176,12 +210,16 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 sock.bind(("", 2000))
 
+start_time = datetime.now()
+
 broadcast = Broadcast(handle)
 display = Display()
 inputs = Input()
 recieve = Recieve()
-
+voip = VOIP()
+print(voip)
 broadcast.start()
 display.start()
 inputs.start()
 recieve.start()
+voip.start()
