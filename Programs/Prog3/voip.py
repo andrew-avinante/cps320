@@ -133,12 +133,13 @@ class VOIPR(Thread):
         start = millis()
         size_to_rw = period_size * 2  # 2 bytes per mono sample
         prev_elapsed_time = start
+        senderIP = ''
         while True:
             if(Broadcast.incall):
                 if count == 0:
                     count += 1
-                data = sockTalk.recv(size_to_rw)
-                if data:
+                data = sockTalk.recvfrom(size_to_rw, senderIP)
+                if data and senderIP == Recieve.partyIP:
                     output.write(data)
                 elapsed_time = millis() - start
                 if elapsed_time - prev_elapsed_time > 1000:     
