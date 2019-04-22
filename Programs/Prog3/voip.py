@@ -124,7 +124,7 @@ class VOIP(Thread):
         while True:
             if(Broadcast.incall):
                 print(str(Recieve.partyIP))
-                sock.bind((Recieve.partyIP, 4098)) 
+                sock.bind(("", 4098)) 
                 numframes, data = self.device.read()
                 sock.sendto(data, (Recieve.partyIP, 4098))
                 #sock.send(data)
