@@ -83,6 +83,8 @@ class Recieve(Thread):
                 Broadcast.partyHandle = senderHandle
             elif recieveAction == 'endcall':
                 command = handle + ' ' + Broadcast.deviceToCall
+                Broadcast.incall = False
+                Broadcast.curAction = 'await'
             elif recieveAction == 'incall':
                 Broadcast.curAction = 'incall'
 
@@ -147,6 +149,8 @@ class Input(Thread):
                 Broadcast.curAction = 'reject'
             elif inputChar == 'a' and len(Broadcast.discovered) != 0 and Broadcast.incomingRequest:
                 Broadcast.curAction = 'accept'
+            elif inputChar == 'h' and len(Broadcast.discovered) != 0 and Broadcast.incomingRequest:
+                Broadcast.curAction = 'endcall'
             else:
                 self.engine.say(list(Broadcast.discovered)[Display.selected])
                 self.engine.runAndWait()
