@@ -108,14 +108,7 @@ class Recieve(Thread):
 class VOIP(Thread):
     def __init__(self):
         super().__init__()
-        self.sample_rate = 44100
-        self.period_size = 1000
-        self.device = alsaaudio.PCM(alsaaudio.PCM_CAPTURE, device='default')
-        self.device.setchannels(1)
-        self.device.setrate(self.sample_rate)
-        self.device.setformat(alsaaudio.PCM_FORMAT_S16_LE) # 16 bit little endian frames
-        self.device.setperiodsize(self.period_size)
-        self.size_to_rw = self.period_size * 2  # 2 bytes per mono sample
+        self.size_to_rw = period_size * 2  # 2 bytes per mono sample
         self.prev_elapsed_time = self.start
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
@@ -128,7 +121,7 @@ class VOIP(Thread):
                 # print(str(Recieve.partyIP))
                 if count == 0:
                     self.sock.bind(('localhost', 4098))
-                numframes, data = self.device.read()
+                numframes, data = device.read()
                 self.sock.sendto(data, (Recieve.partyIP, 4098))
                 #sock.send(data)
                 elapsed_time = millis() - start
@@ -136,7 +129,7 @@ class VOIP(Thread):
                     cur_elapsed_time = elapsed_time - prev_elapsed_time
                 data = self.sock.recv(self.size_to_rw)
                 if data:
-                    self.device.write(data)
+                    device.write(data)
                 if elapsed_time - prev_elapsed_time > 1000:        
                     cur_elapsed_time = elapsed_time - prev_elapsed_time
                     self.prev_elapsed_time = elapsed_time
@@ -206,6 +199,16 @@ class Input(Thread):
             else:
                 self.engine.say(list(Broadcast.discovered)[Display.selected])
                 self.engine.runAndWait()
+
+sample_rate = 44100
+period_size = 1000
+
+device = alsaaudio.PCM(alsaaudio.PCM_CAPTURE, device='default')
+
+device.setchannels(1)
+device.setrate(sample_rate)
+device.setformat(alsaaudio.PCM_FORMAT_S16_LE) # 16 bit little endian frames
+device.setperiodsize(period_size)
 
 PORT = 2000    # Port to transmit to
 
