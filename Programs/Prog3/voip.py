@@ -158,7 +158,7 @@ class Display(Thread):
         
     def run(self):
         while True:
-            os.system("clear")
+            # os.system("clear")
             remove = []
             print('\fCONTROLS\n---------------\nw - select up\ns - select down\nc - call selected user\nx - cancel call\nr - reject call\na - accept call\nh - hangup\n')
             print('DEVICES')
