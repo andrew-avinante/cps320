@@ -34,6 +34,7 @@ class Broadcast(Thread):
                 Broadcast.partyHandle = ''
                 Broadcast.incomingRequest = False
             elif Broadcast.action == '@accept':
+                Broadcast.incall = True
                 command = handle + Broadcast.action + ' ' + Broadcast.deviceToCall
             elif Broadcast.action == '@endcall':
                 command = handle + Broadcast.action + ' ' + Broadcast.deviceToCall
@@ -145,7 +146,6 @@ class Input(Thread):
                 Broadcast.deviceToCall = ''
                 Broadcast.curAction = 'reject'
             elif inputChar == 'a' and len(Broadcast.discovered) != 0 and Broadcast.incomingRequest:
-                # Broadcast.deviceToCall = 
                 Broadcast.curAction = 'accept'
             else:
                 self.engine.say(list(Broadcast.discovered)[Display.selected])
