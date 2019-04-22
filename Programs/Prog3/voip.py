@@ -8,6 +8,7 @@ from threading import Thread
 from time import sleep
 import pyttsx3
 
+
 class Broadcast(Thread):
     discovered = {}
     deviceToCall = ''
@@ -20,14 +21,16 @@ class Broadcast(Thread):
     def __init__(self, handle):
         super().__init__()
         self.handle = handle
-        self.engine = pyttsx3.init()
+        self.engine = pyttsx3.init()  
+        self.hostname = socket.gethostname()    
+        self.IPAddr = socket.gethostbyname(hostname)  
         
     def run(self):
         while True:
             command = ''
             Broadcast.action = Broadcast.statuses[Broadcast.curAction]
             if Broadcast.action == '@call':
-                command = handle + Broadcast.action + ' ' + Broadcast.deviceToCall
+                command = handle + Broadcast.action + ' ' + Broadcast.deviceToCall ' ' + IPAddr
             elif Broadcast.action == '@reject':
                 command = handle + Broadcast.action + ' ' + Broadcast.deviceToCall
                 Broadcast.curAction = 'await'
@@ -35,7 +38,7 @@ class Broadcast(Thread):
                 Broadcast.incomingRequest = False
             elif Broadcast.action == '@accept':
                 Broadcast.incall = True
-                command = handle + Broadcast.action + ' ' + Broadcast.deviceToCall
+                command = handle + Broadcast.action + ' ' + Broadcast.deviceToCall + ' ' + IPAddr
             elif Broadcast.action == '@endcall':
                 command = handle + Broadcast.action + ' ' + Broadcast.deviceToCall
             elif Broadcast.action == '@incall':
@@ -59,7 +62,7 @@ class Recieve(Thread):
             recieveAction = ''
             
             if 'awaiting' not in senderData and 'incall' not in senderData:
-                recieveAction, recieverHandle = senderData.split(' ')
+                recieveAction, recieverHandle, ip = senderData.split(' ')
             elif senderHandle == Broadcast.partyHandle and not Broadcast.incall:
                 Broadcast.curAction = 'await'
                 Broadcast.partyHandle = ''
