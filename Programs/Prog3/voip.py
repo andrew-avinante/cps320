@@ -117,21 +117,21 @@ class VOIP(Thread):
         self.device.setperiodsize(self.period_size)
         self.size_to_rw = self.period_size * 2  # 2 bytes per mono sample
         self.prev_elapsed_time = self.start
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
     def run(self):
         start = millis()
         prev_elapsed_time = start
         while True:
             if(Broadcast.incall):
-                self.sock.bind(("127.0.1.1", 4098)) 
+                print(str(Recieve.partyIP))
+                sock.bind((Recieve.partyIP, 4098)) 
                 numframes, data = self.device.read()
-                self.sock.sendto(data, (Recieve.partyIP, 4098))
+                sock.sendto(data, (Recieve.partyIP, 4098))
                 #sock.send(data)
                 elapsed_time = millis() - start
                 if elapsed_time - prev_elapsed_time > 1000:        
                     cur_elapsed_time = elapsed_time - prev_elapsed_time
-                data = self.sock.recv(self.size_to_rw)
+                data = sock.recv(self.size_to_rw)
                 if data:
                     self.device.write(data)
                 if elapsed_time - prev_elapsed_time > 1000:        
