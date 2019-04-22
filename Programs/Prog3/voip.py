@@ -130,6 +130,7 @@ class VOIP(Thread):
                     self.sock.bind((Recieve.partyIP, 4098))
                     count += 1
                 numframes, data = self.device.read()
+                print(len(data))
                 self.sock.sendto(data, (Recieve.partyIP, 4098))
                 #sock.send(data)
                 elapsed_time = millis() - start
