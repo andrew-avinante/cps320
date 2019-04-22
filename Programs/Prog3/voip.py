@@ -8,6 +8,7 @@ from threading import Thread
 from time import sleep
 import pyttsx3
 import alsaaudio
+import os
 
 start_time = datetime.now()
 
@@ -134,10 +135,11 @@ class VOIPR(Thread):
         prev_elapsed_time = start
         while True:
             if(Broadcast.incall):
-                data = sockTalk.recv(size_to_rw)
+                print("TEST")
                 if count == 0:
-                    sockTalk.bind(('localhost', 4098))
+                    sockTalk.bind(('', 4098))
                     count += 1
+                data = sockTalk.recv(size_to_rw)
                 if data:
                     device.write(data)
                 elapsed_time = millis() - start
@@ -158,6 +160,7 @@ class Display(Thread):
         
     def run(self):
         while True:
+            os.system("clear")
             remove = []
             print('\fCONTROLS\n---------------\nw - select up\ns - select down\nc - call selected user\nx - cancel call\nr - reject call\na - accept call\nh - hangup\n')
             print('DEVICES')
