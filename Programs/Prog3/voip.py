@@ -30,7 +30,7 @@ class Broadcast(Thread):
             command = ''
             Broadcast.action = Broadcast.statuses[Broadcast.curAction]
             if Broadcast.action == '@call':
-                command = handle + Broadcast.action + ' ' + Broadcast.deviceToCall + ' ' + IPAddr
+                command = handle + Broadcast.action + ' ' + Broadcast.deviceToCall + ' ' + self.IPAddr
             elif Broadcast.action == '@reject':
                 command = handle + Broadcast.action + ' ' + Broadcast.deviceToCall
                 Broadcast.curAction = 'await'
@@ -38,7 +38,7 @@ class Broadcast(Thread):
                 Broadcast.incomingRequest = False
             elif Broadcast.action == '@accept':
                 Broadcast.incall = True
-                command = handle + Broadcast.action + ' ' + Broadcast.deviceToCall + ' ' + IPAddr
+                command = handle + Broadcast.action + ' ' + Broadcast.deviceToCall + ' ' + self.IPAddr
             elif Broadcast.action == '@endcall':
                 command = handle + Broadcast.action + ' ' + Broadcast.deviceToCall
             elif Broadcast.action == '@incall':
