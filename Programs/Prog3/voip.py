@@ -131,7 +131,6 @@ class VOIP(Thread):
                 elapsed_time = millis() - start
                 if elapsed_time - prev_elapsed_time > 1000:        
                     cur_elapsed_time = elapsed_time - prev_elapsed_time
-                    bps_rate = bytecount / cur_elapsed_time * 1000
                     self.prev_elapsed_time = elapsed_time
 
         
