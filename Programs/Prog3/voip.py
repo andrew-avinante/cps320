@@ -121,6 +121,7 @@ class VOIP(Thread):
 
     def run(self):
         start = millis()
+        prev_elapsed_time = start
         while True:
             if(Broadcast.incall):
                 numframes, data = self.device.read()
