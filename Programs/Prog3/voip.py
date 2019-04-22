@@ -123,7 +123,7 @@ class VOIP(Thread):
         start = millis()
         while True:
             if(Broadcast.incall):
-                numframes, data = selfdevice.read()
+                numframes, data = self.device.read()
                 self.sock.sendto(data, (Recieve.partyIP, 4098))
                 #sock.send(data)
                 bytecount += len(data)
