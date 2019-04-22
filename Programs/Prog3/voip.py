@@ -13,7 +13,7 @@ class Broadcast(Thread):
     deviceToCall = ''
     partyHandle = ''
     curAction = 'await'
-    statuses = {'await': '@awaiting', 'call' :'@call', 'accept': '@accept', 'incall': '@incall' 'reject' : '@reject', 'endcall': '@endcall', 'incoming' : '@awaiting'}
+    statuses = {'await': '@awaiting', 'call' :'@call', 'accept': '@accept', 'incall': '@incall', 'reject' : '@reject', 'endcall': '@endcall', 'incoming' : '@awaiting'}
     action = statuses[curAction]
     incomingRequest = False
     incall = False
