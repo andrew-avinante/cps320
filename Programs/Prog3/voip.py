@@ -136,7 +136,6 @@ class VOIPR(Thread):
         while True:
             if(Broadcast.incall):
                 if count == 0:
-                    sockTalk.bind((Recieve.partyIP, 4098))
                     count += 1
                 data = sockTalk.recv(size_to_rw)
                 if data:
@@ -235,6 +234,7 @@ sockTalk = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 sock.bind(("", 2000))
+sockTalk.bind(('0.0.0.0', 4098))
 
 start_time = datetime.now()
 
