@@ -117,8 +117,8 @@ class VOIP(Thread):
         while True:
             if(Broadcast.incall):
                 # print(str(Recieve.partyIP))
-                numframes, data = device.read()
-                sockTalk.sendto(data, ("localhost", 4098))
+                numframes, data = mic.read()
+                sockTalk.sendto(data, (Recieve.partyIP, 4098))
                 #sock.send(data)
                 elapsed_time = millis() - start
                 if elapsed_time - prev_elapsed_time > 1000:        
@@ -139,7 +139,7 @@ class VOIPR(Thread):
                     count += 1
                 data = sockTalk.recv(size_to_rw)
                 if data:
-                    device.write(data)
+                    output.write(data)
                 elapsed_time = millis() - start
                 if elapsed_time - prev_elapsed_time > 1000:     
                     cur_elapsed_time = elapsed_time - prev_elapsed_time
@@ -214,12 +214,19 @@ class Input(Thread):
 sample_rate = 44100
 period_size = 1000
 
-device = alsaaudio.PCM(alsaaudio.PCM_CAPTURE, device='default')
+mic = alsaaudio.PCM(alsaaudio.PCM_CAPTURE, device='default')
 
-device.setchannels(1)
-device.setrate(sample_rate)
-device.setformat(alsaaudio.PCM_FORMAT_S16_LE) # 16 bit little endian frames
-device.setperiodsize(period_size)
+mic.setchannels(1)
+mic.setrate(sample_rate)
+mic.setformat(alsaaudio.PCM_FORMAT_S16_LE) # 16 bit little endian frames
+mic.setperiodsize(period_size)
+
+output = alsaaudio.PCM(alsaaudio.PCM_PLAYBACK, device='default')
+
+output.setchannels(1)
+output.setrate(sample_rate)
+output.setformat(alsaaudio.PCM_FORMAT_S16_LE) # 16 bit little endian frames
+output.setperiodsize(period_size)
 
 PORT = 2000    # Port to transmit to
 
