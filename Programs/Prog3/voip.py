@@ -118,7 +118,7 @@ class VOIP(Thread):
             if(Broadcast.incall):
                 # print(str(Recieve.partyIP))
                 numframes, data = device.read()
-                sockTalk.sendto(data, (Recieve.partyIP, 4098))
+                sockTalk.sendto(data, "localhost", 4098))
                 #sock.send(data)
                 elapsed_time = millis() - start
                 if elapsed_time - prev_elapsed_time > 1000:        
