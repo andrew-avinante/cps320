@@ -136,6 +136,7 @@ class VOIPR(Thread):
         while True:
             if(Broadcast.incall):
                 if count == 0:
+                    print("HI")
                     sockTalk.bind(('0.0.0.0', 4098))
                     count += 1
                 data = sockTalk.recv(size_to_rw)
