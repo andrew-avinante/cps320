@@ -9,7 +9,6 @@ from time import sleep
 import pyttsx3
 import alsaaudio
 import os
-import netifaces as ni
 
 start_time = datetime.now()
 
@@ -134,13 +133,12 @@ class VOIPR(Thread):
         start = millis()
         size_to_rw = period_size * 2  # 2 bytes per mono sample
         prev_elapsed_time = start
-        senderIP = ''
         while True:
             if(Broadcast.incall):
                 if count == 0:
                     count += 1
                 data = sockTalk.recv(size_to_rw)
-                if data and senderIP == Recieve.partyIP:
+                if data:
                     output.write(data)
                 elapsed_time = millis() - start
                 if elapsed_time - prev_elapsed_time > 1000:     
@@ -244,9 +242,6 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 sock.bind(("", 2000))
 sockTalk.bind(('0.0.0.0', 4098))
-ni.ifaddresses('eth0')
-ip = ni.ifaddresses('eth0')[ni.AF_INET][0]['addr']
-print(ip)
 
 start_time = datetime.now()
 
