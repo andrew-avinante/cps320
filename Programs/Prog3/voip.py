@@ -91,12 +91,12 @@ class Recieve(Thread):
             if senderHandle != handle:
                 Broadcast.discovered[senderHandle] = [datetime.now(), senderData]
 
-class VOIP(Thread):
-    def __init__(self):
-        super().__init__()
+# class VOIP(Thread):
+#     def __init__(self):
+#         super().__init__()
 
-    def run(self):
-        if(Broadcast.incall)
+#     def run(self):
+#         if(Broadcast.incall)
 
 class Display(Thread):
     selected = 0
