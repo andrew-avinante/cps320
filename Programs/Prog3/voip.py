@@ -136,11 +136,10 @@ class VOIPR(Thread):
         while True:
             if(Broadcast.incall):
                 if count == 0:
-                    sockTalk.bind(('', 4098))
+                    sockTalk.bind(('0.0.0.0', 4098))
                     count += 1
                 data = sockTalk.recv(size_to_rw)
                 if data:
-                    print(data)
                     device.write(data)
                 elapsed_time = millis() - start
                 if elapsed_time - prev_elapsed_time > 1000:     
