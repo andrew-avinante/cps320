@@ -92,7 +92,7 @@ class Display(Thread):
     def run(self):
         while True:
             remove = []
-            print('\fSTATS\n---------------')
+            print('\fCONTROLS\n---------------\nw - select up\ns - select down\nc - call selected user\nx - cancel cal\nr - reject call\n')
             print('DEVICES')
             count = 0
             for i in Broadcast.discovered:
@@ -136,6 +136,9 @@ class Input(Thread):
             elif inputChar == 'r' and len(Broadcast.discovered) != 0 and Broadcast.incomingRequest:
                 Broadcast.deviceToCall = ''
                 Broadcast.curAction = 'reject'
+            elif inputChar == 'a' and len(Broadcast.discovered) != 0 and Broadcast.incomingRequest:
+                # Broadcast.deviceToCall = 
+                Broadcast.curAction = 'accept'
             else:
                 self.engine.say(list(Broadcast.discovered)[Display.selected])
                 self.engine.runAndWait()
