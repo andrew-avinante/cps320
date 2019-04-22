@@ -136,7 +136,7 @@ class VOIPR(Thread):
         while True:
             if(Broadcast.incall):
                 if count == 0:
-                    sockTalk.bind(('0.0.0.0', 4098))
+                    sockTalk.bind((Recieve.partyIP, 4098))
                     count += 1
                 data = sockTalk.recv(size_to_rw)
                 if data:
@@ -158,7 +158,7 @@ class Display(Thread):
         
     def run(self):
         while True:
-            # os.system("clear")
+            os.system("clear")
             remove = []
             print('\fCONTROLS\n---------------\nw - select up\ns - select down\nc - call selected user\nx - cancel call\nr - reject call\na - accept call\nh - hangup\n')
             print('DEVICES')
