@@ -122,11 +122,13 @@ class VOIP(Thread):
     def run(self):
         start = millis()
         prev_elapsed_time = start
+        count = 0
         while True:
             if(Broadcast.incall):
                 # print(str(Recieve.partyIP))
-                self.sock.bind((Recieve.partyIP, 4098)) 
-                print("HI")
+                if count == 0:
+                    self.sock.bind((Recieve.partyIP, 4098))
+                    count += 1
                 numframes, data = self.device.read()
                 self.sock.sendto(data, (Recieve.partyIP, 4098))
                 #sock.send(data)
