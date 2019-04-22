@@ -9,6 +9,7 @@ from time import sleep
 import pyttsx3
 import alsaaudio
 import os
+import netifaces as ni
 
 start_time = datetime.now()
 
@@ -243,8 +244,9 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 sock.bind(("", 2000))
 sockTalk.bind(('0.0.0.0', 4098))
-
-print(socket.gethostbyname(socket.gethostname()) )
+ni.ifaddresses('eth0')
+ip = ni.ifaddresses('eth0')[ni.AF_INET][0]['addr']
+print(ip)
 
 start_time = datetime.now()
 
