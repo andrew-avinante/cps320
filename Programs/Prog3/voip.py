@@ -13,9 +13,10 @@ class Broadcast(Thread):
     deviceToCall = ''
     partyHandle = ''
     curAction = 'await'
-    statuses = {'await': '@awaiting', 'call' :'@call', 'accept': '@accept', 'reject' : '@reject', 'endcall': '@endcall', 'incoming' : '@awaiting'}
+    statuses = {'await': '@awaiting', 'call' :'@call', 'accept': '@accept', 'incall': '@incall' 'reject' : '@reject', 'endcall': '@endcall', 'incoming' : '@awaiting'}
     action = statuses[curAction]
     incomingRequest = False
+    incall = False
     def __init__(self, handle):
         super().__init__()
         self.handle = handle
@@ -35,6 +36,8 @@ class Broadcast(Thread):
             elif Broadcast.action == '@accept':
                 command = handle + Broadcast.action + ' ' + Broadcast.deviceToCall
             elif Broadcast.action == '@endcall':
+                command = handle + Broadcast.action + ' ' + Broadcast.deviceToCall
+            elif Broadcast.action == '@incall':
                 command = handle + Broadcast.action + ' ' + Broadcast.deviceToCall
             else:
                 command = handle + '@awaiting'
@@ -74,7 +77,8 @@ class Recieve(Thread):
                 self.engine.runAndWait()
             elif recieveAction == 'accept':
                 Broadcast.incomingRequest = False
-                Broadcast.curAction = 'accept'
+                Broadcast.incall = True
+                Broadcast.curAction = 'incall'
                 Broadcast.partyHandle = senderHandle
             elif recieveAction == 'endcall':
                 command = handle + ' ' + Broadcast.deviceToCall
@@ -88,7 +92,7 @@ class Display(Thread):
         super().__init__()
             
     def getStatus(self):
-        statusText = {'await': 'Awaiting call', 'call' :'Calling ' + Broadcast.deviceToCall, 'accept': 'Call in progress', 'reject' : 'Awaiting call', 'endcall': 'Awaiting call', 'incoming' : 'Incoming call from ' + Broadcast.partyHandle}
+        statusText = {'await': 'Awaiting call', 'call' :'Calling ' + Broadcast.deviceToCall, 'accept': 'Call in progress', 'incall': 'Call in progress', 'reject' : 'Awaiting call', 'endcall': 'Awaiting call', 'incoming' : 'Incoming call from ' + Broadcast.partyHandle}
         return  statusText[Broadcast.curAction]
         
     def run(self):
