@@ -23,7 +23,7 @@ class Broadcast(Thread):
         self.handle = handle
         self.engine = pyttsx3.init()  
         self.hostname = socket.gethostname()    
-        self.IPAddr = socket.gethostbyname(hostname)  
+        self.IPAddr = socket.gethostbyname(self.hostname)  
         
     def run(self):
         while True:
