@@ -91,6 +91,13 @@ class Recieve(Thread):
             if senderHandle != handle:
                 Broadcast.discovered[senderHandle] = [datetime.now(), senderData]
 
+class VOIP(Thread):
+    def __init__(self):
+        super().__init__()
+
+    def run(self):
+        if(Broadcast.incall)
+
 class Display(Thread):
     selected = 0
     def __init__(self):
@@ -103,7 +110,7 @@ class Display(Thread):
     def run(self):
         while True:
             remove = []
-            print('\fCONTROLS\n---------------\nw - select up\ns - select down\nc - call selected user\nx - cancel cal\nr - reject call\n')
+            print('\fCONTROLS\n---------------\nw - select up\ns - select down\nc - call selected user\nx - cancel call\nr - reject call\na - accept call\nh - hangup\n')
             print('DEVICES')
             count = 0
             for i in Broadcast.discovered:
