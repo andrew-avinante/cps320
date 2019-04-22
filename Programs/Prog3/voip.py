@@ -138,7 +138,7 @@ class VOIPR(Thread):
             if(Broadcast.incall):
                 if count == 0:
                     count += 1
-                data = sockTalk.recvfrom(size_to_rw, senderIP)
+                data = sockTalk.recv(size_to_rw)
                 if data and senderIP == Recieve.partyIP:
                     output.write(data)
                 elapsed_time = millis() - start
@@ -243,6 +243,8 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 sock.bind(("", 2000))
 sockTalk.bind(('0.0.0.0', 4098))
+
+print(socket.gethostbyname(socket.gethostname()) )
 
 start_time = datetime.now()
 
