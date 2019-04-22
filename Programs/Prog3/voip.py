@@ -108,32 +108,42 @@ class Recieve(Thread):
 class VOIP(Thread):
     def __init__(self):
         super().__init__()
-        self.size_to_rw = period_size * 2  # 2 bytes per mono sample
-        self.prev_elapsed_time = self.start
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
     def run(self):
         start = millis()
         prev_elapsed_time = start
-        count = 0
+        size_to_rw = period_size * 2  # 2 bytes per mono sample
         while True:
             if(Broadcast.incall):
                 # print(str(Recieve.partyIP))
-                if count == 0:
-                    self.sock.bind(('localhost', 4098))
                 numframes, data = device.read()
-                self.sock.sendto(data, (Recieve.partyIP, 4098))
+                sockTalk.sendto(data, (Recieve.partyIP, 4098))
                 #sock.send(data)
                 elapsed_time = millis() - start
                 if elapsed_time - prev_elapsed_time > 1000:        
                     cur_elapsed_time = elapsed_time - prev_elapsed_time
-                data = self.sock.recv(self.size_to_rw)
-                if data:
-                    device.write(data)
-                if elapsed_time - prev_elapsed_time > 1000:        
-                    cur_elapsed_time = elapsed_time - prev_elapsed_time
-                    self.prev_elapsed_time = elapsed_time
 
+class VOIPR(Thread):
+    def __init__(self):
+        super().__init__()
+    
+    def run(self):
+        count = 0
+        start = millis()
+        size_to_rw = period_size * 2  # 2 bytes per mono sample
+        prev_elapsed_time = start
+        while True:
+            if(Broadcast.incall):
+               data = sockTalk.recv(size_to_rw)
+            if count == 0:
+                sockTalk.bind(('localhost', 4098))
+                count += 1
+            if data:
+                device.write(data)
+            elapsed_time = millis() - start
+            if elapsed_time - prev_elapsed_time > 1000:        
+                cur_elapsed_time = elapsed_time - prev_elapsed_time
+                prev_elapsed_time = elapsed_time
         
 
 class Display(Thread):
@@ -217,6 +227,9 @@ if len(sys.argv) != 2:
     sys.exit(1)
 
 handle = sys.argv[1]
+
+sockTalk = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 sock.bind(("", 2000))
