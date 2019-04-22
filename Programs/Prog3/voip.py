@@ -73,7 +73,9 @@ class Recieve(Thread):
                 self.engine.say("You just got REJECTED")
                 self.engine.runAndWait()
             elif recieveAction == 'accept':
-                command = handle +' ' + Broadcast.deviceToCall
+                Broadcast.incomingRequest = False
+                Broadcast.curAction = 'accept'
+                Broadcast.partyHandle = senderHandle
             elif recieveAction == 'endcall':
                 command = handle + ' ' + Broadcast.deviceToCall
 
