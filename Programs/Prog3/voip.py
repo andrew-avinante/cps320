@@ -127,10 +127,8 @@ class VOIP(Thread):
             if(Broadcast.incall):
                 # print(str(Recieve.partyIP))
                 if count == 0:
-                    self.sock.bind((Recieve.partyIP, 4098))
-                    count += 1
+                    self.sock.bind(('localhost', 4098))
                 numframes, data = self.device.read()
-                print(len(data))
                 self.sock.sendto(data, (Recieve.partyIP, 4098))
                 #sock.send(data)
                 elapsed_time = millis() - start
@@ -139,7 +137,6 @@ class VOIP(Thread):
                 data = self.sock.recv(self.size_to_rw)
                 if data:
                     self.device.write(data)
-                    print(len(data))
                 if elapsed_time - prev_elapsed_time > 1000:        
                     cur_elapsed_time = elapsed_time - prev_elapsed_time
                     self.prev_elapsed_time = elapsed_time
