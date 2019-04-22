@@ -126,6 +126,7 @@ class VOIP(Thread):
                 numframes, data = self.device.read()
                 self.sock.sendto(data, (Recieve.partyIP, 4098))
                 #sock.send(data)
+                print(millis())
                 elapsed_time = millis() - self.start
                 if elapsed_time - prev_elapsed_time > 1000:        
                     cur_elapsed_time = elapsed_time - prev_elapsed_time
