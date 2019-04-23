@@ -54,7 +54,6 @@ class Broadcast(Thread):
                 Broadcast.partyHandle = ''
                 Recieve.partyIP = ''
                 Broadcast.curAction = 'await'
-                print("HI")
             elif Broadcast.action == '@incall':
                 command = handle + Broadcast.action
             else:
@@ -102,6 +101,7 @@ class Recieve(Thread):
                 Broadcast.partyHandle = senderHandle
                 Recieve.partyIP = ip
             elif recieveAction == 'endcall':
+                print("HI")
                 Broadcast.incall = False
                 Broadcast.partyHandle = ''
                 Recieve.partyIP = ''
