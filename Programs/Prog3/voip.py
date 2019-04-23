@@ -71,7 +71,7 @@ class Recieve(Thread):
 
             recieveAction = ''
             
-            if 'awaiting' not in senderData and 'incall' not in senderData:
+            if 'awaiting' not in senderData and 'incall' not in senderData and 'endcall' not in senderData:
                 recieveAction, recieverHandle, ip = senderData.split(' ')
             elif senderHandle == Broadcast.partyHandle and not Broadcast.incall:
                 Broadcast.curAction = 'await'
