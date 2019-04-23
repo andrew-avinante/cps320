@@ -100,7 +100,7 @@ class Recieve(Thread):
                 Broadcast.curAction = 'incall'
                 Broadcast.partyHandle = senderHandle
                 Recieve.partyIP = ip
-            elif recieveAction == 'endcall':
+            elif senderData == 'endcall':
                 print("HI")
                 Broadcast.incall = False
                 Broadcast.partyHandle = ''
