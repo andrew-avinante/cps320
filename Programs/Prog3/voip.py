@@ -47,6 +47,7 @@ class Broadcast(Thread):
                 Broadcast.incomingRequest = False
             elif Broadcast.action == '@accept':
                 Broadcast.incall = True
+                Broadcast.curAction = 'incall'
                 command = handle + Broadcast.action + ' ' + Broadcast.deviceToCall + ' ' + self.IPAddr
             elif Broadcast.action == '@endcall':
                 command = handle + Broadcast.action
@@ -101,7 +102,6 @@ class Recieve(Thread):
                 Broadcast.partyHandle = senderHandle
                 Recieve.partyIP = ip
             elif senderData == 'endcall':
-                print("HI")
                 Broadcast.incall = False
                 Broadcast.partyHandle = ''
                 Recieve.partyIP = ''
@@ -213,9 +213,6 @@ class Input(Thread):
                 Broadcast.curAction = 'accept'
             elif inputChar == 'h' and len(Broadcast.discovered) != 0 and Broadcast.incall:
                 Broadcast.curAction = 'endcall'
-            else:
-                self.engine.say(list(Broadcast.discovered)[Display.selected])
-                self.engine.runAndWait()
 
 sample_rate = 44100
 period_size = 1000
