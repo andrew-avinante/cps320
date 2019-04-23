@@ -49,7 +49,11 @@ class Broadcast(Thread):
                 Broadcast.incall = True
                 command = handle + Broadcast.action + ' ' + Broadcast.deviceToCall + ' ' + self.IPAddr
             elif Broadcast.action == '@endcall':
-                command = handle + Broadcast.action + ' ' + Broadcast.deviceToCall
+                command = handle + Broadcast.action
+                Broadcast.incall = False
+                Broadcast.partyHandle = ''
+                Recieve.partyIP = ''
+                Broadcast.curAction = 'await'
             elif Broadcast.action == '@incall':
                 command = handle + Broadcast.action
             else:
@@ -97,8 +101,9 @@ class Recieve(Thread):
                 Broadcast.partyHandle = senderHandle
                 Recieve.partyIP = ip
             elif recieveAction == 'endcall':
-                command = handle + ' ' + Broadcast.deviceToCall
                 Broadcast.incall = False
+                Broadcast.partyHandle = ''
+                Recieve.partyIP = ''
                 Broadcast.curAction = 'await'
             elif recieveAction == 'incall':
                 Broadcast.curAction = 'incall'
