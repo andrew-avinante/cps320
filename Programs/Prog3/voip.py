@@ -200,13 +200,13 @@ class Input(Thread):
                 Display.selected -= 1
                 self.engine.say(list(Broadcast.discovered)[Display.selected])
                 self.engine.runAndWait()
-            elif inputChar == 'c' and len(Broadcast.discovered) != 0:
+            elif inputChar == 'c' and len(Broadcast.discovered) != 0 and not Broadcast.incall:
                 Broadcast.deviceToCall = list(Broadcast.discovered)[Display.selected]
                 Broadcast.curAction = 'call'
-            elif inputChar == 'x' and len(Broadcast.discovered) != 0:
+            elif inputChar == 'x' and len(Broadcast.discovered) != 0 and not Broadcast.incall:
                 Broadcast.deviceToCall = ''
                 Broadcast.curAction = 'await'
-            elif inputChar == 'r' and len(Broadcast.discovered) != 0 and Broadcast.incomingRequest:
+            elif inputChar == 'r' and len(Broadcast.discovered) != 0 and Broadcast.incomingRequest and not Broadcast.incall:
                 Broadcast.deviceToCall = ''
                 Broadcast.curAction = 'reject'
             elif inputChar == 'a' and len(Broadcast.discovered) != 0 and Broadcast.incomingRequest:
