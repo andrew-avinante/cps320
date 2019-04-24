@@ -41,6 +41,7 @@ class Broadcast(Thread):
             if Broadcast.action == '@call':
                 command = handle + Broadcast.action + ' ' + Broadcast.deviceToCall + ' ' + self.IPAddr
             elif Broadcast.action == '@reject':
+                print("SDFSDSDFDFSKJKDFSKJLDSFKJLDSKJLSKJLDFSDKJLKJLDFSKJLDFSKJLKSDFKJLDSKJLDSFKJLDFS")
                 command = handle + Broadcast.action + ' ' + Broadcast.deviceToCall
                 Broadcast.partyHandle = ''
                 Broadcast.incomingRequest = False
@@ -90,7 +91,6 @@ class Recieve(Thread):
                 self.engine.runAndWait()
                 Recieve.partyIP = ip
             elif senderData == 'reject' and Broadcast.partyHandle == senderHandle:
-                print("SDDSDSDSSSDDSFSDDSFDSDFSDSF")
                 Broadcast.deviceToCall = ''
                 Broadcast.curAction = 'await'
                 self.engine.say("You just got REJECTED")
