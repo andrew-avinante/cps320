@@ -44,6 +44,8 @@ class Broadcast(Thread):
                 Recieve.block = Broadcast.partyHandle
                 command = handle + Broadcast.action + ' ' + Broadcast.partyHandle
                 Broadcast.curAction = 'await'
+                for i in range(10):
+                    sock.sendto(command.encode('UTF-8'), ('<broadcast>', PORT))
                 Broadcast.incomingRequest = False
             elif Broadcast.action == '@accept':
                 Broadcast.incall = True
@@ -86,7 +88,6 @@ class Recieve(Thread):
                 Broadcast.incomingRequest = False
 
             if senderHandle != handle:
-                print(data)
                 if recieveAction[0] == 'call' and Broadcast.action != '@call' and recieveAction[1] == handle and not Broadcast.incall and Recieve.block != senderHandle:
                     Broadcast.incomingRequest = True
                     Broadcast.curAction = 'incoming'
