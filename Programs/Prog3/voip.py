@@ -73,7 +73,7 @@ class Recieve(Thread):
             data, addr = sock.recvfrom(1024)
             senderHandle, senderData = data.decode("UTF-8").split('@')
 
-            recieveAction = ''
+            recieveAction = [None, None, None]
             
             print(data)
 
