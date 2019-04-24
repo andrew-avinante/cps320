@@ -95,6 +95,7 @@ class Recieve(Thread):
                     self.engine.runAndWait()
                     Recieve.partyIP = recieveAction[2]
                 elif recieveAction[0] == 'reject' and recieveAction[1] == handle:
+                    print("SDFSDFSDFSDFDSFSDFSDDFSDFSDF")
                     Broadcast.incomingRequest = False
                     Broadcast.deviceToCall = ''
                     Broadcast.curAction = 'await'
