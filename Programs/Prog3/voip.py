@@ -41,7 +41,7 @@ class Broadcast(Thread):
             if Broadcast.action == '@call' and Broadcast.deviceToCall != '':
                 command = handle + Broadcast.action + ' ' + Broadcast.deviceToCall + ' ' + self.IPAddr
             elif Broadcast.action == '@reject':
-                command = handle + Broadcast.action + ' ' + Broadcast.deviceToCall
+                command = handle + Broadcast.action + ' ' + Broadcast.partyHandle
                 Broadcast.curAction = 'await'
                 Broadcast.incomingRequest = False
             elif Broadcast.action == '@accept':
