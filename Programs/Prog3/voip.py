@@ -42,7 +42,6 @@ class Broadcast(Thread):
                 command = handle + Broadcast.action + ' ' + Broadcast.deviceToCall + ' ' + self.IPAddr
             elif Broadcast.action == '@reject':
                 command = handle + Broadcast.action + ' ' + Broadcast.deviceToCall
-                Broadcast.curAction = 'await'
                 Broadcast.partyHandle = ''
                 Broadcast.incomingRequest = False
             elif Broadcast.action == '@accept':
@@ -83,7 +82,7 @@ class Recieve(Thread):
                 Broadcast.partyHandle = ''
                 Broadcast.incomingRequest = False
             
-            if recieveAction == 'call' and Broadcast.action != '@call' and recieverHandle == handle and not Broadcast.incall:
+            if recieveAction == 'call' and Broadcast.action != '@call' and recieverHandle == handle and not Broadcast.incall and Broadcast.curAction != 'reject':
                 Broadcast.incomingRequest = True
                 Broadcast.curAction = 'incoming'
                 Broadcast.partyHandle = senderHandle
@@ -208,7 +207,6 @@ class Input(Thread):
                 Broadcast.curAction = 'await'
             elif inputChar == 'r' and len(Broadcast.discovered) != 0 and Broadcast.incomingRequest and not Broadcast.incall:
                 Broadcast.deviceToCall = ''
-                print("SDFDSFSDFSDDSFDFSDSFDFSDSDSFDFSDSFDSFFDDSFDFSDFS")
                 Broadcast.curAction = 'reject'
             elif inputChar == 'a' and len(Broadcast.discovered) != 0 and Broadcast.incomingRequest:
                 Broadcast.curAction = 'accept'
