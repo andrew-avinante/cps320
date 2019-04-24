@@ -98,7 +98,7 @@ class Recieve(Thread):
                 Broadcast.curAction = 'await'
                 self.engine.say(senderHandle + " Declined your call")
                 self.engine.runAndWait()
-            elif recieveAction[0] == 'accept':
+            elif recieveAction[0] == 'accept' and senderHandle == Broadcast.partyHandle:
                 Broadcast.incomingRequest = False
                 Broadcast.incall = True
                 Broadcast.curAction = 'incall'
