@@ -148,13 +148,14 @@ class VOIPR(Thread):
             if(Broadcast.incall):
                 if count == 0:
                     count += 1
-                data = sockTalk.recv(size_to_rw)
-                if data:
-                    output.write(data)
-                elapsed_time = millis() - start
-                if elapsed_time - prev_elapsed_time > 1000:     
-                    cur_elapsed_time = elapsed_time - prev_elapsed_time
-                    prev_elapsed_time = elapsed_time
+                data, ip = sockTalk.recvfrom(size_to_rw)
+                if(ip == Recieve.partyIP):
+                    if data:
+                        output.write(data)
+                    elapsed_time = millis() - start
+                    if elapsed_time - prev_elapsed_time > 1000:     
+                        cur_elapsed_time = elapsed_time - prev_elapsed_time
+                        prev_elapsed_time = elapsed_time
         
 
 class Display(Thread):
