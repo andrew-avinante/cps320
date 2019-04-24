@@ -78,7 +78,7 @@ class Recieve(Thread):
            
             if senderHandle != handle:
                 if ' ' in senderData and senderHandle != handle:
-                recieveAction = senderData.split(' ')
+                    recieveAction = senderData.split(' ')
                 elif senderHandle == Broadcast.partyHandle and not Broadcast.incall:
                     Broadcast.curAction = 'await'
                     Broadcast.partyHandle = ''
