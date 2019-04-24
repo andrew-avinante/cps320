@@ -60,7 +60,6 @@ class Broadcast(Thread):
             else:
                 command = handle + '@awaiting'
             
-            sock.sendto(command.encode('UTF-8'), ('<broadcast>', PORT))
             time.sleep(1)
 
 class Recieve(Thread):
@@ -76,7 +75,9 @@ class Recieve(Thread):
             senderHandle, senderData = data.decode("UTF-8").split('@')
 
             recieveAction = [None, None, None]
-        
+
+            if(senderHandle == handle):
+                continue
 
             if ' ' in senderData and senderHandle != handle:
                 recieveAction = senderData.split(' ')
@@ -149,6 +150,7 @@ class VOIPR(Thread):
                 if count == 0:
                     count += 1
                 data, ip = sockTalk.recvfrom(size_to_rw)
+                print(ip[0] + ' ' + Recieve.partyIP)
                 if(ip[0] == Recieve.partyIP):
                     if data:
                         output.write(data)
