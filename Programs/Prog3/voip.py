@@ -35,7 +35,7 @@ class Broadcast(Thread):
         self.IPAddr = socket.gethostbyname(self.hostname)  
         
     def run(self):
-        while True:
+        while display.keepon:
             command = ''
             Broadcast.action = Broadcast.statuses[Broadcast.curAction]
             if Broadcast.action == '@call' and Broadcast.deviceToCall != '':
@@ -69,7 +69,7 @@ class Recieve(Thread):
         self.engine = pyttsx3.init()
 
     def run(self):
-        while True:
+        while display.keepon:
             data, addr = sock.recvfrom(1024)
             senderHandle, senderData = data.decode("UTF-8").split('@')
 
@@ -120,7 +120,7 @@ class VOIP(Thread):
         start = millis()
         prev_elapsed_time = start
         size_to_rw = period_size * 2  # 2 bytes per mono sample
-        while True:
+        while display.keepon:
             if(Broadcast.incall):
                 # print(str(Recieve.partyIP))
                 numframes, data = mic.read()
@@ -139,7 +139,7 @@ class VOIPR(Thread):
         start = millis()
         size_to_rw = period_size * 2  # 2 bytes per mono sample
         prev_elapsed_time = start
-        while True:
+        while display.keepon:
             if(Broadcast.incall):
                 if count == 0:
                     count += 1
@@ -154,6 +154,7 @@ class VOIPR(Thread):
 
 class Display(Thread):
     selected = 0
+    keepon = True
     def __init__(self):
         super().__init__()
             
@@ -162,7 +163,7 @@ class Display(Thread):
         return  statusText[Broadcast.curAction]
         
     def run(self):
-        while True:
+        while display.keepon:
             os.system("clear")
             remove = []
             print('\fCONTROLS\n---------------\nw - select up\ns - select down\nc - call selected user\nx - cancel call\nr - reject call\na - accept call\nh - hangup\n')
@@ -190,7 +191,7 @@ class Input(Thread):
         self.engine = pyttsx3.init()
         
     def run(self):
-        while True:
+        while Display.keepon:
             inputChar = input()
             if inputChar == 'w' and Display.selected + 1 < len(Broadcast.discovered):
                 Display.selected += 1
@@ -213,6 +214,8 @@ class Input(Thread):
                 Broadcast.curAction = 'accept'
             elif inputChar == 'h' and len(Broadcast.discovered) != 0 and Broadcast.incall:
                 Broadcast.curAction = 'endcall'
+            elif inputChar == 'q' and not Broadcast.incall:
+                Display.keepon = False
 
 sample_rate = 44100
 period_size = 1000
