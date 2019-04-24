@@ -149,7 +149,7 @@ class VOIPR(Thread):
                 if count == 0:
                     count += 1
                 data, ip = sockTalk.recvfrom(size_to_rw)
-                if(ip == Recieve.partyIP):
+                if(ip[0] == Recieve.partyIP):
                     if data:
                         output.write(data)
                     elapsed_time = millis() - start
