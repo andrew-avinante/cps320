@@ -100,6 +100,7 @@ class Recieve(Thread):
                     Broadcast.curAction = 'await'
                     self.engine.say(senderHandle + " Declined your call")
                     self.engine.runAndWait()
+                    sleep(3)
                 elif recieveAction[0] == 'accept':
                     Broadcast.incomingRequest = False
                     Broadcast.incall = True
@@ -200,7 +201,6 @@ class Input(Thread):
     def run(self):
         while Display.keepon:
             inputChar = input()
-            print("HISDSFSDFDSFDFS")
             if inputChar == 'w' and Display.selected + 1 < len(Broadcast.discovered):
                 Display.selected += 1
                 self.engine.say(list(Broadcast.discovered)[Display.selected])
