@@ -37,6 +37,7 @@ class Broadcast(Thread):
     def run(self):
         while display.keepon:
             command = ''
+            print(self.IPAddr)
             Broadcast.action = Broadcast.statuses[Broadcast.curAction]
             if Broadcast.action == '@call' and Broadcast.deviceToCall != '':
                 command = handle + Broadcast.action + ' ' + Broadcast.deviceToCall + ' ' + self.IPAddr
@@ -128,6 +129,7 @@ class VOIP(Thread):
             if(Broadcast.incall):
                 # print(str(Recieve.partyIP))
                 numframes, data = mic.read()
+                print(Recieve.partyIP)
                 sockTalk.sendto(data, (Recieve.partyIP, 4098))
                 #sock.send(data)
                 elapsed_time = millis() - start
@@ -148,7 +150,7 @@ class VOIPR(Thread):
                 if count == 0:
                     count += 1
                 data, ip = sockTalk.recvfrom(size_to_rw)
-                print(ip[0] + ' ' + Recieve.partyIP)
+                # print(ip[0] + ' ' + Recieve.partyIP)
                 if(ip[0] == Recieve.partyIP):
                     if data:
                         output.write(data)
