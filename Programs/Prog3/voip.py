@@ -90,7 +90,7 @@ class Recieve(Thread):
                 self.engine.say("Call from " + senderHandle)
                 self.engine.runAndWait()
                 Recieve.partyIP = recieveAction[2]
-            elif recieveAction[0] == 'reject':
+            elif recieveAction[0] == 'reject' and recieveAction[1] == handle:
                 Broadcast.deviceToCall = ''
                 Broadcast.curAction = 'await'
                 self.engine.say("You just got REJECTED")
