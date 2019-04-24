@@ -75,37 +75,39 @@ class Recieve(Thread):
 
             recieveAction = ''
             
-            if ' ' in senderData:
-                recieveAction, recieverHandle, ip = senderData.split(' ')
+            print(data)
+
+            if ' ' in senderData and senderHandle != handle:
+                recieveAction = senderData.split(' ')
             elif senderHandle == Broadcast.partyHandle and not Broadcast.incall:
                 Broadcast.curAction = 'await'
                 Broadcast.partyHandle = ''
                 Broadcast.incomingRequest = False
-            print(data)
-            if recieveAction == 'call' and Broadcast.action != '@call' and recieverHandle == handle and not Broadcast.incall:
+
+            if recieveAction[0] == 'call' and Broadcast.action != '@call' and recieveAction[1] == handle and not Broadcast.incall:
                 Broadcast.incomingRequest = True
                 Broadcast.curAction = 'incoming'
                 Broadcast.partyHandle = senderHandle
                 self.engine.say("Call from " + senderHandle)
                 self.engine.runAndWait()
-                Recieve.partyIP = ip
-            elif recieveAction == 'reject':
+                Recieve.partyIP = recieveAction[2]
+            elif recieveAction[0] == 'reject':
                 Broadcast.deviceToCall = ''
                 Broadcast.curAction = 'await'
                 self.engine.say("You just got REJECTED")
                 self.engine.runAndWait()
-            elif recieveAction == 'accept':
+            elif recieveAction[0] == 'accept':
                 Broadcast.incomingRequest = False
                 Broadcast.incall = True
                 Broadcast.curAction = 'incall'
                 Broadcast.partyHandle = senderHandle
-                Recieve.partyIP = ip
+                Recieve.partyIP = recieveAction[2]
             elif senderData == 'endcall':
                 Broadcast.incall = False
                 Broadcast.partyHandle = ''
                 Recieve.partyIP = ''
                 Broadcast.curAction = 'await'
-            elif recieveAction == 'incall':
+            elif recieveAction[0] == 'incall':
                 Broadcast.curAction = 'incall'
 
             if senderHandle != handle:
