@@ -111,7 +111,7 @@ class Recieve(Thread):
                 Broadcast.curAction = 'await'
             elif recieveAction[0] == 'incall':
                 Broadcast.curAction = 'incall'
-            print(block)
+            print(Recieve.block)
             if senderHandle != handle:
                 Broadcast.discovered[senderHandle] = [datetime.now(), senderData]
                 if senderHandle == Recieve.block:
