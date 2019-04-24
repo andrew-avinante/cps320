@@ -81,7 +81,7 @@ class Recieve(Thread):
                 Broadcast.curAction = 'await'
                 Broadcast.partyHandle = ''
                 Broadcast.incomingRequest = False
-            
+            print(data)
             if recieveAction == 'call' and Broadcast.action != '@call' and recieverHandle == handle and not Broadcast.incall:
                 Broadcast.incomingRequest = True
                 Broadcast.curAction = 'incoming'
