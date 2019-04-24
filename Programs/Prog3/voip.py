@@ -114,7 +114,7 @@ class Recieve(Thread):
            
             if senderHandle != handle:
                 Broadcast.discovered[senderHandle] = [datetime.now(), senderData]
-                if senderHandle == Recieve.block:
+                if senderHandle == Recieve.block and recieveAction[0] != 'call':
                     Recieve.block = ''
 
 class VOIP(Thread):
