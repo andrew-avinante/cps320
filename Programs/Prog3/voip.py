@@ -85,7 +85,7 @@ class Recieve(Thread):
                 Broadcast.partyHandle = ''
                 Broadcast.incomingRequest = False
 
-            if recieveAction[0] == 'call' and Broadcast.action != '@call' and recieveAction[1] == handle and not Broadcast.incall and block != senderHandle:
+            if recieveAction[0] == 'call' and Broadcast.action != '@call' and recieveAction[1] == handle and not Broadcast.incall and Recieve.block != senderHandle:
                 Broadcast.incomingRequest = True
                 Broadcast.curAction = 'incoming'
                 Broadcast.partyHandle = senderHandle
@@ -114,7 +114,7 @@ class Recieve(Thread):
 
             if senderHandle != handle:
                 Broadcast.discovered[senderHandle] = [datetime.now(), senderData]
-                if senderHandle == block:
+                if senderHandle == Recieve.block:
                     block = ''
 
 class VOIP(Thread):
