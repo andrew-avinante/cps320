@@ -82,7 +82,7 @@ class Recieve(Thread):
                 Broadcast.curAction = 'await'
                 Broadcast.partyHandle = ''
                 Broadcast.incomingRequest = False
-
+            
             if recieveAction == 'call' and Broadcast.action != '@call' and recieverHandle == handle and not Broadcast.incall:
                 Broadcast.incomingRequest = True
                 Broadcast.curAction = 'incoming'
@@ -91,6 +91,7 @@ class Recieve(Thread):
                 self.engine.runAndWait()
                 Recieve.partyIP = ip
             elif senderData == 'reject':
+                print("SDDFS")
                 Broadcast.deviceToCall = ''
                 Broadcast.curAction = 'await'
                 self.engine.say("You just got REJECTED")
