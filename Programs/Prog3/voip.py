@@ -44,9 +44,7 @@ class Broadcast(Thread):
                 Recieve.block = Broadcast.partyHandle
                 command = handle + Broadcast.action + ' ' + Broadcast.partyHandle
                 Broadcast.curAction = 'await'
-                Broadcast.incomingRequest = False       
-                sock.sendto(command.encode('UTF-8'), ('<broadcast>', PORT))
-                sleep(3)
+                Broadcast.incomingRequest = False
             elif Broadcast.action == '@accept':
                 Broadcast.incall = True
                 Broadcast.curAction = 'incall'
@@ -119,7 +117,6 @@ class Recieve(Thread):
             if senderHandle != handle:
                 Broadcast.discovered[senderHandle] = [datetime.now(), senderData]
                 if senderHandle == Recieve.block and recieveAction[0] != 'call':
-                    print("HI")
                     Recieve.block = ''
 
 class VOIP(Thread):
@@ -203,6 +200,7 @@ class Input(Thread):
     def run(self):
         while Display.keepon:
             inputChar = input()
+            print("HISDSFSDFDSFDFS")
             if inputChar == 'w' and Display.selected + 1 < len(Broadcast.discovered):
                 Display.selected += 1
                 self.engine.say(list(Broadcast.discovered)[Display.selected])
