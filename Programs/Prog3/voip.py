@@ -111,11 +111,11 @@ class Recieve(Thread):
                 Broadcast.curAction = 'await'
             elif recieveAction[0] == 'incall':
                 Broadcast.curAction = 'incall'
-            print(Recieve.block + ' ' + senderHandle + ' ' + handle)
+           
             if senderHandle != handle:
                 Broadcast.discovered[senderHandle] = [datetime.now(), senderData]
                 if senderHandle == Recieve.block:
-                    block = ''
+                    Recieve.block = ''
 
 class VOIP(Thread):
     def __init__(self):
