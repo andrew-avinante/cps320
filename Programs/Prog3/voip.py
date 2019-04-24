@@ -41,7 +41,6 @@ class Broadcast(Thread):
             if Broadcast.action == '@call':
                 command = handle + Broadcast.action + ' ' + Broadcast.deviceToCall + ' ' + self.IPAddr
             elif Broadcast.action == '@reject':
-                print("SDFSDSDFDFSKJKDFSKJLDSFKJLDSKJLSKJLDFSDKJLKJLDFSKJLDFSKJLKSDFKJLDSKJLDSFKJLDFS")
                 command = handle + Broadcast.action + ' ' + Broadcast.deviceToCall
                 Broadcast.partyHandle = ''
                 Broadcast.incomingRequest = False
@@ -163,7 +162,7 @@ class Display(Thread):
         
     def run(self):
         while True:
-            # os.system("clear")
+            os.system("clear")
             remove = []
             print('\fCONTROLS\n---------------\nw - select up\ns - select down\nc - call selected user\nx - cancel call\nr - reject call\na - accept call\nh - hangup\n')
             print('DEVICES')
