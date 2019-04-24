@@ -41,6 +41,7 @@ class Broadcast(Thread):
             if Broadcast.action == '@call' and Broadcast.deviceToCall != '':
                 command = handle + Broadcast.action + ' ' + Broadcast.deviceToCall + ' ' + self.IPAddr
             elif Broadcast.action == '@reject':
+                Recieve.block = Broadcast.partyHandle
                 command = handle + Broadcast.action + ' ' + Broadcast.partyHandle
                 Broadcast.curAction = 'await'
                 Broadcast.incomingRequest = False
@@ -64,6 +65,7 @@ class Broadcast(Thread):
 
 class Recieve(Thread):
     partyIP = ''
+    block = ''
     def __init__(self):
         super().__init__()
         self.engine = pyttsx3.init()
@@ -83,7 +85,7 @@ class Recieve(Thread):
                 Broadcast.partyHandle = ''
                 Broadcast.incomingRequest = False
 
-            if recieveAction[0] == 'call' and Broadcast.action != '@call' and recieveAction[1] == handle and not Broadcast.incall:
+            if recieveAction[0] == 'call' and Broadcast.action != '@call' and recieveAction[1] == handle and not Broadcast.incall and block != senderHandle:
                 Broadcast.incomingRequest = True
                 Broadcast.curAction = 'incoming'
                 Broadcast.partyHandle = senderHandle
@@ -91,6 +93,7 @@ class Recieve(Thread):
                 self.engine.runAndWait()
                 Recieve.partyIP = recieveAction[2]
             elif recieveAction[0] == 'reject' and recieveAction[1] == handle:
+                Broadcast.incomingRequest = False
                 Broadcast.deviceToCall = ''
                 Broadcast.curAction = 'await'
                 self.engine.say("You just got REJECTED")
@@ -111,6 +114,8 @@ class Recieve(Thread):
 
             if senderHandle != handle:
                 Broadcast.discovered[senderHandle] = [datetime.now(), senderData]
+                if senderHandle == block:
+                    block = ''
 
 class VOIP(Thread):
     def __init__(self):
