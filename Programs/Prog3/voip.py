@@ -60,6 +60,7 @@ class Broadcast(Thread):
             else:
                 command = handle + '@awaiting'
             
+            sock.sendto(command.encode('UTF-8'), ('<broadcast>', PORT))
             time.sleep(1)
 
 class Recieve(Thread):
@@ -97,7 +98,7 @@ class Recieve(Thread):
                 Broadcast.curAction = 'await'
                 self.engine.say(senderHandle + " Declined your call")
                 self.engine.runAndWait()
-            elif recieveAction[0] == 'accept' and senderHandle != handle:
+            elif recieveAction[0] == 'accept':
                 Broadcast.incomingRequest = False
                 Broadcast.incall = True
                 Broadcast.curAction = 'incall'
@@ -148,7 +149,6 @@ class VOIPR(Thread):
                 if count == 0:
                     count += 1
                 data, ip = sockTalk.recvfrom(size_to_rw)
-                print(ip[0] + ' ' + Recieve.partyIP)
                 if(ip[0] == Recieve.partyIP):
                     if data:
                         output.write(data)
