@@ -100,7 +100,6 @@ class Recieve(Thread):
                     Broadcast.curAction = 'await'
                     self.engine.say(senderHandle + " Declined your call")
                     self.engine.runAndWait()
-                    sleep(3)
                 elif recieveAction[0] == 'accept':
                     Broadcast.incomingRequest = False
                     Broadcast.incall = True
@@ -117,8 +116,8 @@ class Recieve(Thread):
            
             if senderHandle != handle:
                 Broadcast.discovered[senderHandle] = [datetime.now(), senderData]
-                if senderHandle == Recieve.block and recieveAction[0] != 'call':
-                    Recieve.block = ''
+                # if senderHandle == Recieve.block and recieveAction[0] != 'call':
+                #     Recieve.block = ''
 
 class VOIP(Thread):
     def __init__(self):
