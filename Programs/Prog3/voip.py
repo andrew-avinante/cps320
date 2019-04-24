@@ -84,21 +84,22 @@ class Recieve(Thread):
                 Broadcast.curAction = 'await'
                 Broadcast.partyHandle = ''
                 Broadcast.incomingRequest = False
-
+            if senderHandle == handle:
+                continue
             if senderHandle != handle:
                 if recieveAction[0] == 'call' and Broadcast.action != '@call' and recieveAction[1] == handle and not Broadcast.incall and Recieve.block != senderHandle:
                     Broadcast.incomingRequest = True
                     Broadcast.curAction = 'incoming'
                     Broadcast.partyHandle = senderHandle
-                    # self.engine.say("Call from " + senderHandle)
-                    # self.engine.runAndWait()
+                    self.engine.say("Call from " + senderHandle)
+                    self.engine.runAndWait()
                     Recieve.partyIP = recieveAction[2]
                 elif recieveAction[0] == 'reject' and recieveAction[1] == handle:
                     Broadcast.incomingRequest = False
                     Broadcast.deviceToCall = ''
                     Broadcast.curAction = 'await'
-                    # self.engine.say(senderHandle + " Declined your call")
-                    # self.engine.runAndWait()
+                    self.engine.say(senderHandle + " Declined your call")
+                    self.engine.runAndWait()
                 elif recieveAction[0] == 'accept':
                     Broadcast.incomingRequest = False
                     Broadcast.incall = True
