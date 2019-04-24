@@ -44,7 +44,9 @@ class Broadcast(Thread):
                 Recieve.block = Broadcast.partyHandle
                 command = handle + Broadcast.action + ' ' + Broadcast.partyHandle
                 Broadcast.curAction = 'await'
-                Broadcast.incomingRequest = False
+                Broadcast.incomingRequest = False       
+                sock.sendto(command.encode('UTF-8'), ('<broadcast>', PORT))
+                sleep(3)
             elif Broadcast.action == '@accept':
                 Broadcast.incall = True
                 Broadcast.curAction = 'incall'
@@ -95,7 +97,6 @@ class Recieve(Thread):
                     self.engine.runAndWait()
                     Recieve.partyIP = recieveAction[2]
                 elif recieveAction[0] == 'reject' and recieveAction[1] == handle:
-                    print("SDFSDFSDFSDFDSFSDFSDDFSDFSDF")
                     Broadcast.incomingRequest = False
                     Broadcast.deviceToCall = ''
                     Broadcast.curAction = 'await'
