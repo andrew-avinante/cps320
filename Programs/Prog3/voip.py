@@ -82,7 +82,7 @@ class Recieve(Thread):
                 Broadcast.curAction = 'await'
                 Broadcast.partyHandle = ''
                 Broadcast.incomingRequest = False
-            print(senderData)
+            
             if recieveAction == 'call' and Broadcast.action != '@call' and recieverHandle == handle and not Broadcast.incall:
                 Broadcast.incomingRequest = True
                 Broadcast.curAction = 'incoming'
@@ -208,6 +208,7 @@ class Input(Thread):
                 Broadcast.curAction = 'await'
             elif inputChar == 'r' and len(Broadcast.discovered) != 0 and Broadcast.incomingRequest and not Broadcast.incall:
                 Broadcast.deviceToCall = ''
+                print("SDFDSFSDFSDDSFDFSDSFDFSDSDSFDFSDSFDSFFDDSFDFSDFS")
                 Broadcast.curAction = 'reject'
             elif inputChar == 'a' and len(Broadcast.discovered) != 0 and Broadcast.incomingRequest:
                 Broadcast.curAction = 'accept'
