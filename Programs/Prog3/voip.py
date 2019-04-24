@@ -37,7 +37,6 @@ class Broadcast(Thread):
     def run(self):
         while display.keepon:
             command = ''
-            print(self.IPAddr)
             Broadcast.action = Broadcast.statuses[Broadcast.curAction]
             if Broadcast.action == '@call' and Broadcast.deviceToCall != '':
                 command = handle + Broadcast.action + ' ' + Broadcast.deviceToCall + ' ' + self.IPAddr
@@ -78,13 +77,14 @@ class Recieve(Thread):
 
             recieveAction = [None, None, None]
         
-            print(data)
+
             if ' ' in senderData and senderHandle != handle:
                 recieveAction = senderData.split(' ')
             elif senderHandle == Broadcast.partyHandle and not Broadcast.incall:
                 Broadcast.curAction = 'await'
                 Broadcast.partyHandle = ''
                 Broadcast.incomingRequest = False
+
             if recieveAction[0] == 'call' and Broadcast.action != '@call' and recieveAction[1] == handle and not Broadcast.incall and Recieve.block != senderHandle:
                 Broadcast.incomingRequest = True
                 Broadcast.curAction = 'incoming'
@@ -98,7 +98,7 @@ class Recieve(Thread):
                 Broadcast.curAction = 'await'
                 self.engine.say(senderHandle + " Declined your call")
                 self.engine.runAndWait()
-            elif recieveAction[0] == 'accept' and senderHandle == Broadcast.partyHandle:
+            elif recieveAction[0] == 'accept':
                 Broadcast.incomingRequest = False
                 Broadcast.incall = True
                 Broadcast.curAction = 'incall'
@@ -129,7 +129,6 @@ class VOIP(Thread):
             if(Broadcast.incall):
                 # print(str(Recieve.partyIP))
                 numframes, data = mic.read()
-                print(Recieve.partyIP)
                 sockTalk.sendto(data, (Recieve.partyIP, 4098))
                 #sock.send(data)
                 elapsed_time = millis() - start
@@ -149,15 +148,13 @@ class VOIPR(Thread):
             if(Broadcast.incall):
                 if count == 0:
                     count += 1
-                data, ip = sockTalk.recvfrom(size_to_rw)
-                # print(ip[0] + ' ' + Recieve.partyIP)
-                if(ip[0] == Recieve.partyIP):
-                    if data:
-                        output.write(data)
-                    elapsed_time = millis() - start
-                    if elapsed_time - prev_elapsed_time > 1000:     
-                        cur_elapsed_time = elapsed_time - prev_elapsed_time
-                        prev_elapsed_time = elapsed_time
+                data = sockTalk.recv(size_to_rw)
+                if data:
+                    output.write(data)
+                elapsed_time = millis() - start
+                if elapsed_time - prev_elapsed_time > 1000:     
+                    cur_elapsed_time = elapsed_time - prev_elapsed_time
+                    prev_elapsed_time = elapsed_time
         
 
 class Display(Thread):
